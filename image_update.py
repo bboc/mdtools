@@ -20,11 +20,22 @@ def image_update(document_root, image_root):
     if not os.path.exists(image_root):
         raise MissingImageRootException(image_root)
 
+    print('building image repo...')
     image_repo = ImageRepo(image_root)
 
     image_repo.check_duplicates()
 
-    process_documents(document_root, image_repo)
+    print('processing documents...')
+    p = DocumentProcessor(document_root, image_repo)
+
+    p.list()
+    #process_documents(document_root, image_repo)
+
+
+def filter_dirs(dirs):
+    for item in dirs:
+        if item in EXCLUDE_DIRS:
+            dirs.remove(item)
 
 
 class ImageRepo(object):
@@ -51,21 +62,27 @@ class ImageRepo(object):
                 print('::duplicate image:', key, repr(self.images[key]))
 
 
-def process_documents(document_root, image_repo):
-    for root, dirs, files in os.walk(document_root):
-        filter_dirs(dirs)
-        for doc in files:
-            _name, ext = os.path.splitext(doc)
-            if ext.lower() in DOCUMENT_TYPES:
-                update_document(os.path.join(root, doc), image_repo)
+class DocumentProcessor(object):
 
-def update_document(doc, repo):
-    pass
+    def __init__(self, root, image_repo):
+        self.root = root
+        self.image_repo = image_repo
+        self.documents = []
+        self._find_documents()
 
-def filter_dirs(dirs):
-    for item in dirs:
-        if item in EXCLUDE_DIRS:
-            dirs.remove(item)
+
+    def _find_documents(self):
+        for root, dirs, files in os.walk(self.root):
+            filter_dirs(dirs)
+            for doc in files:
+                _name, ext = os.path.splitext(doc)
+                if ext.lower() in DOCUMENT_TYPES:
+                    self.documents.append(os.path.join(root, doc))
+
+    def list(self):
+        for item in self.documents:
+            print(item)
+
 
 
 class MissingDocumentRootException(Exception):
