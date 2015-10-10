@@ -24,6 +24,9 @@ LEVEL_2 = 2
 LEVEL_3 = 3 
 
 
+# TODO: add command to parse for unknown image references and list errors only
+# TODO: add command to check for unresolved critic markup with image reference errors
+
 def check_images_cmd(args):
     """List images and check for duplicate names."""
     image_repo = ImageRepo(args.image_root, args.verbose + 1)
@@ -32,10 +35,10 @@ def check_images_cmd(args):
 
 def run_cmd(args):
     print("verbosity", args.verbose)
+    print('building image repository...')
     image_repo = ImageRepo(args.image_root, args.verbose)
 
     image_repo.check_duplicates()
-
     print('processing documents...')
     p = DocumentProcessor(image_repo, args)
     p.list()
@@ -90,7 +93,7 @@ class ImageRepo(VerbosityControlled):
         """Walk the filesystem and add all images to repository."""
         for root, dirs, files in os.walk(self.root):
             dirs = filter_dirs(dirs)
-            path_prefix = root[len(self.root):]
+            path_prefix = root[len(self.root)+1:]
             self.vprint(LEVEL_2, '...processing', path_prefix)
             for image in files:
                 _name, ext = os.path.splitext(image)
@@ -107,11 +110,10 @@ class ImageRepo(VerbosityControlled):
 
     def translate_path(self, old_image_path):
         """Identify and return new image path."""
-        if os.path.exists(old_image_path):
+        if os.path.exists(os.path.join(self.root, old_image_path)):
             # no need to do anything if old image still exists!
             return old_image_path
         dummy, image_name = os.path.split(old_image_path)
-
         if self.images.has_key(image_name):
             if len(self.images[image_name]) == 1:
                 return self.images[image_name][0]
@@ -182,7 +184,7 @@ class Document(VerbosityControlled):
 
 
     def parse_file(self, source, writer):
-        def repl(m):
+        def _update_image_ref(m):
             image_path = m.group(2)
             return m.group(1) + self.image_repo.translate_path(image_path) + m.group(3)
 
@@ -193,7 +195,7 @@ class Document(VerbosityControlled):
             if line == '':
                 break
             try:
-                result = re.sub(r"(.*?\!\[.*?\]\()(.*)(\).*)", repl, line)
+                result = re.sub(r"(.*?\!\[.*?\]\()(.*)(\).*)", _update_image_ref, line)
                 if line != result:
                     self.vprint(LEVEL_3, '::', line.strip())
                     self.vprint(LEVEL_3, '>>', result.strip())
@@ -201,15 +203,15 @@ class Document(VerbosityControlled):
 
             except ImageRepo.ImageNotFoundException, e:
                 print(e.message(self.path, line_number), file=sys.stderr)
-                writer('{>>ERROR: IMAGE NOT FOUND:<<}\n')
+                writer('{>>ERROR--image reference not found:<<}\n')
                 writer(line)
                 
             except ImageRepo.DuplicateImageException, e:
                 print(e.message(self.path, line_number), file=sys.stderr)
-                writer('{>>ERROR: AMBIGUOUS IMAGE NAME:<<}\n')
-                for idx, variant in e[1]:
-                    writer('{>>variant', idx ,'<<}\n')
-                    writer(line.replace(old_image_path, variant))
+                writer('{>>ERROR--ambiguous image reference:<<}\n')
+                for idx, variant in enumerate(e[1]):
+                    writer('{>>variant ' + str(idx) + ':<<}\n')
+                    writer(line.replace(e[0], variant))
                 writer('{>>original reference:<<}\n')
                 writer(line)
 
@@ -221,7 +223,7 @@ def dir_type(dirname):
     raise argparse.ArgumentTypeError('%s is not a valid directory' % dirname)
 
 
-def main():
+def get_parser():
     parser = argparse.ArgumentParser(
         description='update images referenced in source markdown files (.md, .mmd, .txt) to new paths.')
 
@@ -253,6 +255,11 @@ def main():
     run.add_argument('--keep-backup', '-k', action='store_true', 
                         help='keep backup of original file')
     run.set_defaults(func=run_cmd)
+
+    return parser
+
+def main():
+    parser = get_parser()
 
     args = parser.parse_args()
     args.func(args)
