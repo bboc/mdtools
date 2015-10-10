@@ -2,6 +2,7 @@
 
 import unittest
 import os
+import shutil
 from image_update import run_cmd
 import tempfile
 import filecmp
@@ -29,14 +30,13 @@ class BasicImageUpdateTests(unittest.TestCase):
         """Compare the actual result with the correct result."""
         with file(correct_file, 'r+') as correct:
             c = correct.readlines()
-            with file(result_file, 'r+') as result
-            r = result.readlines()
-            self.assertEqual(c, t)
+            with file(result_file, 'r+') as result:
+                r = result.readlines()
+                self.assertEqual(c, t)
 
     def compare_files(self, a,b):
-        self.assertTrue(filecmp.cmp(a, b, shallow=False])
+        self.assertTrue(filecmp.cmp(a, b, shallow=False))
 
     def test_one(self):
         self.fail()
 
-        
