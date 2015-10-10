@@ -23,7 +23,6 @@ LEVEL_1 = 1
 LEVEL_2 = 2
 LEVEL_3 = 3 
 
-
 # TODO: add command to parse for unknown image references and list errors only
 # TODO: add command to check for unresolved critic markup with image reference errors
 
@@ -70,23 +69,15 @@ class ImageRepo(VerbosityControlled):
     class DuplicateImageException(Exception):
         def message(self, path, line_number):
             return dedent("""
-                ------------------------
-                :::AMBIGUOUS IMAGE REFERENCE
-                file "{}", line {}:
-                image reference: "{}"
-                image repo key: "{}"
-                """).format(path, line_number, self[0], repr(self[1]))
+                ambiguous image reference in "{}", line {}:
+                "{}" --> "{}" """).format(path, line_number, self[0], repr(self[1]))
 
 
     class ImageNotFoundException(Exception):
         def message(self, path, line_number):
             return dedent("""
-                ------------------------
-                :::IMAGE REFERENCE NOT ImageNotFoundException
-                file "{}", line {}:
-                image reference: "{}"
-                possible targets "{}"
-                """).format(path, line_number, self[0], repr(self[1]))
+                image not found in file "{}", line {}:
+                image reference: "{}" """).format(path, line_number, self[0])
 
 
     def _build_repo_structure(self):
@@ -158,6 +149,8 @@ class DocumentProcessor(VerbosityControlled):
 
 class Document(VerbosityControlled):
 
+    ERROR_OUT = sys.stderr
+
     def __init__(self, path, image_repo, verbosity, commit, keep_backup):
         self.path = path
         self.image_repo = image_repo
@@ -202,12 +195,12 @@ class Document(VerbosityControlled):
                 writer(result)
 
             except ImageRepo.ImageNotFoundException, e:
-                print(e.message(self.path, line_number), file=sys.stderr)
+                print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--image reference not found:<<}\n')
                 writer(line)
                 
             except ImageRepo.DuplicateImageException, e:
-                print(e.message(self.path, line_number), file=sys.stderr)
+                print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--ambiguous image reference:<<}\n')
                 for idx, variant in enumerate(e[1]):
                     writer('{>>variant ' + str(idx) + ':<<}\n')

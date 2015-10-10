@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
-import unittest
+import filecmp
+from image_update import run_cmd, get_parser, Document
 import os
 import shutil
-from image_update import run_cmd, get_parser
+import sys
 import tempfile
-import filecmp
+import unittest
 
 
-def test_dir():
+def data_dir():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                         'test-data')    
 
 def make_path(*args):
-    return os.path.join(test_dir(), *args)
+    return os.path.join(data_dir(), *args)
 
 
 class BasicImageUpdateTests(unittest.TestCase):
@@ -22,7 +23,7 @@ class BasicImageUpdateTests(unittest.TestCase):
         """Create temp folder, copy test case data."""
         self.maxDiff = None
         self.document_root = tempfile.mkdtemp()
-        self.image_root = test_dir()
+        self.image_root = data_dir()
 
         print(self.document_root)
         # TODO: remove temp folder
@@ -41,6 +42,9 @@ class BasicImageUpdateTests(unittest.TestCase):
 
     def test_one(self):
 
+        # suppress error out
+        Document.ERROR_OUT = sys.stdout
+
         # copy testcase full-test to tempfolder
         shutil.copytree(make_path('testcases', 'full-test', 'documents'), 
                         os.path.join(self.document_root, 'documents')) 
@@ -49,9 +53,11 @@ class BasicImageUpdateTests(unittest.TestCase):
         run_cmd(args)
 
         # compare test results with correct files
-        self.compare_results(make_path('testcases', 'full-test', 'results', 'document_one.txt'),
+        correct_results = make_path('testcases', 'full-test', 'results', 'document_one.txt')
+        self.compare_results(correct_results,
                              os.path.join(self.document_root, 'documents', 'document_one.txt'))
-        self.compare_results(make_path('testcases', 'full-test', 'results', 'document_two.mmd'),
+        # this file is just a copy in a subfolder, we can compare to the same result file
+        self.compare_results(correct_results,
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
 
         # TODO: check backup files to original files
@@ -60,7 +66,4 @@ class BasicImageUpdateTests(unittest.TestCase):
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
 
-        self.compare()
-
-        self.fail()
 
