@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """
-update image references in multimarkdown files (and preserve deckset formatting.
+update image references in multimarkdown files (and preserve deckset formatting).
 """
 
 from __future__ import print_function
 
+import argparse
 import os
 import os.path
 import re
+import shutil
 import sys
 from collections import defaultdict
 from textwrap import dedent
@@ -16,27 +18,27 @@ from textwrap import dedent
 IMAGE_TYPES = ['.png', '.gif', '.jpg', '.jpeg']
 DOCUMENT_TYPES = ['.txt', '.md', '.mmd', '.markdown', '.multimarkdown']
 EXCLUDE_DIRS = ['.git', 'CVS', 'SVN']
+LEVEL_0 = 0
 LEVEL_1 = 1
 LEVEL_2 = 2
 LEVEL_3 = 3 
 
-def image_update(document_root, image_root, image_prefix, verbosity):
-    print("verbosity", verbosity)
-    if not os.path.exists(document_root):
-        raise MissingDocumentRootException(document_root)
-    if not os.path.exists(image_root):
-        raise MissingImageRootException(image_root)
 
-    print('building image repo...')
-    image_repo = ImageRepo(image_root, image_prefix, verbosity)
+def check_images_cmd(args):
+    """List images and check for duplicate names."""
+    image_repo = ImageRepo(args.image_root, args.verbose + 1)
+    image_repo.check_duplicates()
+ 
+
+def run_cmd(args):
+    print("verbosity", args.verbose)
+    image_repo = ImageRepo(args.image_root, args.verbose)
 
     image_repo.check_duplicates()
 
     print('processing documents...')
-    p = DocumentProcessor(document_root, image_repo, verbosity)
-
+    p = DocumentProcessor(image_repo, args)
     p.list()
-    #process_documents(document_root, image_repo)
     p.run()
 
 
@@ -55,20 +57,37 @@ class VerbosityControlled(object):
 
 class ImageRepo(VerbosityControlled):
 
-    class DuplicateImageException(Exception):
-        pass
-
-    class ImageNotFoundException(Exception):
-        pass
-
-    def __init__(self, root, path_prefix, verbosity):
+    def __init__(self, root, verbosity):
         self.root = root
-        self.path_prefix = path_prefix
         self.verbosity = verbosity
         self.images = defaultdict(list)
         self._build_repo_structure()
 
+
+    class DuplicateImageException(Exception):
+        def message(self, path, line_number):
+            return dedent("""
+                ------------------------
+                :::AMBIGUOUS IMAGE REFERENCE
+                file "{}", line {}:
+                image reference: "{}"
+                image repo key: "{}"
+                """).format(path, line_number, self[0], repr(self[1]))
+
+
+    class ImageNotFoundException(Exception):
+        def message(self, path, line_number):
+            return dedent("""
+                ------------------------
+                :::IMAGE REFERENCE NOT ImageNotFoundException
+                file "{}", line {}:
+                image reference: "{}"
+                possible targets "{}"
+                """).format(path, line_number, self[0], repr(self[1]))
+
+
     def _build_repo_structure(self):
+        """Walk the filesystem and add all images to repository."""
         for root, dirs, files in os.walk(self.root):
             dirs = filter_dirs(dirs)
             path_prefix = root[len(self.root):]
@@ -76,35 +95,43 @@ class ImageRepo(VerbosityControlled):
             for image in files:
                 _name, ext = os.path.splitext(image)
                 if ext.lower() in IMAGE_TYPES:
-                    self.images[image].append(os.path.join(path_prefix, image))
-
+                    image_ref = os.path.join(path_prefix, image)
+                    self.vprint(LEVEL_1, image_ref)
+                    self.images[image].append(image_ref)
     
     def check_duplicates(self):
+        """Check repo for duplicate image names."""
         for key in self.images.keys():
             if len(self.images[key]) > 1:
-                self.vprint(LEVEL_2, '::duplicate image:', key, repr(self.images[key]))
+                self.vprint(LEVEL_1, '::duplicate image name:', key, repr(self.images[key]))
 
     def translate_path(self, old_image_path):
-        dummy, image = os.path.split(old_image_path)
-        if self.images.has_key(image):
-            if len(self.images[image]) == 1:
-                return os.path.join(self.path_prefix, self.images[image][0])
+        """Identify and return new image path."""
+        if os.path.exists(old_image_path):
+            # no need to do anything if old image still exists!
+            return old_image_path
+        dummy, image_name = os.path.split(old_image_path)
+
+        if self.images.has_key(image_name):
+            if len(self.images[image_name]) == 1:
+                return self.images[image_name][0]
             else:
-                 raise self.DuplicateImageException(old_image_path, self.images[image])
+                 raise self.DuplicateImageException(old_image_path, self.images[image_name])
         else:
-            raise self.ImageNotFoundException(old_image_path, image)
+            raise self.ImageNotFoundException(old_image_path, image_name)
 
 
 class DocumentProcessor(VerbosityControlled):
 
-    def __init__(self, root, image_repo, verbosity):
-        self.root = root
+    def __init__(self, image_repo, args):
         self.image_repo = image_repo
-        self.verbosity = verbosity
+        self.root = args.document_root
+        self.verbosity = args.verbose
+        self.commit = args.commit
+        self.keep_backup = args.keep_backup
 
         self.documents = []
         self._find_documents()
-
 
     def _find_documents(self):
         for root, dirs, files in os.walk(self.root):
@@ -123,87 +150,112 @@ class DocumentProcessor(VerbosityControlled):
         """Process all documents."""
 
         for doc in self.documents:
-            d = Document(doc, self.image_repo, self.verbosity)
+            d = Document(doc, self.image_repo, self.verbosity, self.commit, self.keep_backup)
             d.process()
 
 
 class Document(VerbosityControlled):
 
-    def __init__(self, path, image_repo, verbosity):
+    def __init__(self, path, image_repo, verbosity, commit, keep_backup):
         self.path = path
         self.image_repo = image_repo
         self.verbosity = verbosity
+        self.commit  = commit
+        self.keep_backup = keep_backup
 
 
     def process(self):
+        self.vprint(LEVEL_0, "processing file", self.path, '...')
+        if self.commit: 
+            source_path = self.path + '.backup'
+            shutil.move(self.path, source_path)
+            with file(source_path, 'r') as source:
+                with file(self.path, 'w+') as target:
+                    self.parse_file(source, target.write)
+            if not self.keep_backup:
+                os.unlink.source_path
+        else: 
+            with file(self.path, 'r') as source:
+                def ignore(s):
+                    pass
+                self.parse_file(source, ignore)
 
+
+    def parse_file(self, source, writer):
         def repl(m):
             image_path = m.group(2)
             return m.group(1) + self.image_repo.translate_path(image_path) + m.group(3)
 
+        line_number = 0
+        while True:
+            line_number += 1
+            line = source.readline()
+            if line == '':
+                break
+            try:
+                result = re.sub(r"(.*?\!\[.*?\]\()(.*)(\).*)", repl, line)
+                if line != result:
+                    self.vprint(LEVEL_3, '::', line.strip())
+                    self.vprint(LEVEL_3, '>>', result.strip())
+                writer(result)
 
-        with file(self.path, 'r') as source:
-            line_number = 0
-            while True:
-                line_number += 1
-                line = source.readline()
-                if line == '':
-                    break
-                try:
-                    result = re.sub(r"(.*?\!\[.*?\]\()(.*)(\).*)", repl, line)
-
-                except ImageRepo.ImageNotFoundException, e:
-                    print(dedent("""
-                        ------------------------
-                        :::IMAGE REFERENCE NOT ImageNotFoundException
-                        file "{}", line {}:
-                        image reference: "{}"
-                        possible targets "{}"
-                        """).format(self.path, line_number, e[0], repr(e[1])),
-                        file=sys.stderr)
-
-                except ImageRepo.DuplicateImageException, e:
-                    print(dedent("""
-                        ------------------------
-                        :::AMBIGUOUS IMAGE REFERENCE
-                        file "{}", line {}:
-                        image reference: "{}"
-                        image repo key: "{}"
-                        """).format(self.path, line_number, e[0], repr(e[1])),
-                        file=sys.stderr)
+            except ImageRepo.ImageNotFoundException, e:
+                print(e.message(self.path, line_number), file=sys.stderr)
+                writer('{>>ERROR: IMAGE NOT FOUND:<<}\n')
+                writer(line)
+                
+            except ImageRepo.DuplicateImageException, e:
+                print(e.message(self.path, line_number), file=sys.stderr)
+                writer('{>>ERROR: AMBIGUOUS IMAGE NAME:<<}\n')
+                for idx, variant in e[1]:
+                    writer('{>>variant', idx ,'<<}\n')
+                    writer(line.replace(old_image_path, variant))
+                writer('{>>original reference:<<}\n')
+                writer(line)
 
 
-class MissingDocumentRootException(Exception):
-    pass
-
-
-class MissingImageRootException(Exception):
-    pass
+def dir_type(dirname):
+    # type for argparse
+    if os.path.isdir(dirname):
+        return dirname
+    raise argparse.ArgumentTypeError('%s is not a valid directory' % dirname)
 
 
 def main():
-    import argparse
-    import sys
     parser = argparse.ArgumentParser(
         description='update images referenced in source markdown files (.md, .mmd, .txt) to new paths.')
-    parser.add_argument('document_root',
-                        help='root folder for documents to update')
-    parser.add_argument('image_root',
+
+    parent = argparse.ArgumentParser(add_help=False)
+    parent.add_argument('--verbose', '-v', action='count', default=0,
+                        help='increase level of verbosity (repeat up to 3 times)')
+    parent.add_argument('--image-root', '-i', type=dir_type,
                         help='root folder for new images files')
-    parser.add_argument('image_prefix',
-                        help='path prefix for new image path')
-    parser.add_argument('--verbose', '-v', action='count', default=0)
+
+    subparsers = parser.add_subparsers(help='command help',
+                                       title='valid sub commands')
+
+    # sub command: check-images
+    check_images = subparsers.add_parser('check-images',
+                                         parents=[parent], 
+                                         help='list all image paths and check for ambiguous names')
+
+    check_images.set_defaults(func=check_images_cmd)
+
+    # sub command: run
+    run = subparsers.add_parser('run', 
+                                parents=[parent], 
+                                help='parse all files, list ambiguous and missing image references.')
+
+    run.add_argument('document_root',  type=dir_type,
+                        help='root folder for documents to update')
+    run.add_argument('--commit', '-c', action='store_true', 
+                        help='commit result to file')
+    run.add_argument('--keep-backup', '-k', action='store_true', 
+                        help='keep backup of original file')
+    run.set_defaults(func=run_cmd)
 
     args = parser.parse_args()
-    try:
-        image_update(args.document_root, args.image_root, args.image_prefix, args.verbose)
-    except MissingDocumentRootException, e:
-        print('ERROR: missing document root:', e[0], file=sys.stderr)
-        sys.exit(1)
-    except MissingImageRootException, e:
-        print ('ERROR: missing image root', e[0], file=sys.stderr)
-        sys.exit(2)
-
+    args.func(args)
 
 if __name__ == '__main__':
     main()
