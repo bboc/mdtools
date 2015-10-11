@@ -7,7 +7,7 @@ setup(
 
     entry_points = {
         'console_scripts': [
-            'md-img-update = image_update:main',
+            'mdtools = image_update:main',
         ],
     }
 

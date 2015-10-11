@@ -32,7 +32,7 @@ def check_images_cmd(args):
     image_repo.check_duplicates()
  
 
-def run_cmd(args):
+def update_images_cmd(args):
     print("verbosity", args.verbose)
     print('building image repository...')
     image_repo = ImageRepo(args.image_root, args.verbose)
@@ -43,6 +43,8 @@ def run_cmd(args):
     p.list()
     p.run()
 
+def list_broken_images_cmd(args):
+    print('not implemented yet')
 
 def filter_dirs(dirs):
     for item in dirs:
@@ -237,17 +239,21 @@ def get_parser():
     check_images.set_defaults(func=check_images_cmd)
 
     # sub command: run
-    run = subparsers.add_parser('run', 
+    update_img = subparsers.add_parser('update-images', 
                                 parents=[parent], 
-                                help='parse all files, list ambiguous and missing image references.')
-
-    run.add_argument('document_root',  type=dir_type,
+                                help='update all files, list ambiguous and missing image references.')
+    update_img.add_argument('document_root',  type=dir_type,
                         help='root folder for documents to update')
-    run.add_argument('--commit', '-c', action='store_true', 
+    update_img.add_argument('--commit', '-c', action='store_true', 
                         help='commit result to file')
-    run.add_argument('--keep-backup', '-k', action='store_true', 
+    update_img.add_argument('--keep-backup', '-k', action='store_true', 
                         help='keep backup of original file')
-    run.set_defaults(func=run_cmd)
+    update_img.set_defaults(func=update_images_cmd)
+
+    list_broken_images = subparsers.add_parser('list-broken-images', 
+                         parents=[parent], 
+                         help='parse all files, print ambiguous and missing image references.')
+    list_broken_images.set_defaults(func=list_broken_images_cmd)
 
     return parser
 

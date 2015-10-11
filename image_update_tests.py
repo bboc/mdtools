@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import filecmp
-from image_update import run_cmd, get_parser, Document
+from image_update import update_images_cmd, get_parser, Document
 import os
 import shutil
 import sys
@@ -49,8 +49,8 @@ class BasicImageUpdateTests(unittest.TestCase):
         shutil.copytree(make_path('testcases', 'full-test', 'documents'), 
                         os.path.join(self.document_root, 'documents')) 
         parser = get_parser()
-        args = parser.parse_args(['run', self.document_root, '-i', self.image_root, '--commit', '--keep'])
-        run_cmd(args)
+        args = parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit', '--keep'])
+        update_images_cmd(args)
 
         # compare test results with correct files
         correct_results = make_path('testcases', 'full-test', 'results', 'document_one.txt')
