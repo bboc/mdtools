@@ -230,7 +230,7 @@ class Document(VerbosityControlled):
 def dir_type(dirname):
     # type for argparse
     if os.path.isdir(dirname):
-        return dirname
+        return os.path.normpath(dirname)
     raise argparse.ArgumentTypeError('%s is not a valid directory' % dirname)
 
 
