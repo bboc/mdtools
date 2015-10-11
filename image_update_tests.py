@@ -52,16 +52,15 @@ class BasicImageUpdateTests(unittest.TestCase):
         args = parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit', '--keep'])
         update_images_cmd(args)
 
-        correct_results_document_one = make_path('testcases', 'full-test', 'results', 'document_one.txt')
         # test document_one
-        self.compare_results(correct_results_document_one,
-                             os.path.join(self.document_root, 'documents', 'document_one.txt.review'))
+        self.compare_results(make_path('testcases', 'full-test', 'results', 'document_one.txt'),
+                             os.path.join(self.document_root, 'documents', '--document_one.txt'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_one.txt'),
-                             os.path.join(self.document_root, 'documents', 'document_one.txt.backup'))
+                             os.path.join(self.document_root, 'documents', 'document_one.txt'))
         
-        # document 2 is just a copy of document one in a subfolder
-        self.compare_results(correct_results_document_one,
-                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.review'))
+        # document 2 has a backup file
+        self.compare_results(make_path('testcases', 'full-test', 'results', 'document_two.mmd'),
+                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
         

@@ -164,16 +164,27 @@ class Document(VerbosityControlled):
 
     def process(self):
         self.vprint(LEVEL_0, "processing file", self.path, '...')
+
         if self.commit: 
-            source_path = self.path + '.backup'
-            shutil.move(self.path, source_path)
-            with file(source_path, 'r') as source:
-                with file(self.path, 'w+') as target:
+            target_path = self.path + '.updated'
+            original = self.path
+            print('original', original)
+            print('target', target_path)
+            with file(original, 'r') as source:
+                with file(target_path, 'w+') as target:
                     self.parse_file(source, target.write)
-            if not self.keep_backup:
-                os.unlink.source_path
-            if self.document_has_errors:
-                shutil.move(self.path, self.path +'.review')
+
+            if self.document_has_errors:                                
+                # keep original and move prefix target with '--''
+
+                shutil.move(target_path, os.path.join(os.path.dirname(self.path),
+                                                      '--' + os.path.basename(self.path)))
+            else:
+                if self.keep_backup:                
+                    shutil.move(original, self.path + '.backup')
+                else: 
+                    os.unlink(original)
+                shutil.move(target_path, self.path)
         else: 
             with file(self.path, 'r') as source:
                 def ignore(s):
