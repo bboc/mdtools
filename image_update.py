@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-update image references in multimarkdown files (and preserve deckset formatting).
+Update image references in multimarkdown files (and preserve deckset formatting).
+
+TODO: refactor so the tool adds error markup and variants inline {++![](variant1)++}} and {-- --} around original
+
 """
 
 from __future__ import print_function
