@@ -52,18 +52,23 @@ class BasicImageUpdateTests(unittest.TestCase):
         args = parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit', '--keep'])
         update_images_cmd(args)
 
-        # compare test results with correct files
-        correct_results = make_path('testcases', 'full-test', 'results', 'document_one.txt')
-        self.compare_results(correct_results,
+        correct_results_document_one = make_path('testcases', 'full-test', 'results', 'document_one.txt')
+        # test document_one
+        self.compare_results(correct_results_document_one,
                              os.path.join(self.document_root, 'documents', 'document_one.txt'))
-        # this file is just a copy in a subfolder, we can compare to the same result file
-        self.compare_results(correct_results,
-                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
-
-        # TODO: check backup files to original files
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_one.txt'),
                              os.path.join(self.document_root, 'documents', 'document_one.txt.backup'))
+        
+        # document 2 is just a copy of document one in a subfolder
+        self.compare_results(correct_results_document_one,
+                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
+        
+        # this file is unchanged
+        self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_three.md'),
+                             os.path.join(self.document_root, 'documents', 'document_three.md'))
+        self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_three.md'),
+                             os.path.join(self.document_root, 'documents',  'document_three.md.backup'))
 
 
