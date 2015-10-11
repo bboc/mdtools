@@ -55,13 +55,13 @@ class BasicImageUpdateTests(unittest.TestCase):
         correct_results_document_one = make_path('testcases', 'full-test', 'results', 'document_one.txt')
         # test document_one
         self.compare_results(correct_results_document_one,
-                             os.path.join(self.document_root, 'documents', 'document_one.txt'))
+                             os.path.join(self.document_root, 'documents', 'document_one.txt.review'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_one.txt'),
                              os.path.join(self.document_root, 'documents', 'document_one.txt.backup'))
         
         # document 2 is just a copy of document one in a subfolder
         self.compare_results(correct_results_document_one,
-                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
+                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.review'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
         

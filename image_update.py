@@ -159,6 +159,7 @@ class Document(VerbosityControlled):
         self.verbosity = verbosity
         self.commit  = commit
         self.keep_backup = keep_backup
+        self.document_has_errors = False
 
 
     def process(self):
@@ -171,6 +172,8 @@ class Document(VerbosityControlled):
                     self.parse_file(source, target.write)
             if not self.keep_backup:
                 os.unlink.source_path
+            if self.document_has_errors:
+                shutil.move(self.path, self.path +'.review')
         else: 
             with file(self.path, 'r') as source:
                 def ignore(s):
@@ -197,11 +200,13 @@ class Document(VerbosityControlled):
                 writer(result)
 
             except ImageRepo.ImageNotFoundException, e:
+                self.document_has_errors = True
                 print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--image reference not found:<<}\n')
                 writer(line)
                 
             except ImageRepo.DuplicateImageException, e:
+                self.document_has_errors = True
                 print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--ambiguous image reference:<<}\n')
                 for idx, variant in enumerate(e[1]):
