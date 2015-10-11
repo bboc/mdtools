@@ -174,16 +174,16 @@ class Document(VerbosityControlled):
                 with file(target_path, 'w+') as target:
                     self.parse_file(source, target.write)
 
-            if self.document_has_errors:                                
-                # keep original and move prefix target with '--''
+            if self.keep_backup:
+                shutil.move(original, self.path + '.backup')
+            else: 
+                os.unlink(original)
 
+            if self.document_has_errors:                                                
+                # keep prefix target with '--''
                 shutil.move(target_path, os.path.join(os.path.dirname(self.path),
                                                       '--' + os.path.basename(self.path)))
             else:
-                if self.keep_backup:                
-                    shutil.move(original, self.path + '.backup')
-                else: 
-                    os.unlink(original)
                 shutil.move(target_path, self.path)
         else: 
             with file(self.path, 'r') as source:

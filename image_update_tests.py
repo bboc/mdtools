@@ -24,10 +24,10 @@ class BasicImageUpdateTests(unittest.TestCase):
         self.maxDiff = None
         self.document_root = tempfile.mkdtemp()
         self.image_root = data_dir()
-
-        print(self.document_root)
-        # TODO: remove temp folder
-        # self.addCleanup(shutil.rmtree, self.document_root)
+        self.addCleanup(shutil.rmtree, self.document_root)
+        self.parser = get_parser()        
+        # suppress error out
+        Document.ERROR_OUT = sys.stdout
 
     def compare_results(self, result_file, correct_file):
         """Compare the actual result with the correct result."""
@@ -40,33 +40,48 @@ class BasicImageUpdateTests(unittest.TestCase):
     def compare_files(self, a,b):
         self.assertTrue(filecmp.cmp(a, b, shallow=False))
 
-    def test_one(self):
-
-        # suppress error out
-        Document.ERROR_OUT = sys.stdout
-
-        # copy testcase full-test to tempfolder
-        shutil.copytree(make_path('testcases', 'full-test', 'documents'), 
+    def create_fixture(self, *args):
+        """Copy testcase to tempfolder."""
+        shutil.copytree(make_path('testcases', *args), 
                         os.path.join(self.document_root, 'documents')) 
-        parser = get_parser()
-        args = parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit', '--keep'])
-        update_images_cmd(args)
 
-        # test document_one
+    def _validate_tc1_documents(self):
         self.compare_results(make_path('testcases', 'full-test', 'results', 'document_one.txt'),
                              os.path.join(self.document_root, 'documents', '--document_one.txt'))
-        self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_one.txt'),
-                             os.path.join(self.document_root, 'documents', 'document_one.txt'))
-        
-        # document 2 has a backup file
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_one.txt')))   
         self.compare_results(make_path('testcases', 'full-test', 'results', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
-        self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
-                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
-        
-        # this file is unchanged
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_three.md'),
                              os.path.join(self.document_root, 'documents', 'document_three.md'))
+
+    def test_update_images_with_commit(self):
+        self.create_fixture('full-test', 'documents')
+        args = self.parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit'])
+        update_images_cmd(args)
+
+        # make sure document contens are valid
+        self._validate_tc1_documents()
+
+        # make sure backups don't exist
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_one.txt.backup')))    
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup')))
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents',  'document_three.md.backup')))
+
+
+    def test_update_images_with_commit_and_keep_backups(self):
+
+        self.create_fixture('full-test', 'documents')
+        args = self.parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit', '--keep'])
+        update_images_cmd(args)
+
+        # make sure document contens are valid
+        self._validate_tc1_documents()
+
+        # test for backup files
+        self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_one.txt'),
+                             os.path.join(self.document_root, 'documents', 'document_one.txt.backup'))    
+        self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
+                             os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_three.md'),
                              os.path.join(self.document_root, 'documents',  'document_three.md.backup'))
 
