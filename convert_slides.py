@@ -105,6 +105,9 @@ SLIDE_END = """
 </section>
 """
 
+REVEAL_IMG_TEMPLATE = '![]({0}'
+
+
 def convert_to_reveal_cmd(args):
     print 'converting to reveal.js'
 
@@ -127,7 +130,7 @@ def convert_to_reveal_cmd(args):
                 elif line.lstrip().startswith("!["):
                     # fix image
                     pos = l.find('(')
-                    lw.write(IMG_TEMPLATE.format(l[pos+1:]))
+                    lw.write(REVEAL_IMG_TEMPLATE.format(l[pos+1:]))
                 else:
                     lw.write(line)
             lw.write(SLIDE_END)
