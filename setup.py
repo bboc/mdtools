@@ -7,7 +7,7 @@ setup(
 
     entry_points = {
         'console_scripts': [
-            'mdtools = mdtools:main',
+            'mdimg = mdimg:main',
         ],
     }
 
