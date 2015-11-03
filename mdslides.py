@@ -31,23 +31,13 @@ def get_parser():
 
     to_web.set_defaults(func=convert_to_web_cmd)
 
-    # # sub command: run
-    # update_img = subparsers.add_parser('update-images', 
-    #                             parents=[parent], 
-    #                             help='update all files, list ambiguous and missing image references.')
-    # update_img.add_argument('document_root',  type=dir_type,
-    #                     help='root folder for documents to update')
-    # update_img.add_argument('--commit', '-c', action='store_true', 
-    #                     help='commit result to file')
-    # update_img.add_argument('--keep-backup', '-k', action='store_true', 
-    #                     help='keep backup of original file')
-    # update_img.set_defaults(func=update_images_cmd)
-
-    # list_broken_images = subparsers.add_parser('list-broken-images', 
-    #                      parents=[parent], 
-    #                      help='parse all files, print ambiguous and missing image references.')
-    # list_broken_images.set_defaults(func=list_broken_images_cmd)
-
+    # sub command: convert to reveal.js
+    to_reveal = subparsers.add_parser('to-reveal', 
+                                      parents=[parent], 
+                                      help='Convert to reveal.js slidedeck.')
+    to_reveal.add_argument('source', type=argparse.FileType('r'))
+    to_reveal.set_defaults(func=convert_to_reveal_cmd)
+    
     return parser
 
 def main():

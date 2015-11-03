@@ -104,5 +104,6 @@ def increase_headline_level(line):
     return line
 
 def convert_to_reveal_cmd(args):
-    pass
+    print 'converting to reveal.js'
+
 
