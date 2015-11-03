@@ -18,9 +18,7 @@ def get_parser():
     parent = argparse.ArgumentParser(add_help=False)
     parent.add_argument('--verbose', '-v', action='count', default=0,
                         help='increase level of verbosity (repeat up to 3 times)')
-    # parent.add_argument('--image-root', '-i', type=dir_type, required=True,
-    #                     help='root folder for new images files')
-
+    
     subparsers = parser.add_subparsers(help='command help',
                                        title='valid sub commands')
 
@@ -28,7 +26,7 @@ def get_parser():
     to_web = subparsers.add_parser('to-web',
                                    parents=[parent], 
                                    help='convert contents of slides/ to web/')
-
+    to_web.add_argument('footer', type=argparse.FileType('r'))
     to_web.set_defaults(func=convert_to_web_cmd)
 
     # sub command: convert to reveal.js

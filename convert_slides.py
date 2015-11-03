@@ -14,12 +14,6 @@ import os
 import os.path
 
 
-footer = """
----
-
-© 2015 by Bernhard Bockelbrink and James Priest
-"""
-
 STATUS_TEMPLATE = """
 =========================================
 conversion finished
@@ -31,7 +25,6 @@ img_template = '![](/static-images/{0}'
 
 # TODO: make output of filename optional
 # TODO: create line writer object with prev_line_empty 
-
 
 class LineWriter(object):
     def __init__(self, target, newlines):
@@ -56,10 +49,10 @@ class LineWriter(object):
 
 def convert_to_web_cmd(args):
     print "starting conversion"
-    convert_to_web(os.path.join(os.getcwd(), 'slides'), os.path.join(os.getcwd(), 'web'))
+    convert_to_web(os.path.join(os.getcwd(), 'slides'), os.path.join(os.getcwd(), 'web'), args.footer)
 
 
-def convert_to_web(slides_dir, target_dir, slides_filename_pattern='*.md'):
+def convert_to_web(slides_dir, target_dir, footer, slides_filename_pattern='*.md'):
     num_processed = 0 
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
@@ -90,10 +83,9 @@ def convert_to_web(slides_dir, target_dir, slides_filename_pattern='*.md'):
                         lw.write(img_template.format(l[pos+1:]))
                     else:
                         lw.write(line)
-
-                target.write(footer)
-                        
-
+                if footer:
+                    target.write(footer)
+    
     print STATUS_TEMPLATE.format(num_processed)
 
 
@@ -103,7 +95,7 @@ def increase_headline_level(line):
         line = line + '#'
     return line
 
+
 def convert_to_reveal_cmd(args):
     print 'converting to reveal.js'
-
 
