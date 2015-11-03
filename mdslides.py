@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import argparse
 
 from convert_slides import convert_to_web_cmd, convert_to_reveal_cmd
+
 
 def dir_type(dirname):
     # type for argparse
@@ -33,16 +36,21 @@ def get_parser():
     to_reveal = subparsers.add_parser('to-reveal', 
                                       parents=[parent], 
                                       help='Convert to reveal.js slidedeck.')
-    to_reveal.add_argument('source', type=argparse.FileType('r'))
+    to_reveal.add_argument('source',
+                           help='source file')
+    to_reveal.add_argument('target',
+                           help='target file')
     to_reveal.set_defaults(func=convert_to_reveal_cmd)
     
     return parser
+
 
 def main():
     parser = get_parser()
 
     args = parser.parse_args()
     args.func(args)
+
 
 if __name__ == '__main__':
     main()

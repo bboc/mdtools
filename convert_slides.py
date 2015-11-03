@@ -21,7 +21,7 @@ conversion finished
 files processed: {0}
 """
 
-img_template = '![](/static-images/{0}'
+IMG_TEMPLATE = '![](/static-images/{0}'
 
 # TODO: make output of filename optional
 # TODO: create line writer object with prev_line_empty 
@@ -80,7 +80,7 @@ def convert_to_web(slides_dir, target_dir, footer, slides_filename_pattern='*.md
                     elif line.lstrip().startswith("!["):
                         # fix image
                         pos = l.find('(')
-                        lw.write(img_template.format(l[pos+1:]))
+                        lw.write(IMG_TEMPLATE.format(l[pos+1:]))
                     else:
                         lw.write(line)
                 if footer:
@@ -95,7 +95,41 @@ def increase_headline_level(line):
         line = line + '#'
     return line
 
+SLIDE_START = """
+<section data-markdown>
+    <script type="text/template">
+"""
+
+SLIDE_END = """    
+    </script>
+</section>
+"""
 
 def convert_to_reveal_cmd(args):
     print 'converting to reveal.js'
+
+    with codecs.open(args.source, 'r', 'utf-8') as source:
+        with codecs.open(args.target, 'w', 'utf-8') as target:
+
+            lw = LineWriter(target, source.newlines)
+            lw.write(SLIDE_START)
+            for line in source:
+                l = line.strip()    
+                if not l:
+                    lw.mark_empty_line()
+                elif l == '---':
+                    lw.write(SLIDE_END)
+                    lw.write(SLIDE_START)
+                    # omit line, do not change empty line marker!
+                    pass 
+                elif l.startswith('#'):
+                    lw.write(increase_headline_level(l))
+                elif line.lstrip().startswith("!["):
+                    # fix image
+                    pos = l.find('(')
+                    lw.write(IMG_TEMPLATE.format(l[pos+1:]))
+                else:
+                    lw.write(line)
+            lw.write(SLIDE_END)
+
 
