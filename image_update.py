@@ -9,7 +9,7 @@ TODO: refactor so the tool adds error markup and variants inline {++![](variant1
 
 from __future__ import print_function
 
-import argparse
+
 import os
 import os.path
 import re
@@ -46,8 +46,10 @@ def update_images_cmd(args):
     p.list()
     p.run()
 
+
 def list_broken_images_cmd(args):
     print('not implemented yet')
+
 
 def filter_dirs(dirs):
     for item in dirs:
@@ -230,58 +232,4 @@ class Document(VerbosityControlled):
                 writer(line)
 
 
-def dir_type(dirname):
-    # type for argparse
-    if os.path.isdir(dirname):
-        return os.path.normpath(dirname)
-    raise argparse.ArgumentTypeError('%s is not a valid directory' % dirname)
-
-
-def get_parser():
-    parser = argparse.ArgumentParser(
-        description='update images referenced in source markdown files (.md, .mmd, .txt) to new paths.')
-
-    parent = argparse.ArgumentParser(add_help=False)
-    parent.add_argument('--verbose', '-v', action='count', default=0,
-                        help='increase level of verbosity (repeat up to 3 times)')
-    parent.add_argument('--image-root', '-i', type=dir_type,
-                        help='root folder for new images files')
-
-    subparsers = parser.add_subparsers(help='command help',
-                                       title='valid sub commands')
-
-    # sub command: check-images
-    check_images = subparsers.add_parser('check-images',
-                                         parents=[parent], 
-                                         help='list all image paths and check for ambiguous names')
-
-    check_images.set_defaults(func=check_images_cmd)
-
-    # sub command: run
-    update_img = subparsers.add_parser('update-images', 
-                                parents=[parent], 
-                                help='update all files, list ambiguous and missing image references.')
-    update_img.add_argument('document_root',  type=dir_type,
-                        help='root folder for documents to update')
-    update_img.add_argument('--commit', '-c', action='store_true', 
-                        help='commit result to file')
-    update_img.add_argument('--keep-backup', '-k', action='store_true', 
-                        help='keep backup of original file')
-    update_img.set_defaults(func=update_images_cmd)
-
-    list_broken_images = subparsers.add_parser('list-broken-images', 
-                         parents=[parent], 
-                         help='parse all files, print ambiguous and missing image references.')
-    list_broken_images.set_defaults(func=list_broken_images_cmd)
-
-    return parser
-
-def main():
-    parser = get_parser()
-
-    args = parser.parse_args()
-    args.func(args)
-
-if __name__ == '__main__':
-    main()
 
