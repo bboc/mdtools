@@ -8,6 +8,7 @@ setup(
     entry_points = {
         'console_scripts': [
             'mdimg = mdimg:main',
+            'mdslides = mdslides:main',
         ],
     }
 
