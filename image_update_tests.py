@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import filecmp
-from image_update import update_images_cmd, get_parser, Document
+from image_update import update_images_cmd, Document
+from mdimg import get_parser
 import os
 import shutil
 import sys

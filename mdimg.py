@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 
 from image_update import check_images_cmd, update_images_cmd, list_broken_images_cmd
 
