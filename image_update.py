@@ -46,6 +46,17 @@ def update_images_cmd(args):
     p.list()
     p.run()
 
+    if args.verbose:
+        image_usage_report(image_repo)
+
+def image_usage_report(image_repo):
+    print('-'*19)
+    print('--- Images Used ---')
+    print('-'*19)
+    def _count(x): return x[1]
+    for (img, count) in sorted(image_repo.imagecount.items(), key=_count):
+        print(img, count)
+
 
 def list_broken_images_cmd(args):
     print('not implemented yet')
@@ -70,6 +81,7 @@ class ImageRepo(VerbosityControlled):
         self.root = root
         self.verbosity = verbosity
         self.images = defaultdict(list)
+        self.imagecount = defaultdict(int)
         self._build_repo_structure()
 
 
@@ -99,6 +111,7 @@ class ImageRepo(VerbosityControlled):
                     image_ref = os.path.join(path_prefix, image)
                     self.vprint(LEVEL_1, image_ref)
                     self.images[image].append(image_ref)
+                    self.imagecount[image] = 0
     
     def check_duplicates(self):
         """Check repo for duplicate image names."""
@@ -120,6 +133,9 @@ class ImageRepo(VerbosityControlled):
         else:
             raise self.ImageNotFoundException(old_image_path, image_name)
 
+    def count_usage(self, image_path):
+        dummy, image_name = os.path.split(image_path)
+        self.imagecount[image_name] += 1
 
 class DocumentProcessor(VerbosityControlled):
 
@@ -200,6 +216,7 @@ class Document(VerbosityControlled):
     def parse_file(self, source, writer):
         def _update_image_ref(m):
             image_path = m.group(2)
+            self.image_repo.count_usage(image_path)
             return m.group(1) + self.image_repo.translate_path(image_path) + m.group(3)
 
         line_number = 0
