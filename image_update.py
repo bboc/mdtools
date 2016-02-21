@@ -47,15 +47,9 @@ def update_images_cmd(args):
     p.run()
 
     if args.verbose:
-        image_usage_report(image_repo)
+        image_repo.report_usage()
 
-def image_usage_report(image_repo):
-    print('-'*19)
-    print('--- Images Used ---')
-    print('-'*19)
-    def _count(x): return x[1]
-    for (img, count) in sorted(image_repo.imagecount.items(), key=_count):
-        print(img, count)
+    image_repo.report_missing_images()
 
 
 def list_broken_images_cmd(args):
@@ -82,6 +76,8 @@ class ImageRepo(VerbosityControlled):
         self.verbosity = verbosity
         self.images = defaultdict(list)
         self.imagecount = defaultdict(int)
+        self.missingcount = defaultdict(int)
+
         self._build_repo_structure()
 
 
@@ -131,11 +127,35 @@ class ImageRepo(VerbosityControlled):
             else:
                  raise self.DuplicateImageException(old_image_path, self.images[image_name])
         else:
+            self.count_missing(old_image_path)
             raise self.ImageNotFoundException(old_image_path, image_name)
 
     def count_usage(self, image_path):
         dummy, image_name = os.path.split(image_path)
         self.imagecount[image_name] += 1
+
+    def report_usage(self):
+        print('-'*19)
+        print('--- Images Used ---')
+        print('-'*19)
+        def _count(x): return x[1]
+        for (img, count) in sorted(self.imagecount.items(), key=_count):
+            print(img, count)        
+
+    def count_missing(self, image_path):
+        self.missingcount[image_path] += 1
+
+    def report_missing_images(self):
+        if len(self.missingcount):
+            print('-'*22)
+            print('--- Missing Images ---')
+            print('-'*22)
+            def _count(x): return x[1]
+            for image_path in sorted(self.missingcount.keys()):
+                print(image_path, self.missingcount[image_path])        
+        else:
+            print("--all images were replaced, no images missing--")
+
 
 class DocumentProcessor(VerbosityControlled):
 
