@@ -46,7 +46,7 @@ def parse_line(line):
     if line.endswith(LE_NL):
         line_ending = LE_NL
         content = content[:-1]
-    elif line.endswith(LE_CRND):
+    elif line.endswith(LE_CRNL):
         line_ending = LE_CRNL
         content = content[:-2]
     else: 
