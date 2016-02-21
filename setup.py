@@ -9,6 +9,7 @@ setup(
         'console_scripts': [
             'mdimg = mdimg:main',
             'mdslides = mdslides:main',
+            'mddiff = diff:main',
         ],
     }
 
