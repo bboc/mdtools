@@ -2,13 +2,17 @@
 Command line interface to difflib.py which wraps ndiff output in Critic Markup syntax.
 """
 
-import sys, os, time, difflib, optparse
+import sys
+import os
+import time
+import difflib
+import optparse
 
 
-DELETED = '- ' # line unique to sequence 1
+DELETED = '- '  # line unique to sequence 1
 ADDED = '+ '   # line unique to sequence 2
 COMMON = '  '  # line common to both sequences
-NEITHER = '? ' # line not present in either input sequence
+NEITHER = '? '  # line not present in either input sequence
 
 CM_ADD = '{++%s++}%s'
 CM_DEL = '{--%s--}%s'
@@ -18,12 +22,20 @@ PLAIN = '%s%s'
 LE_NL = '\n'
 LE_CRNL = '\r\n'
 
+
 def critic_markup(lines):
     "wrap lines of ndiff output in critic markup"
     while True:
         line = next(lines)
-        template, content, line_ending = parse_line(line)
-        yield template % (content, line_ending)
+        try:
+            template, content, line_ending = parse_line(line)
+            yield template % (content, line_ending)
+        except IntralineDifferences:
+            pass  # suppress intraline difference markers
+
+
+class IntralineDifferences(Exception):
+    pass
 
 
 def parse_line(line):
@@ -35,8 +47,7 @@ def parse_line(line):
         template = CM_DEL
         content = line[2:]
     elif line.startswith(NEITHER):
-        template = CM_HI
-        content = line[2:]
+        raise IntralineDifferences()
     elif line.startswith(COMMON):
         template = PLAIN
         content = line[2:]
@@ -49,7 +60,7 @@ def parse_line(line):
     elif line.endswith(LE_CRNL):
         line_ending = LE_CRNL
         content = content[:-2]
-    else: 
+    else:
         line_ending = ''
 
     return template, content, line_ending
@@ -67,7 +78,7 @@ def main():
     if len(args) != 2:
         parser.error("need to specify both a fromfile and tofile")
 
-    fromfile, tofile = args # as specified in the usage string
+    fromfile, tofile = args  # as specified in the usage string
 
     # we're passing these as arguments to the diff function
     fromdate = time.ctime(os.stat(fromfile).st_mtime)
@@ -81,5 +92,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-    
