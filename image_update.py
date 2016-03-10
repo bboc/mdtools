@@ -140,7 +140,10 @@ class ImageRepo(VerbosityControlled):
         print('-'*19)
         def _count(x): return x[1]
         for (img, count) in sorted(self.imagecount.items(), key=_count):
-            print(img, count)        
+            try:
+                print(self.images[img][0], count)        
+            except IndexError:
+                print(img, count)        
 
     def count_missing(self, image_path):
         self.missingcount[image_path] += 1
