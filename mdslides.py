@@ -28,8 +28,13 @@ def get_parser():
     # ub command: to-web
     to_web = subparsers.add_parser('to-web',
                                    parents=[parent], 
-                                   help='convert contents of slides/ to web/')
-    to_web.add_argument('footer', type=argparse.FileType('r'))
+                                   help='convert [arg1] to [arg2] or contents of folder --from=... to folder --to=... rcontents of slides/ to web/')
+    to_web.add_argument('--footer', type=argparse.FileType('r'),
+                        help='include contents of file as a footer in output')
+    to_web.add_argument('source',
+                        help='source file or folder')
+    to_web.add_argument('target', 
+                        help='target file (if source is file) or folder (if source is folder')
     to_web.set_defaults(func=convert_to_web_cmd)
 
     # sub command: convert to reveal.js
