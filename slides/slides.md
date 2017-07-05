@@ -1,8 +1,8 @@
 # mdslides
 
-A set of tools to build slide decks from reositories of Markdown files for use in Deckset and reveal.js.
+A set of tools to build slide decks from reositories of Markdown files for use in [Deckset](https://www.decksetapp.com/) and [reveal.js](http://lab.hakim.se/reveal-js/#/).
 
-A presentation is created from several groups that consist of one or more sections. Each section is a file that contains one or more slides separated by `---`):
+A presentation is created from several groups that consist of one or more sections. Each section is a file that contains one or more slides separated by `---`:
 
 - `title.md` - Contains at least the title slide
 - `introduction/*` (optional) 
@@ -43,7 +43,7 @@ A YAML file describes the order of chapters, and what sections will be included 
         - this has one section
 
 
-The resository for "S3 - All Patterns explained" serves as an example for the [file structure](https://github.com/S3-working-group/s3-all-patterns-explained/tree/master/src), the [config file](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/s3-all-patterns-explained.yaml) and a [build script](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/build-slides.sh) for building reveal.js, wordpress and Decset versions.
+The resository for "S3 - All Patterns explained" serves as an example for the [file structure](https://github.com/S3-working-group/s3-all-patterns-explained/tree/master/src), the [config file](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/s3-all-patterns-explained.yaml) and a [build script](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/build-slides.sh) for building reveal.js, wordpress and Deckset versions.
 
 Each chapter, as well as the optional groups introduction and closing may contain an section `index.md` as a preamble,  which is automatically included. This section is not included in the numbering of the chapte's sections. 
 
