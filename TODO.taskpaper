@@ -1,1 +1,25 @@
+mdslides:
+    - later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml @estimate(1h)
+    - class names and code layout can be improved @estimate(30min)
+    - add support for right aligned images
+    add a set of simple tests: @estimate(1h)
+      - one test with introducion and closing and numbering of sections in chapters
+      - another one  without all three
+      - test skeleton
+      - test compile
+      - test build:
+        - Deckset
+        - reveal.js
+        - Wordpress
+      - include: 
+        - speaker notes
+        - background images
+        - floating images
+        - inline images
+  Style/Theming:
+    see https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md
+    - paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
+    - some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
+mdimg:
+   - add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png)
 
