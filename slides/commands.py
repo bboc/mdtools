@@ -55,7 +55,7 @@ def add_parser_skeleton(subparsers):
 def main():
     # setup argparse
     parser = argparse.ArgumentParser(
-        description='Tools for s3 slide decks with all patterns')
+        description='Tools for creating and converting Markdown slide decks with Deckset and reveal.js')
     parser.add_argument('--verbose', '-v', action='count')
     subparsers = parser.add_subparsers()
     add_parser_build(subparsers)

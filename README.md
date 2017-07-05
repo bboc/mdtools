@@ -2,17 +2,19 @@
 
 commandline scripts for processing (multi-)markdown files
 
-## Image Update 
-
-Update image references in MultiMarkdown files (while preserving Deckset formatting).
-
-Usage: see `mdimg -h`
 
 ## mdslides
 
-Convert deckset slides into slides for reveal.js
+A powerful set of tools to build slide decks from reositories of Markdown files for use in Deckset, reveal.js adn wordpress. This helps with reuse of slides and evolution of large decks, e.g. [Sociocracy 3.0 - All Patterns Explained](http://sociocracy30.org/slides/s3-all-patterns-explained.html).
 
-Usage: see `mdslides-h`
+See [the mdslides documentation](slides/slides.md) for more information.
+
+## Image Update 
+
+Update image references in MultiMarkdown files (while preserving Deckset formatting). This is helpful when maintining a large set of illustrations used in a large number of markdown file, because it allows for changing the folder structure of the illustrations without having to worry about updating all the references.
+
+Usage: see `mdimg -h`
+
 
 ## mddiff
 
@@ -23,12 +25,5 @@ Usage: see `mddiff -h`
 ## Upcoming
 
 * file transclusion for Multimarkdown files (with error output for missing files)
-* preparing standalone Markdown files for usage in Wordpress.
-
-## Resources
-
-[MultMarkdown User's Guide](https://fletcher.github.io/MultiMarkdown-4/)
-
-[Section on Metadata](https://fletcher.github.io/MultiMarkdown-4/metadata.html)
 
 
