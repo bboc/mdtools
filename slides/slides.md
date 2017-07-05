@@ -17,10 +17,10 @@ Slide decks are created and manipulated through four commands
 
 * `mdslides compile <config> <source> <destination> [options] ` compiles Markdown sections into one file per group. These files may then be then processed by other commands.
 * `mdslides build deckset|revealjs|wordpress <config> <source> <destination> --template=<template>` builds deckset or reveal.js presentations, or formats the slides for use with Wordpress (with the Jetpack plugin)
+* `mdslides convert <source> <target> --template=<template>` converts one deckset file to reveal.js (horizontal sections)
+* `mdslides skeleton <config> <target>` can build the folder structure with markdown files from a config file so you do not have to set this up for yourself. If you run this over an existing folders, only files not existing will be created.
 
-
-
-A YAML file describes the order of chapters, and what sections will be included in what chapter. The file contains optional entries for introduction and closing slides, as well as a special section where the order of the chapter is defined.
+A YAML file describes the order of chapters, and what sections will be included in what chapter. The file contains optional entries for introduction and closing slides, as well as a special section `chapter_order` where the order of the chapter is defined.
 
 
     introduction:
