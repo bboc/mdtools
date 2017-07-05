@@ -24,6 +24,6 @@ Usage: see `mddiff -h`
 
 ## Upcoming
 
-* file transclusion for Multimarkdown files (with error output for missing files)
+* file transclusion for Multimarkdown files (with error output for missing files) (currently located in [this repository]())
 
 

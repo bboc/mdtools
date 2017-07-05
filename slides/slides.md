@@ -12,7 +12,7 @@ A presentation is created from several groups that consist of one or more sectio
 
 Groups are irrelevant for Deckstet, but each group becomes its own column in reveal.js.
 
-Slide decks are created and manipulated through four commands
+Slide decks are created and manipulated through four commands:
 
 
 * `mdslides compile <config> <source> <destination> [options] ` compiles Markdown sections into one file per group. These files may then be then processed by other commands.
@@ -42,6 +42,8 @@ A YAML file describes the order of chapters, and what sections will be included 
       a third chapter:
         - this has one section
 
+
+The resository for "S3 - All Patterns explained" serves as an example for the [file structure](https://github.com/S3-working-group/s3-all-patterns-explained/tree/master/src), the [config file](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/s3-all-patterns-explained.yaml) and a [build script](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/build-slides.sh) for building reveal.js, wordpress and Decset versions.
 
 Each chapter, as well as the optional groups introduction and closing may contain an section `index.md` as a preamble,  which is automatically included. This section is not included in the numbering of the chapte's sections. 
 
