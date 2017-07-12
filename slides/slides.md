@@ -1,6 +1,6 @@
 # mdslides
 
-A set of tools to build slide decks from reositories of Markdown files for use in [Deckset](https://www.decksetapp.com/) and [reveal.js](http://lab.hakim.se/reveal-js/#/).
+A set of tools to build slide decks from repositories of Markdown files for use in [Deckset](https://www.decksetapp.com/) and [reveal.js](http://lab.hakim.se/reveal-js/#/).
 
 A presentation is created from several groups that consist of one or more sections. Each section is a file that contains one or more slides separated by `---`:
 
@@ -16,8 +16,8 @@ Slide decks are created and manipulated through four commands:
 
 
 * `mdslides compile <config> <source> <destination> [options] ` compiles Markdown sections into one file per group. These files may then be then processed by other commands.
-* `mdslides build deckset|revealjs|wordpress <config> <source> <destination> --template=<template>` builds deckset or reveal.js presentations, or formats the slides for use with Wordpress (with the Jetpack plugin)
-* `mdslides convert <source> <target> --template=<template>` converts one deckset file to reveal.js (horizontal sections)
+* `mdslides build deckset|revealjs|wordpress <config> <source> <destination> --template=<template>` builds Deckset or reveal.js presentations, or formats the slides for use with Wordpress (with the Jetpack plugin)
+* `mdslides convert <source> <target> --template=<template>` converts one Deckset file to reveal.js (horizontal sections)
 * `mdslides skeleton <config> <target>` can build the folder structure with markdown files from a config file so you do not have to set this up for yourself. If you run this over an existing folders, only files not existing will be created.
 
 A YAML file describes the order of chapters, and what sections will be included in what chapter. The file contains optional entries for introduction and closing slides, as well as a special section `chapter_order` where the order of the chapter is defined.
@@ -43,10 +43,10 @@ A YAML file describes the order of chapters, and what sections will be included 
         - this has one section
 
 
-The resository for "S3 - All Patterns explained" serves as an example for the [file structure](https://github.com/S3-working-group/s3-all-patterns-explained/tree/master/src), the [config file](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/s3-all-patterns-explained.yaml) and a [build script](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/build-slides.sh) for building reveal.js, wordpress and Deckset versions.
+The repository for "S3 - All Patterns explained" serves as an example for the [file structure](https://github.com/S3-working-group/s3-all-patterns-explained/tree/master/src), the [config file](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/s3-all-patterns-explained.yaml) and a [build script](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/build-slides.sh) for building reveal.js, wordpress and Deckset versions.
 
-Each chapter, as well as the optional groups introduction and closing may contain an section `index.md` as a preamble,  which is automatically included. This section is not included in the numbering of the chapte's sections. 
+Each chapter, as well as the optional groups introduction and closing may contain an section `index.md` as a preamble,  which is automatically included. This section is not included in the numbering of the chapter's sections. 
 
-Title slides as text or image (or both) can be generated for each chapter with commandline options.
+Title slides as text or image (or both) can be generated for each chapter with command line options.
 
 Between introduction and chapters a set of illustrations for each chapter can be added (used for showing all patterns in groups in "S3- All Patterns Explained", probably less useful in other slide decks.)
