@@ -4,16 +4,15 @@ A set of tools to build slide decks from repositories of Markdown files for use 
 
 A presentation is created from several groups that consist of one or more sections. Each section is a file that contains one or more slides separated by `---`:
 
-- `title.md` - Contains at least the title slide
+- `title.md` - Contains at least the title slide, file name can be overridden in yaml
 - `introduction/*` (optional) 
 - `chapters/<chapter name>/*` the main body of the slide deck. Chapters and sections within chapters can be numbered automatically, and may contain special image slides at the beginning of each chapter.
 - `closing/*` (optional)
-- `end.md` - contains at least one closing slide
+- `end.md` - contains at least one closing slide, file name can be overridden in yaml
 
-Groups are irrelevant for Deckstet, but each group becomes its own column in reveal.js.
+Groups are irrelevant for Deckset, but each group becomes its own column in reveal.js.
 
 Slide decks are created and manipulated through four commands:
-
 
 * `mdslides compile <config> <source> <destination> [options] ` compiles Markdown sections into one file per group. These files may then be then processed by other commands.
 * `mdslides build deckset|revealjs|wordpress <config> <source> <destination> --template=<template>` builds Deckset or reveal.js presentations, or formats the slides for use with Wordpress (with the Jetpack plugin)
@@ -22,7 +21,7 @@ Slide decks are created and manipulated through four commands:
 
 A YAML file describes the order of chapters, and what sections will be included in what chapter. The file contains optional entries for introduction and closing slides, as well as a special section `chapter_order` where the order of the chapter is defined.
 
-
+    title: deck_title    
     introduction:
       - one section 
       - another section
@@ -41,6 +40,8 @@ A YAML file describes the order of chapters, and what sections will be included 
         - just one section here
       a third chapter:
         - this has one section
+    
+      end: end_slides
 
 
 The repository for "S3 - All Patterns explained" serves as an example for the [file structure](https://github.com/S3-working-group/s3-all-patterns-explained/tree/master/src), the [config file](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/s3-all-patterns-explained.yaml) and a [build script](https://github.com/S3-working-group/s3-all-patterns-explained/blob/master/build-slides.sh) for building reveal.js, wordpress and Deckset versions.
