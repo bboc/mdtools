@@ -11,8 +11,9 @@ import unittest
 
 
 def data_dir():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-                        'test-data')    
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'test-data')
+
 
 def make_path(*args):
     return os.path.join(data_dir(), *args)
@@ -26,7 +27,7 @@ class BasicImageUpdateTests(unittest.TestCase):
         self.document_root = tempfile.mkdtemp()
         self.image_root = data_dir()
         self.addCleanup(shutil.rmtree, self.document_root)
-        self.parser = get_parser()        
+        self.parser = get_parser()
         # suppress error out
         Document.ERROR_OUT = sys.stdout
 
@@ -38,18 +39,18 @@ class BasicImageUpdateTests(unittest.TestCase):
                 r = result.readlines()
                 self.assertEqual(c, r)
 
-    def compare_files(self, a,b):
+    def compare_files(self, a, b):
         self.assertTrue(filecmp.cmp(a, b, shallow=False))
 
     def create_fixture(self, *args):
         """Copy testcase to tempfolder."""
-        shutil.copytree(make_path('testcases', *args), 
-                        os.path.join(self.document_root, 'documents')) 
+        shutil.copytree(make_path('testcases', *args),
+                        os.path.join(self.document_root, 'documents'))
 
     def _validate_tc1_documents(self):
         self.compare_results(make_path('testcases', 'full-test', 'results', 'document_one.txt'),
                              os.path.join(self.document_root, 'documents', '--document_one.txt'))
-        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_one.txt')))   
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_one.txt')))
         self.compare_results(make_path('testcases', 'full-test', 'results', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_three.md'),
@@ -64,10 +65,9 @@ class BasicImageUpdateTests(unittest.TestCase):
         self._validate_tc1_documents()
 
         # make sure backups don't exist
-        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_one.txt.backup')))    
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_one.txt.backup')))
         self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup')))
-        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents',  'document_three.md.backup')))
-
+        self.assertFalse(os.path.exists(os.path.join(self.document_root, 'documents', 'document_three.md.backup')))
 
     def test_update_images_with_commit_and_keep_backups(self):
 
@@ -80,10 +80,8 @@ class BasicImageUpdateTests(unittest.TestCase):
 
         # test for backup files
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_one.txt'),
-                             os.path.join(self.document_root, 'documents', 'document_one.txt.backup'))    
+                             os.path.join(self.document_root, 'documents', 'document_one.txt.backup'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'subfolder', 'document_two.mmd'),
                              os.path.join(self.document_root, 'documents', 'subfolder', 'document_two.mmd.backup'))
         self.compare_results(make_path('testcases', 'full-test', 'documents', 'document_three.md'),
-                             os.path.join(self.document_root, 'documents',  'document_three.md.backup'))
-
-
+                             os.path.join(self.document_root, 'documents', 'document_three.md.backup'))

@@ -80,7 +80,7 @@ def convert_file_for_web(source_path, result_path, footer, increase_headline_lev
         with codecs.open(result_path, 'w', 'utf-8') as target:
             lw = LineWriter(target, source.newlines)
             for line in source:
-                l = line.strip()   
+                l = line.strip()
                 if not l:
                     lw.mark_empty_line()
                 elif l == '---':
