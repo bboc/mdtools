@@ -55,14 +55,14 @@ class RevealJSBuilder(object):
         # title
         self._append_section('title.md')
         # introduction
-        if self.config.has_key('introduction'):
+        if 'introduction' in self.config:
             self._append_section('introduction.md')
         # chapters
         for chapter in self.config['chapter_order']:
-            self._append_section( '%s.md' % make_pathname(chapter))
-        
-        # closing 
-        if self.config.has_key('closing'):
+            self._append_section('%s.md' % make_pathname(chapter))
+
+        # closing
+        if 'closing' in self.config:
             self._append_section('closing.md')
         # end
         self._append_section('end.md')
@@ -78,5 +78,3 @@ class RevealJSBuilder(object):
         c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename))
         c.write(self.target)
         self._end_section()
-
-

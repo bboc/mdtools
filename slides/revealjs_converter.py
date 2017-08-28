@@ -14,7 +14,7 @@ class RevealJSMarkdownConverter(object):
     """
     Convert Deckset Markdown to Reveal.js Markdown slides.
 
-    Untested. Has known issues with image placement and other things. 
+    Untested. Has known issues with image placement and other things.
     Might still be helpful sometime because the new converter can only output HTML.
     """
     SLIDE_START = """
@@ -62,13 +62,13 @@ class RevealJSMarkdownConverter(object):
 
 
 class RevealJsHtmlConverter(object):
-    
+
     def __init__(self, source_path):
 
         self.source_path = source_path
 
     def write(self, target):
-        #target.write('<section>')
+        # target.write('<section>')
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
             while True:
                 slide = Slide()
@@ -78,7 +78,7 @@ class RevealJsHtmlConverter(object):
                     break
                 finally:
                     slide.render(target)
-        #target.write('</section>')
+        # target.write('</section>')
 
 
 class Slide(object):

@@ -4,6 +4,7 @@ import os
 import yaml
 import markdown
 
+
 def make_pathname(name):
     return name.lower().replace(" ", '-')
 
@@ -18,8 +19,8 @@ def create_directory(directory):
 
 
 def read_config(filename):
-	stream = open(filename, "r")
-	return yaml.load(stream)
+    stream = open(filename, "r")
+    return yaml.load(stream)
 
 
 def increase_headline_level(line):
@@ -30,7 +31,7 @@ def increase_headline_level(line):
 
 
 def markdown2html(text):
-    return markdown.markdown(text,['markdown.extensions.extra', 'markdown.extensions.meta'])
+    return markdown.markdown(text, ['markdown.extensions.extra', 'markdown.extensions.meta'])
 
 
 class LineWriter(object):

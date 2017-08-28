@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 
 import argparse
-import os
-import shutil
-import re
-import os.path
-import sys
 
 from build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
 
@@ -17,9 +12,9 @@ def add_parser_compile(subparsers):
     sp.add_argument('source', help='Directory with source files.')
     sp.add_argument('target', help='Target folder.')
     sp.add_argument('--chapter-title', default='none',
-        help='What kind of title slide to add to each chapter: text, img, both, none (default)')
+                    help='What kind of title slide to add to each chapter: text, img, both, none (default)')
     sp.add_argument('--add-chapter-illustration', action='store_true',
-        help='add chapter overview')
+                    help='add chapter overview')
     sp.set_defaults(func=cmd_compile_slides)
 
 
@@ -42,7 +37,7 @@ def add_parser_convert(subparsers):
     sp.add_argument('target', help='Target file (for reveal.js and deckset) or folder (for wordpress).')
     sp.add_argument('template', help='The template to use')
     sp.set_defaults(func=cmd_convert_slides)
-    
+
 
 def add_parser_skeleton(subparsers):
     sp = subparsers.add_parser('skeleton',

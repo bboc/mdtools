@@ -30,7 +30,7 @@ def cmd_build_slides(args):
     elif args.format == 'deckset':
         build_deckset_slides(args)
     elif args.format == 'wordpress':
-        build_wordpress(args)    
+        build_wordpress(args)
     else:
         print("unknown format", args.format)
         sys.exit(1)
@@ -58,7 +58,7 @@ def build_deckset_slides(args):
 
 def build_reveal_slides(args):
     """
-    Build reveal.js presentation. <target> is a file inside the reveal.js folder, 
+    Build reveal.js presentation. <target> is a file inside the reveal.js folder,
     template.html is expected in the same folder.
     """
     cw = RevealJSBuilder(args.config, args.source)
@@ -97,11 +97,11 @@ def cmd_create_source_files_for_slides(args):
                 print "skipped %s" % title_root
 
     make_file(args.target, 'title', 'title')
-    if config.has_key('introduction'):
+    if 'introduction' in config:
         make_group('introduction', config['introduction'])
     for chapter in config['chapters'].keys():
         make_group(chapter, config['chapters'][chapter])
-    if config.has_key('closing'):
+    if 'closing' in config:
         make_group('closing', config['closing'])
     make_file(args.target, 'end', 'end')
 
@@ -117,11 +117,11 @@ class SectionCompiler():
 
     Chapters can optionally be prefixed with a title slide, an image slide, or both."""
 
-    # TODO: add those as defaults, and read from config    
+    # TODO: add those as defaults, and read from config
     CHAPTER_NUMBER = ' Pattern %s.%s:'
-    
+
     GROUP_INDEX_FILENAME = 'index.md'
-    CHAPTER_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'    
+    CHAPTER_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
     CHAPTER_TITLE_IMAGE = '\n![inline,fit](img/pattern-group-headers/header-group-%s.png)\n\n'
 
     def __init__(self, args):
@@ -140,7 +140,6 @@ class SectionCompiler():
             self.INSERT_CHAPTER_TEXT_TITLE_SLIDE = True
         self.config = read_config(self.args.config)
 
-
     def compile_content(self):
         """Compile one all source files relevant for building the slide deck:
             - title
@@ -149,14 +148,14 @@ class SectionCompiler():
             - closing
             - end
             into the temp folder."""
-        
+
         if not os.path.exists(self.target_folder):
             os.makedirs(self.target_folder)
 
         # title
         self._copy_file('title.md')
-        # intro 
-        if self.config.has_key('introduction'):
+        # intro
+        if 'introduction' in self.config:
             self._compile_section_group(self.config['introduction'], 'introduction')
 
             # insert illustrations for all chapters between intro and chapters
@@ -169,7 +168,7 @@ class SectionCompiler():
         for i, chapter in enumerate(self.config['chapter_order']):
                 self._compile_section_group(self.config['chapters'][chapter], chapter, i + 1)
         # closing
-        if self.config.has_key('closing'):
+        if 'closing' in self.config:
             self._compile_section_group(self.config['closing'], 'closing')
         # end
         self._copy_file('end.md')
@@ -180,6 +179,7 @@ class SectionCompiler():
     def _compile_section_group(self, group, group_name, chapter_index=None):
         """Compile intros, chapters and closing."""
         folder = os.path.join(self.source, make_pathname(group_name))
+
         def is_chapter():
             return chapter_index
 
@@ -205,7 +205,7 @@ class SectionCompiler():
             for section_index, section in enumerate(group):
                 if is_chapter():
                     number = self.CHAPTER_NUMBER % (chapter_index, section_index + 1)
-                else: 
+                else:
                     number = None
                 self._append_section(folder, '%s.md' % make_pathname(section), number)
                 if section_index + 1 < len(group):

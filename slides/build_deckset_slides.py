@@ -8,7 +8,7 @@ import codecs
 
 import os
 
-from common import make_pathname, make_title, read_config
+from common import make_pathname, read_config
 
 
 class DecksetWriter(object):
@@ -24,17 +24,16 @@ class DecksetWriter(object):
     def build(self):
         with codecs.open(self.args.target, 'w+', 'utf-8') as self.target:
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
-
                 self._copy_template_header()
                 self._append_section('title.md')
-                if self.config.has_key('introduction'):
+                if 'introduction' in self.config:
                     self._append_section('introduction.md')
 
                 # add all the groups
                 for i, chapter in enumerate(self.config['chapter_order']):
                     self._append_section('%s.md' % make_pathname(chapter))
 
-                if self.config.has_key('closing'):
+                if 'closing' in self.config:
                     self._append_section('closing.md')
                 self._append_section('end.md', skip_section_break=True)
 
