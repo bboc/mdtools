@@ -1,20 +1,20 @@
 This image did not move:
-![inline, fit](img/image-did-not-move.png)
+![inline, fit](img/ba/image-did-not-move.png)
 
 This image has moved:
-![](img/moved/this-image-has-moved.JPEG)
+![](img/ba/moved/this-image-has-moved.JPEG)
 
 This image reference is ambiguous in the new file system:
 {>>ERROR--ambiguous image reference:<<}
 {>>variant 0:<<}
-![inline, fit](img/image.gif)
+![inline, fit](img/ba/image.gif)
 {>>variant 1:<<}
-![inline, fit](img/duplicate/image.gif)
+![inline, fit](img/ba/duplicate/image.gif)
 {>>original reference:<<}
-![inline, fit](img/old-path/image.gif)
+![inline, fit](img/ba/old-path/image.gif)
 
 These image references can not be found in the new file system:
 {>>ERROR--image reference not found:<<}
-![some random text](img/this-image-does-not-exist.jpg)
+![some random text](img/ba/this-image-does-not-exist.jpg)
 {>>ERROR--image reference not found:<<}
-![](img/missing-images/another-missing-image.jpg)
+![](img/ba/missing-images/another-missing-image.jpg)

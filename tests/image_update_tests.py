@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+"""
+Tests for mdimg, language specific.
+
+Test case structure
+
+img/ba contains the actual tests, with duplicate files, and files that are moved.
+img/fo contains a couple of images which are also in img/ba, but they are referenced correctly
+
+also there's needs to be an additional test that makes probes the image memory for languages 'fo' and 'ba'.
+
+In addition to that, images in the root must also be processed correctly, or responded to with an error! 
+"""
 
 import filecmp
 from mdimg.image_update import update_images_cmd, Document
