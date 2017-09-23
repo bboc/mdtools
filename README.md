@@ -11,7 +11,7 @@ See [the mdslides documentation](slides/slides.md) for more information.
 
 ## Image Update 
 
-Update image references in MultiMarkdown files (while preserving Deckset formatting). This is helpful when maintaining a large set of illustrations used in a large number of markdown file, because it allows for changing the folder structure of the illustrations without having to worry about updating all the references.
+Update image references in MultiMarkdown files (while preserving Deckset formatting). This is helpful when maintaining a large set of illustrations used in a large number of markdown file, because it allows for changing the folder structure of the illustrations without having to worry about updating all the references. 
 
 Usage: see `mdimg -h`
 
@@ -25,5 +25,3 @@ Usage: see `mddiff -h`
 ## Upcoming
 
 * file transclusion for Multimarkdown files (with error output for missing files) (currently located in [this repository]())
-
-
