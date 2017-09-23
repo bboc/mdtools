@@ -18,3 +18,6 @@ These image references can not be found in the new file system:
 ![some random text](img/ba/this-image-does-not-exist.jpg)
 {>>ERROR--image reference not found:<<}
 ![](img/ba/missing-images/another-missing-image.jpg)
+
+This image in this inline image [![](img/ba/moved/this-image-has-moved.JPEG)](http://foobar.invalid) which is also a link has moved.
+

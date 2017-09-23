@@ -10,3 +10,6 @@ This image reference is ambiguous in the new file system:
 These image references can not be found in the new file system:
 ![some random text](img/ba/this-image-does-not-exist.jpg)
 ![](img/ba/missing-images/another-missing-image.jpg)
+
+This image in this inline image [![](img/ba/this-image-has-moved.JPEG)](http://foobar.invalid) which is also a link has moved.
+

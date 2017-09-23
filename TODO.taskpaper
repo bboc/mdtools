@@ -1,25 +1,47 @@
 mdslides:
-    - later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml @estimate(1h)
-    - class names and code layout can be improved @estimate(30min)
-    - add support for right aligned images
-    add a set of simple tests: @estimate(1h)
-      - one test with introducion and closing and numbering of sections in chapters
-      - another one  without all three
-      - test skeleton
-      - test compile
-      - test build:
-        - Deckset
-        - reveal.js
-        - Wordpress
-      - include: 
-        - speaker notes
-        - background images
-        - floating images
-        - inline images
-  Style/Theming:
-    see https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md
-    - paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
-    - some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
+		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml @estimate(1h)
+		- class names and code layout can be improved @estimate(30min)
+		- add support for right aligned images
+		add a set of simple tests: @estimate(1h)
+			- one test with introducion and closing and numbering of sections in chapters
+			- another one  without all three
+			- test skeleton
+			- test compile
+			- test build:
+				- Deckset
+				- reveal.js
+				- Wordpress
+			- include: 
+				- speaker notes
+				- background images
+				- floating images
+				- inline images
+	Style/Theming:
+		see https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md
+		- paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
+		- some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
 mdimg:
-   - add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png)
+	- add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png) @done(2017-09-23)
+	- (optional) parse non-language assets?
+	Multi-language Support:
+		- document structure in readme or help
+			Image repositories structure:
+				Assumption: documents may reference images from all languages
+				there needs to be a common root for for images "img", which is symlinked into each folder that makes use of the images. Otherwise folders become messy quite soon. 
+				- Maybe that root folder can be called something else to cater for something else? If the code is clever, the root folder's name is not important, and image references will be translated accordingly. Then we could also use mdimg to rename the root folder form "img" to, say, "assets"
+				/img/
+					/de/...
+					/en/…
+				/slides/
+					/de/…
+					/en/…
+	TODO:
+		- build new image repo @done(2017-09-23)
+		- resolve the problem that we need to put the folder outside the image root as an argument! @done(2017-09-23)
+		- extract root folder @done(2017-09-23)
+		- parse each language folder @done(2017-09-23)
+		- probe the image repo for presence of all images @done(2017-09-23)
+		- should duplication exception also be raised when image path is unchanged? probably not... @done(2017-09-23)
+		- TEST: [![foobar](…)](target)!! image links!! @done(2017-09-23)
+		
 
