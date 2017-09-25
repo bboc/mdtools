@@ -9,7 +9,7 @@ TODO: refactor so the tool adds error markup and variants inline {++![](variant1
 
 from __future__ import print_function
 
-
+import logging
 import os
 import os.path
 import re
@@ -17,7 +17,7 @@ import shutil
 import sys
 
 
-from common import VerbosityControlled, filter_dirs, DOCUMENT_TYPES, LEVEL_0, LEVEL_2, LEVEL_3
+from common import filter_dirs, DOCUMENT_TYPES
 from image_repo import ImageRepo
 
 
@@ -27,14 +27,13 @@ from image_repo import ImageRepo
 
 def check_images_cmd(args):
     """List images and check for duplicate names."""
-    image_repo = ImageRepo(args.image_root, args.verbose + 1)
+    image_repo = ImageRepo(args.image_root)
     image_repo.check_duplicates()
 
 
 def update_images_cmd(args):
-    print("verbosity", args.verbose)
     print('building image repository...')
-    image_repo = ImageRepo(args.image_root, args.verbose)
+    image_repo = ImageRepo(args.image_root)
 
     image_repo.check_duplicates()
     print('processing documents...')
@@ -42,8 +41,7 @@ def update_images_cmd(args):
     p.list()
     p.run()
 
-    if args.verbose:
-        image_repo.report_usage()
+    image_repo.report_usage()
 
     image_repo.report_missing_images()
 
@@ -52,12 +50,11 @@ def list_broken_images_cmd(args):
     print('not implemented yet')
 
 
-class DocumentProcessor(VerbosityControlled):
+class DocumentProcessor(object):
 
     def __init__(self, image_repo, args):
         self.image_repo = image_repo
         self.root = args.document_root
-        self.verbosity = args.verbose
         self.commit = args.commit
         self.keep_backup = args.keep_backup
 
@@ -75,30 +72,29 @@ class DocumentProcessor(VerbosityControlled):
     def list(self):
         """List all documents."""
         for doc in self.documents:
-            self.vprint(LEVEL_2, doc)
+            logging.info(doc)
 
     def run(self):
         """Process all documents."""
 
         for doc in self.documents:
-            d = Document(doc, self.image_repo, self.verbosity, self.commit, self.keep_backup)
+            d = Document(doc, self.image_repo, self.commit, self.keep_backup)
             d.process()
 
 
-class Document(VerbosityControlled):
+class Document(object):
 
     ERROR_OUT = sys.stderr
 
-    def __init__(self, path, image_repo, verbosity, commit, keep_backup):
+    def __init__(self, path, image_repo, commit, keep_backup):
         self.path = path
         self.image_repo = image_repo
-        self.verbosity = verbosity
         self.commit = commit
         self.keep_backup = keep_backup
         self.document_has_errors = False
 
     def process(self):
-        self.vprint(LEVEL_0, "processing file", self.path, '...')
+        print("processing file", self.path, '...')
 
         if self.commit:
             target_path = self.path + '.updated'
@@ -141,8 +137,8 @@ class Document(VerbosityControlled):
             try:
                 result = re.sub(r"(.*?\!\[.*?\]\()(.*?)(\).*)", _update_image_ref, line)
                 if line != result:
-                    self.vprint(LEVEL_3, '::', line.strip())
-                    self.vprint(LEVEL_3, '>>', result.strip())
+                    logging.debug(':: %s' % line.strip())
+                    logging.debug('>> %s' % result.strip())
                 writer(result)
 
             except ImageRepo.ImageNotFoundException, e:

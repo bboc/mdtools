@@ -21,7 +21,7 @@ mdslides:
 		- paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
 		- some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
 mdimg:
-	- add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png) @done(2017-09-23)
+	✔ add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png) @done (17-09-25 23:05)
 	- (optional) parse non-language assets?
 	Multi-language Support:
 		- document structure in readme or help

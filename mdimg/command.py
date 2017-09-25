@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import logging
 import os
 
 from image_update import check_images_cmd, update_images_cmd, list_broken_images_cmd
@@ -18,8 +19,12 @@ def get_parser():
         description='update images referenced in source markdown files (.md, .mmd, .txt) to new paths.')
 
     parent = argparse.ArgumentParser(add_help=False)
-    parent.add_argument('--verbose', '-v', action='count', default=0,
-                        help='increase level of verbosity (repeat up to 3 times)')
+    parent.add_argument('-d', '--debug', help="print debug output",
+                        action="store_const", dest="loglevel", const=logging.DEBUG,
+                        default=logging.WARNING)
+    parent.add_argument('-v', '--verbose', help="more detailed output",
+                        action="store_const", dest="loglevel", const=logging.INFO)
+
     parent.add_argument('--image-root', '-i', type=dir_type, required=True,
                         help='root folder for new images files')
 
@@ -55,6 +60,6 @@ def get_parser():
 
 def main():
     parser = get_parser()
-
     args = parser.parse_args()
+    logging.basicConfig(format='%(message)s', level=args.loglevel)
     args.func(args)

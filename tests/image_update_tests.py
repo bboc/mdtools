@@ -109,7 +109,7 @@ class ImageRepositoryTests(ImageTestBase):
     def setup_image_repo(self):
         self.create_fixture('full-test', 'documents')
         args = self.parser.parse_args(['update-images', self.document_root, '-i', self.image_root])
-        return ImageRepo(args.image_root, args.verbose)
+        return ImageRepo(args.image_root)
 
     def test_probe_image_repository(self):
         """

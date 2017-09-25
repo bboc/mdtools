@@ -2,25 +2,24 @@
 
 from __future__ import print_function
 
-
+import logging
 import os
 import os.path
 from collections import defaultdict
 from textwrap import dedent
 
-from common import VerbosityControlled, LEVEL_1, LEVEL_2, IMAGE_TYPES
+from common import IMAGE_TYPES
 
 from common import filter_dirs
 
 
-class ImageRepo(VerbosityControlled):
+class ImageRepo(object):
 
-    def __init__(self, root, verbosity):
+    def __init__(self, root):
         """
         root: path to the folder that contains the images
         """
         self.root = os.path.abspath(root)
-        self.verbosity = verbosity
         self.relative_root = os.path.split(root)[1]
         self.languages = []
 
@@ -59,12 +58,12 @@ class ImageRepo(VerbosityControlled):
             for root, dirs, files in os.walk(lang_root):
                 dirs = filter_dirs(dirs)
                 path_prefix = root[len(self.root) + 1:]
-                self.vprint(LEVEL_2, '...processing', path_prefix)
+                logging.debug('...processing %s' % path_prefix)
                 for image in files:
                     _name, ext = os.path.splitext(image)
                     if ext.lower() in IMAGE_TYPES:
                         image_ref = os.path.join(path_prefix, image)
-                        self.vprint(LEVEL_1, image_ref)
+                        logging.debug(image_ref)
                         self.images[language][image].append(os.path.join(self.relative_root, image_ref))
                         self.usage_counter[language][image] = 0
 
@@ -72,7 +71,7 @@ class ImageRepo(VerbosityControlled):
         """Check repo for duplicate image names."""
         for key in self.images.keys():
             if len(self.images[key]) > 1:
-                self.vprint(LEVEL_1, '::duplicate image name:', key, repr(self.images[key]))
+                logging.warning("::duplicate image name: '%s' - %s" % (key, repr(self.images[key])))
 
     def _get_lang_and_image(self, image_path):
         parts = []
@@ -103,18 +102,18 @@ class ImageRepo(VerbosityControlled):
         self.usage_counter[language][image_name] += 1
 
     def report_usage(self):
-        print('-' * 19)
-        print('--- Images Used ---')
-        print('-' * 19)
+        logging.info('-' * 19)
+        logging.info('--- Images Used ---')
+        logging.info('-' * 19)
 
         def _count(x):
             return x[1]
             for language in self.languages:
                 for (img, count) in sorted(self.usage_counter[language].items(), key=_count):
                     try:
-                        print(self.images[language][img][0], count)
+                        logging.info("%s (%s)" % (self.images[language][img][0], count))
                     except IndexError:
-                        print(img, count)
+                        logging.info("%s (%s)" % (img, count))
 
     def count_missing(self, image_path):
         language, image_name = self._get_lang_and_image(image_path)
