@@ -69,9 +69,13 @@ class ImageRepo(object):
 
     def check_duplicates(self):
         """Check repo for duplicate image names."""
-        for key in self.images.keys():
-            if len(self.images[key]) > 1:
-                logging.warning("::duplicate image name: '%s' - %s" % (key, repr(self.images[key])))
+        for language in self.languages:
+            logging.warning("\n---duplicates [%s]---" % language)
+            for image in sorted(self.images[language].keys()):
+                if len(self.images[language][image]) > 1:
+                    logging.warning("\n::: %s" % image)
+                    for version in self.images[language][image]:
+                        logging.warning("    %s" % version)
 
     def _get_lang_and_image(self, image_path):
         parts = []
