@@ -42,12 +42,7 @@ def update_images_cmd(args):
     p.run()
 
     image_repo.report_usage()
-
     image_repo.report_missing_images()
-
-
-def list_broken_images_cmd(args):
-    print('not implemented yet')
 
 
 class DocumentProcessor(object):
