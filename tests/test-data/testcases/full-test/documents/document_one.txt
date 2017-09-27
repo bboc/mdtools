@@ -1,12 +1,15 @@
 This image did not move:
-![inline, fit](img/image-did-not-move.png)
+![inline, fit](img/ba/image-did-not-move.png)
 
 This image has moved:
-![](img/this-image-has-moved.JPEG)
+![](img/ba/this-image-has-moved.JPEG)
 
 This image reference is ambiguous in the new file system:
-![inline, fit](img/old-path/image.gif)
+![inline, fit](img/ba/old-path/image.gif)
 
 These image references can not be found in the new file system:
-![some random text](img/this-image-does-not-exist.jpg)
-![](img/missing-images/another-missing-image.jpg)
+![some random text](img/ba/this-image-does-not-exist.jpg)
+![](img/ba/missing-images/another-missing-image.jpg)
+
+This image in this inline image [![](img/ba/this-image-has-moved.JPEG)](http://foobar.invalid) which is also a link has moved.
+

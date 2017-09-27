@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import logging
 import os
 
-from image_update import check_images_cmd, update_images_cmd, list_broken_images_cmd
+from image_update import check_images_cmd, update_images_cmd
 
 
 def dir_type(dirname):
@@ -18,8 +19,12 @@ def get_parser():
         description='update images referenced in source markdown files (.md, .mmd, .txt) to new paths.')
 
     parent = argparse.ArgumentParser(add_help=False)
-    parent.add_argument('--verbose', '-v', action='count', default=0,
-                        help='increase level of verbosity (repeat up to 3 times)')
+    parent.add_argument('-d', '--debug', help="print debug output",
+                        action="store_const", dest="loglevel", const=logging.DEBUG,
+                        default=logging.WARNING)
+    parent.add_argument('-v', '--verbose', help="more detailed output",
+                        action="store_const", dest="loglevel", const=logging.INFO)
+
     parent.add_argument('--image-root', '-i', type=dir_type, required=True,
                         help='root folder for new images files')
 
@@ -27,14 +32,14 @@ def get_parser():
                                        title='valid sub commands')
 
     # sub command: check-images
-    check_images = subparsers.add_parser('check-images',
+    check_images = subparsers.add_parser('duplicates',
                                          parents=[parent],
                                          help='list all image paths and check for ambiguous names')
 
     check_images.set_defaults(func=check_images_cmd)
 
     # sub command: run
-    update_img = subparsers.add_parser('update-images',
+    update_img = subparsers.add_parser('update',
                                        parents=[parent],
                                        help='update all files, list ambiguous and missing image references.')
     update_img.add_argument('document_root', type=dir_type,
@@ -45,16 +50,11 @@ def get_parser():
                             help='keep backup of original file')
     update_img.set_defaults(func=update_images_cmd)
 
-    list_broken_images = subparsers.add_parser('list-broken-images',
-                                               parents=[parent],
-                                               help='parse all files, print ambiguous and missing image references.')
-    list_broken_images.set_defaults(func=list_broken_images_cmd)
-
     return parser
 
 
 def main():
     parser = get_parser()
-
     args = parser.parse_args()
+    logging.basicConfig(format='%(message)s', level=args.loglevel)
     args.func(args)
