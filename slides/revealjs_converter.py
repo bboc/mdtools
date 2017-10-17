@@ -35,20 +35,20 @@ class RevealJSMarkdownConverter(object):
     def convert_to_reveal(self, source, target):
         lw = LineWriter(target, source.newlines)
         for line in source:
-            l = line.strip()
-            if not l:
+            L = line.strip()
+            if not L:
                 lw.mark_empty_line()
-            elif l == '---':
+            elif L == '---':
                 lw.write(self.SLIDE_END)
                 lw.write(self.SLIDE_START)
                 # omit line, do not change empty line marker!
                 pass
-            elif l.startswith('##'):
-                lw.write(increase_headline_level(l))
+            elif L.startswith('##'):
+                lw.write(increase_headline_level(L))
             elif line.lstrip().startswith("!["):
                 # fix image
-                m = self.IMG_PATTERN.match(l)
-                lw.write(convert_image(m.group(1), m.group(2)))
+                m = self.IMG_PATTERN.match(L)
+                lw.write(self.convert_image(m.group(1), m.group(2)))
             else:
                 lw.write(line)
 
@@ -56,7 +56,7 @@ class RevealJSMarkdownConverter(object):
         """Replace floating images with img tag, pass all others."""
         format = format.lower()
         if 'right' in format:
-            return FLOATING_IMAGE.substitute(url=img_url)
+            return self.FLOATING_IMAGE.substitute(url=img_url)
         else:
             return '![](%s)' % img_url
 
