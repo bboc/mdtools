@@ -7,7 +7,8 @@ import codecs
 import re
 from string import Template
 
-from common import LineWriter, increase_headline_level, markdown2html
+from common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
+from glossary import GLOSSARY_MARKER
 
 
 class RevealJSMarkdownConverter(object):
@@ -38,7 +39,7 @@ class RevealJSMarkdownConverter(object):
             L = line.strip()
             if not L:
                 lw.mark_empty_line()
-            elif L == '---':
+            elif L in SLIDE_MARKERS:
                 lw.write(self.SLIDE_END)
                 lw.write(self.SLIDE_START)
                 # omit line, do not change empty line marker!
@@ -64,7 +65,6 @@ class RevealJSMarkdownConverter(object):
 class RevealJsHtmlConverter(object):
 
     def __init__(self, source_path):
-
         self.source_path = source_path
 
     def write(self, target):
@@ -105,19 +105,21 @@ class Slide(object):
         """Read source until end of slide or end of file."""
         for line in source:
             self.is_empty = False
-            l = line.strip()
-            if l == '---':
-                return # slide end
-            elif l.startswith('#'):
-                headline = self.process_headline(l)
+            L = line.strip()
+            if L in SLIDE_MARKERS:
+                return  # slide end
+            elif L == GLOSSARY_MARKER:
+                raise Exception('glossary not implemented')
+            elif L.startswith('#'):
+                headline = self.process_headline(L)
                 if not self.headline:
                     self.headline = headline
                 else:
                     self.content.append(headline)
-            elif l.startswith("![") and l.endswith(')'):
-                #process image
-                self.process_image(l)
-            elif l.startswith('^'):
+            elif L.startswith("![") and L.endswith(')'):
+                # process image
+                self.process_image(L)
+            elif L.startswith('^'):
                 self.speaker_notes.append(line[1:])
             else:
                 self.content.append(line)
@@ -144,17 +146,17 @@ class Slide(object):
     def slide_start(self, target):
         if self.background_img:
             target.write("""<section data-background-image="%s">\n""" % self.background_img)
-        else: 
+        else:
             target.write("<section>\n")
 
     def slide_end(self, target):
         target.write("</section>\n\n")
-            
+
     def render(self, target):
         if self.is_empty:
             return
 
-        self.slide_start(target)  
+        self.slide_start(target)
         if self.headline:
             target.write(markdown2html(self.headline))
             target.write("\n")

@@ -51,3 +51,49 @@ Each chapter, as well as the optional groups introduction and closing may contai
 Title slides as text or image (or both) can be generated for each chapter with command line options.
 
 Between introduction and chapters a set of illustrations for each chapter can be added (used for showing all patterns in groups in "S3- All Patterns Explained", probably less useful in other slide decks.)
+
+
+## Notes about the glossary
+
+Since a glossary is ordered alphabetically, if it were kept as a text document, a translation would be ordered incorrectly. To remedy this, a glossary can be stored in a yaml file, which also can contain definitions of terms for use in the slides.
+
+The directive {{glossary:full}} will (later) insert a glossary, complete with headlines and slides markers. That way, the position of the glossary in the slide deck can easily be controlled.
+
+The glossary has the following structure
+
+  title: Glossary
+  continued: (cont.)
+  terms:
+    accountability:
+      name: name of the term
+      definition: a definition of the term to be used in the text
+      glossary: the text for the glossary entry
+      note: an (optional) note to be appended to the glossary entry.
+
+
+It's also possible to keep definitions in the glossary file, which can be replaced with the directive {{define:term}} in the build process. The benefit of this is that definitions and glossary entries need to be aligned, which is simple when they are kept next to each other in one file. 
+
+
+
+### Glossary Output
+
+for HTML-Output, we need to render definition lists as html.
+
+We can't use markdown definiton lists, because  they are not supported in reveal.js
+
+Driver
+: The dude who sits at the steering wheel
+
+
+Relevant support:
+
+-    reveal.js / GfM: **not supported**
+-    deckset: **not suported**
+-    Github Pages/kramdown (for future rendering through jekyll), see <https://kramdown.gettalong.org/syntax.html#definition-lists>
+-    wordpress/markdown extra (https://michelf.ca/projects/php-markdown/extra/#def-list)
+-    MMD: https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#definition-lists
+
+Number of glossary elements per page can be determined per output format, maybe even with a rough number of words or characters.
+
+
+

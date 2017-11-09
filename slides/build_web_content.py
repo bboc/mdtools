@@ -14,7 +14,8 @@ import os
 import os.path
 import sys
 
-from common import LineWriter
+from common import LineWriter, SLIDE_MARKERS
+from glossary import GLOSSARY_MARKER
 
 
 STATUS_TEMPLATE = """
@@ -80,24 +81,26 @@ def convert_file_for_web(source_path, result_path, footer, increase_headline_lev
         with codecs.open(result_path, 'w', 'utf-8') as target:
             lw = LineWriter(target, source.newlines)
             for line in source:
-                l = line.strip()
-                if not l:
+                L = line.strip()
+                if not L:
                     lw.mark_empty_line()
-                elif l == '---':
+                elif L == GLOSSARY_MARKER:
+                    raise Exception("Glossary not gefined!")
+                elif L in SLIDE_MARKERS:
                     # omit line, do not change empty line marker!
                     pass
-                elif l.startswith('#'):
-                    if l.endswith("(cont.)"):
+                elif L.startswith('#'):
+                    if L.endswith("(cont.)"):
                         pass  # omit slides with continued headlines
                     else:
                         if increase_headline_level:
-                            lw.write(increase_headline_level(l))
+                            lw.write(increase_headline_level(L))
                         else:
                             lw.write(line)
                 elif line.lstrip().startswith("!["):
                     # fix image
-                    pos = l.find('(')
-                    lw.write(IMG_TEMPLATE.format(l[pos + 1:]))
+                    pos = L.find('(')
+                    lw.write(IMG_TEMPLATE.format(L[pos + 1:]))
                 else:
                     lw.write(line)
             if footer:

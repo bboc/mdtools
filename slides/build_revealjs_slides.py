@@ -22,6 +22,7 @@ class RevealJsWriter(object):
         self.content_writer = content_writer
 
     def build(self):
+        print "RevealJsWriter"
         with codecs.open(self.target_path, 'w+', 'utf-8') as self.target:
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
 
@@ -65,7 +66,10 @@ class RevealJSBuilder(object):
         if 'closing' in self.config:
             self._append_section('closing')
         # end
-        self._append_section(self.config.get('end', 'end'))
+        try:
+            self._append_section(self.config.get('end', 'end'))
+        except IOError:
+            print "no end file."
 
     def _start_section(self):
         self.target.write('<section>')
