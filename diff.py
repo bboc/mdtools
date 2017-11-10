@@ -3,8 +3,6 @@ Command line interface to difflib.py which wraps ndiff output in Critic Markup s
 """
 
 import sys
-import os
-import time
 import difflib
 import optparse
 
@@ -67,7 +65,7 @@ def parse_line(line):
 
 
 def main():
-     # Configure the option parser
+    # Configure the option parser
     usage = "Output differences between two files as CriticMarkup. Output is a full file, works on full paragraphs only. \nusage: %prog [options] fromfile tofile"
     parser = optparse.OptionParser(usage)
     (options, args) = parser.parse_args()
@@ -81,14 +79,15 @@ def main():
     fromfile, tofile = args  # as specified in the usage string
 
     # we're passing these as arguments to the diff function
-    fromdate = time.ctime(os.stat(fromfile).st_mtime)
-    todate = time.ctime(os.stat(tofile).st_mtime)
+    # fromdate = time.ctime(os.stat(fromfile).st_mtime)
+    # todate = time.ctime(os.stat(tofile).st_mtime)
     fromlines = open(fromfile, 'U').readlines()
     tolines = open(tofile, 'U').readlines()
 
     diff = difflib.ndiff(fromlines, tolines)
     # diff is a generator
     sys.stdout.writelines(critic_markup(diff))
+
 
 if __name__ == '__main__':
     main()
