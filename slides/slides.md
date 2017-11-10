@@ -57,7 +57,7 @@ Between introduction and chapters a set of illustrations for each chapter can be
 
 Since a glossary is ordered alphabetically, if it were kept as a text document, a translation would be ordered incorrectly. To remedy this, a glossary can be stored in a yaml file, which also can contain definitions of terms for use in the slides.
 
-The directive {{glossary:full}} will (later) insert a glossary, complete with headlines and slides markers. That way, the position of the glossary in the slide deck can easily be controlled.
+The directive {{insert-full-glossary}} will insert a glossary, complete with headlines and slides markers. That way, the position of the glossary in the slide deck can easily be controlled.
 
 The glossary has the following structure
 
@@ -71,8 +71,9 @@ The glossary has the following structure
       note: an (optional) note to be appended to the glossary entry.
 
 
-It's also possible to keep definitions in the glossary file, which can be replaced with the directive {{define:term}} in the build process. The benefit of this is that definitions and glossary entries need to be aligned, which is simple when they are kept next to each other in one file. 
+The text of a single glossary entry can be placed anywhere in the text with the directive {{glossary:term}}.  It's also possible to keep definitions in the glossary file, which can be placed in the text with the directive {{define:term}}. The benefit of this is that definitions and glossary entries need to be aligned, which is simple when they are kept next to each other in one file. 
 
+The full glossary is rendered in the build step, as it depends on the output format, but the directives 'define' and 'glossary' are replaced in the compile step.
 
 
 ### Glossary Output
@@ -93,7 +94,7 @@ Relevant support:
 -    wordpress/markdown extra (https://michelf.ca/projects/php-markdown/extra/#def-list)
 -    MMD: https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#definition-lists
 
-Number of glossary elements per page can be determined per output format, maybe even with a rough number of words or characters.
+Number of glossary elements per page can be determined per commandline parameter `--glossary-items`, maybe later that will change to a rough nuber of words or similar, at least for some output formats.
 
 
 
