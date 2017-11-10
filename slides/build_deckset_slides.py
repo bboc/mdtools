@@ -9,7 +9,7 @@ import codecs
 import os
 
 from common import make_pathname, read_config
-from glossary import read_glossary, GLOSSARY_MARKER, DecksetGlossaryRenderer
+from glossary import GLOSSARY_MARKER, DecksetGlossaryRenderer
 
 
 class DecksetWriter(object):
@@ -21,8 +21,7 @@ class DecksetWriter(object):
         self.template_path = self.args.template
         self.source_folder = args.source
         self.config = read_config(self.args.config)
-        if self.args.glossary:
-            self.glossary = read_glossary(self.args.glossary)
+        self.glossary_renderer = DecksetGlossaryRenderer(self.args.glossary, self.args.glossary_items)
 
     def build(self):
         print "build deckset"
@@ -62,8 +61,7 @@ class DecksetWriter(object):
         with codecs.open(os.path.join(self.source_folder, name), 'r', 'utf-8') as section:
             for line in section:
                 if line.strip() == GLOSSARY_MARKER:
-                    r = DecksetGlossaryRenderer(self.glossary, self.target.write)
-                    r.render()
+                    self.glossary_renderer.render(self.target.write)
                 else:
                     self.target.write(line)
         if not skip_section_break:

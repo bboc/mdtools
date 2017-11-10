@@ -22,13 +22,15 @@ def add_parser_compile(subparsers):
 def add_parser_build(subparsers):
     sp = subparsers.add_parser('build',
                                help="Build a slide deck.")
-    sp.add_argument('format', help="presentation format, either 'deckset', 'wordpress' or 'revealjs'.")
+    sp.add_argument('format', choices=['deckset', 'wordpress', 'revealjs'],
+                    help="presentation format, either 'deckset', 'wordpress' or 'revealjs'.")
     sp.add_argument('config', help='yaml file with presentation structure')
     sp.add_argument('source', help='Directory with source files.')
     sp.add_argument('target', help='Target file (for reveal.js and deckset) or folder (for wordpress).')
     sp.add_argument('--footer', help='The footer to add to each group (wordpress output)')
     sp.add_argument('--template', help='The template to use (deckset and revealjs output)')
     sp.add_argument('--glossary', help='yaml file with glossary terms')
+    sp.add_argument('--glossary-items', type=int, default=20, help='number of glossary items per page (used for decset and revealjs)')
     sp.set_defaults(func=cmd_build_slides)
 
 

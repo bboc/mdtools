@@ -62,9 +62,7 @@ def build_reveal_slides(args):
     Build reveal.js presentation. <target> is a file inside the reveal.js folder,
     template.html is expected in the same folder.
     """
-
-    glossary = read_glossary(args.glossary)
-    cw = RevealJSBuilder(args.config, args.source, glossary)
+    cw = RevealJSBuilder(args.config, args.source, args.glossary, args.glossary_items)
     rw = RevealJsWriter(args.target, args.template, cw)
     rw.build()
 
