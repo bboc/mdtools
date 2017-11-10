@@ -3,7 +3,7 @@
 from common import read_config
 
 
-GLOSSARY_MARKER = '{{glossary:full}}'
+GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
 
 def read_glossary(filename):

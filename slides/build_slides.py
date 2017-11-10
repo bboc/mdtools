@@ -125,6 +125,7 @@ class SectionCompiler():
     CHAPTER_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
     CHAPTER_TITLE_IMAGE = '\n![inline,fit](img/pattern-group-headers/header-group-%s.png)\n\n'
     DEFINE_PATTERN = re.compile("\{\{define\:(?P<name>.*)\}\}")
+    GLOSSARY_PATTERN = re.compile("\{\{glossary\:(?P<name>.*)\}\}")
 
     def __init__(self, args):
         self.args = args
@@ -227,10 +228,16 @@ class SectionCompiler():
         add that to the first headline of the section.
         """
 
-        def glossary_replace(match):
+        def glossary_replace(match, key, pattern):
             """Get a definition of a term from the glossary."""
             name = match.group('name')
-            return "_%s_" % self.glossary['terms'][name]['definition']
+            return pattern % self.glossary['terms'][name][key]
+
+        def insert_definition(match):
+            return glossary_replace(match, 'definition', "_%s_")
+
+        def insert_glossary_term(match):
+            return glossary_replace(match, 'glossary', "%s")
 
         with codecs.open(os.path.join(folder, name), 'r', 'utf-8') as section:
             if headline_prefix:
@@ -246,5 +253,6 @@ class SectionCompiler():
             for line in section:
                 if self.glossary:
                     # replace definitions from glossary
-                    line = self.DEFINE_PATTERN.sub(glossary_replace, line)
+                    line = self.DEFINE_PATTERN.sub(insert_definition, line)
+                    line = self.GLOSSARY_PATTERN.sub(insert_glossary_term, line)
                 self.target.write(line)
