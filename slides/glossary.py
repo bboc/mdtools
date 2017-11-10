@@ -3,8 +3,6 @@
 from common import read_config
 
 
-DECKSET_TEMPLATE = "**%(name)s**: %(glossary)s\n"
-HTML_TEMPLATE = "%(name)s\n: %(glossary)s"
 GLOSSARY_MARKER = '{{glossary:full}}'
 
 
@@ -17,6 +15,7 @@ def read_glossary(filename):
 
 
 class GlossaryRenderer(object):
+    """Base class for rendering a glossary. Subclasses mostly define class variables."""
 
     def __init__(self, glossary, emitter):
         self.glossary = glossary
@@ -48,6 +47,22 @@ class GlossaryRenderer(object):
 class DecksetGlossaryRenderer(GlossaryRenderer):
 
     TEMPLATE = "**%(name)s**: %(glossary)s\n"
-    HEADER_TEMPLATE = '\n# %s %s\n\n'
+    HEADER_TEMPLATE = '\n# %s %s\n\n\n'
     PAGE_BREAK = '\n\n---\n\n'
-    ITEMS_PER_PAGE = 19
+    ITEMS_PER_PAGE = 16
+
+
+class WordpressGlossaryRenderer(GlossaryRenderer):
+
+    TEMPLATE = "**%(name)s**: %(glossary)s\n"
+    HEADER_TEMPLATE = '\n# %s %s\n\n\n'
+    PAGE_BREAK = '\n\n---\n\n'
+    ITEMS_PER_PAGE = 9999  # no section breaks needed
+
+
+class HtmlGlossaryRenderer(GlossaryRenderer):
+
+    TEMPLATE = "**%(name)s**:%(glossary)s "
+    HEADER_TEMPLATE = '\n# %s %s\n\n\n'
+    PAGE_BREAK = '\n\n</section><section>\n'
+    ITEMS_PER_PAGE = 8

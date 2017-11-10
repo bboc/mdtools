@@ -45,9 +45,10 @@ class RevealJsWriter(object):
 class RevealJSBuilder(object):
     """Convert title, intro, chapters, closing and end to HTML and write to target."""
 
-    def __init__(self, config, source):
+    def __init__(self, config, source, glossary):
         self.config = read_config(config)
         self.source_folder = source
+        self.glossary = glossary
 
     def write(self, target):
         """Called from RevealJsWriter."""
@@ -80,6 +81,6 @@ class RevealJSBuilder(object):
     def _append_section(self, filename):
         filename = '%s.md' % make_pathname(filename)
         self._start_section()
-        c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename))
+        c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename), self.glossary)
         c.write(self.target)
         self._end_section()

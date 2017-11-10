@@ -8,7 +8,7 @@ import re
 from string import Template
 
 from common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
-from glossary import GLOSSARY_MARKER
+from glossary import GLOSSARY_MARKER, HtmlGlossaryRenderer
 
 
 class RevealJSMarkdownConverter(object):
@@ -64,14 +64,15 @@ class RevealJSMarkdownConverter(object):
 
 class RevealJsHtmlConverter(object):
 
-    def __init__(self, source_path):
+    def __init__(self, source_path, glossary):
         self.source_path = source_path
+        self.glossary = glossary
 
     def write(self, target):
         # target.write('<section>')
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
             while True:
-                slide = Slide()
+                slide = Slide(self.glossary)
                 try:
                     slide.read(source)
                 except Slide.EndOfFile:
@@ -93,7 +94,8 @@ class Slide(object):
     class EndOfFile(Exception):
         pass
 
-    def __init__(self):
+    def __init__(self, glossary):
+        self.glossary = glossary
         self.headline = None
         self.background_img = None
         self.content = []
@@ -103,13 +105,17 @@ class Slide(object):
 
     def read(self, source):
         """Read source until end of slide or end of file."""
+
+        def emitter(line):
+            self.content.append(line)
         for line in source:
             self.is_empty = False
             L = line.strip()
             if L in SLIDE_MARKERS:
                 return  # slide end
             elif L == GLOSSARY_MARKER:
-                raise Exception('glossary not implemented')
+                    r = HtmlGlossaryRenderer(self.glossary, emitter)
+                    r.render()
             elif L.startswith('#'):
                 headline = self.process_headline(L)
                 if not self.headline:

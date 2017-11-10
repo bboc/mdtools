@@ -15,7 +15,7 @@ import os.path
 import sys
 
 from common import LineWriter, SLIDE_MARKERS
-from glossary import GLOSSARY_MARKER
+from glossary import GLOSSARY_MARKER, WordpressGlossaryRenderer, read_glossary
 
 
 STATUS_TEMPLATE = """
@@ -37,11 +37,12 @@ def cmd_convert_to_web(args):
     with codecs.open(args.footer, 'r', 'utf-8') as ft:
         footer = ft.read()
 
+    glossary = read_glossary(args.glossary)
     # TODO: add increase headline level as commandline option
-    convert_to_web(args.source, args.target, footer, False)
+    convert_to_web(args.source, args.target, footer, glossary, False)
 
 
-def convert_to_web(source, target, footer, increase_headline_level=False):
+def convert_to_web(source, target, footer, glossary, increase_headline_level=False):
 
     num_processed = 0
     if os.path.isfile(source):
@@ -51,7 +52,7 @@ def convert_to_web(source, target, footer, increase_headline_level=False):
         else:
             result_path = target
 
-            convert_file_for_web(source, result_path, footer)
+            convert_file_for_web(source, result_path, footer, glossary)
             num_processed += 1
 
     elif os.path.isdir(source):
@@ -69,13 +70,13 @@ def convert_to_web(source, target, footer, increase_headline_level=False):
             filename = os.path.basename(source_path)
             # print 'converting', filename
             result_path = os.path.join(target, filename)
-            convert_file_for_web(source_path, result_path, footer, increase_headline_level)
+            convert_file_for_web(source_path, result_path, footer, glossary, increase_headline_level)
             num_processed += 1
 
     # print STATUS_TEMPLATE.format(num_processed)
 
 
-def convert_file_for_web(source_path, result_path, footer, increase_headline_level):
+def convert_file_for_web(source_path, result_path, footer, glossary, increase_headline_level):
 
     with codecs.open(source_path, 'r', 'utf-8') as source:
         with codecs.open(result_path, 'w', 'utf-8') as target:
@@ -85,7 +86,8 @@ def convert_file_for_web(source_path, result_path, footer, increase_headline_lev
                 if not L:
                     lw.mark_empty_line()
                 elif L == GLOSSARY_MARKER:
-                    raise Exception("Glossary not gefined!")
+                    r = WordpressGlossaryRenderer(glossary, lw.write)
+                    r.render()
                 elif L in SLIDE_MARKERS:
                     # omit line, do not change empty line marker!
                     pass
