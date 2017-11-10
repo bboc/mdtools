@@ -8,6 +8,7 @@ import codecs
 import os
 
 from common import make_pathname, read_config
+from glossary import HtmlGlossaryRenderer
 from revealjs_converter import RevealJsHtmlConverter
 
 
@@ -22,6 +23,7 @@ class RevealJsWriter(object):
         self.content_writer = content_writer
 
     def build(self):
+        print "RevealJsWriter"
         with codecs.open(self.target_path, 'w+', 'utf-8') as self.target:
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
 
@@ -44,9 +46,10 @@ class RevealJsWriter(object):
 class RevealJSBuilder(object):
     """Convert title, intro, chapters, closing and end to HTML and write to target."""
 
-    def __init__(self, config, source):
+    def __init__(self, config, source, glossary_path, glossary_items):
         self.config = read_config(config)
         self.source_folder = source
+        self.glossary_renderer = HtmlGlossaryRenderer(glossary_path, glossary_items)
 
     def write(self, target):
         """Called from RevealJsWriter."""
@@ -65,7 +68,10 @@ class RevealJSBuilder(object):
         if 'closing' in self.config:
             self._append_section('closing')
         # end
-        self._append_section(self.config.get('end', 'end'))
+        try:
+            self._append_section(self.config.get('end', 'end'))
+        except IOError:
+            print "no end file."
 
     def _start_section(self):
         self.target.write('<section>')
@@ -76,6 +82,6 @@ class RevealJSBuilder(object):
     def _append_section(self, filename):
         filename = '%s.md' % make_pathname(filename)
         self._start_section()
-        c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename))
+        c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename), self.glossary_renderer)
         c.write(self.target)
         self._end_section()

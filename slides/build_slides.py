@@ -1,17 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Build "All Patterns Explained" slide deck (either in Deckset format or as reveal.js.
+Build a slide deck (either in Deckset format or as reveal.js.
 """
 
 from __future__ import unicode_literals
 
 import codecs
 import os
+import re
 import sys
 from shutil import copyfile
 
 from common import make_pathname, make_title, create_directory, read_config
+from glossary import read_glossary
 
 from build_deckset_slides import DecksetWriter
 from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
@@ -26,7 +28,6 @@ def cmd_build_slides(args):
 
     if args.format == 'revealjs':
         build_reveal_slides(args)
-
     elif args.format == 'deckset':
         build_deckset_slides(args)
     elif args.format == 'wordpress':
@@ -61,7 +62,7 @@ def build_reveal_slides(args):
     Build reveal.js presentation. <target> is a file inside the reveal.js folder,
     template.html is expected in the same folder.
     """
-    cw = RevealJSBuilder(args.config, args.source)
+    cw = RevealJSBuilder(args.config, args.source, args.glossary, args.glossary_items)
     rw = RevealJsWriter(args.target, args.template, cw)
     rw.build()
 
@@ -123,6 +124,8 @@ class SectionCompiler():
     GROUP_INDEX_FILENAME = 'index.md'
     CHAPTER_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
     CHAPTER_TITLE_IMAGE = '\n![inline,fit](img/pattern-group-headers/header-group-%s.png)\n\n'
+    DEFINE_PATTERN = re.compile("\{\{define\:(?P<name>.*)\}\}")
+    GLOSSARY_PATTERN = re.compile("\{\{glossary\:(?P<name>.*)\}\}")
 
     def __init__(self, args):
         self.args = args
@@ -139,6 +142,8 @@ class SectionCompiler():
             self.INSERT_CHAPTER_IMG_TITLE_SLIDE = True
             self.INSERT_CHAPTER_TEXT_TITLE_SLIDE = True
         self.config = read_config(self.args.config)
+
+        self.glossary = read_glossary(self.args.glossary)
 
     def compile_content(self):
         """Compile one all source files relevant for building the slide deck:
@@ -171,7 +176,10 @@ class SectionCompiler():
         if 'closing' in self.config:
             self._compile_section_group(self.config['closing'], 'closing')
         # end
-        self._copy_file('end.md')
+        try:
+            self._copy_file('end.md')
+        except IOError:
+            print "WARNING: missing end.md"
 
     def _copy_file(self, name):
         copyfile(os.path.join(self.source, name), os.path.join(self.target_folder, name))
@@ -219,9 +227,21 @@ class SectionCompiler():
         Append a section to self.target, if headline prefix is given,
         add that to the first headline of the section.
         """
+
+        def glossary_replace(match, key, pattern):
+            """Get a definition of a term from the glossary."""
+            name = match.group('name')
+            return pattern % self.glossary['terms'][name][key]
+
+        def insert_definition(match):
+            return glossary_replace(match, 'definition', "_%s_")
+
+        def insert_glossary_term(match):
+            return glossary_replace(match, 'glossary', "%s")
+
         with codecs.open(os.path.join(folder, name), 'r', 'utf-8') as section:
             if headline_prefix:
-                # insert patter number into first headline of file
+                # insert pattern number into first headline of file
                 line = section.next()
                 try:
                     pos = line.index('# ')
@@ -231,4 +251,8 @@ class SectionCompiler():
                 self.target.write(
                     ''.join((line[:pos + 1], headline_prefix, line[pos + 1:])))
             for line in section:
+                if self.glossary:
+                    # replace definitions from glossary
+                    line = self.DEFINE_PATTERN.sub(insert_definition, line)
+                    line = self.GLOSSARY_PATTERN.sub(insert_glossary_term, line)
                 self.target.write(line)

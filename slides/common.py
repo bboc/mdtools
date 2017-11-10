@@ -5,6 +5,9 @@ import yaml
 import markdown
 
 
+SLIDE_MARKERS = ['---', '***']
+
+
 def make_pathname(name):
     return name.lower().replace(" ", '-')
 
