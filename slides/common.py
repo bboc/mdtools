@@ -5,7 +5,7 @@ import yaml
 import markdown
 
 
-SLIDE_MARKERS = ['---', '***']
+SLIDE_MARKERS = ['---', '***', '* * *']
 
 
 def make_pathname(name):
