@@ -13,6 +13,8 @@ import sys
 from shutil import copyfile
 
 from common import make_pathname, make_title, create_directory, read_config
+from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
+
 from glossary import read_glossary
 
 from build_deckset_slides import DecksetWriter
@@ -98,21 +100,23 @@ def cmd_create_source_files_for_slides(args):
                 print "skipped %s" % title_root
 
     make_file(args.target, 'title', 'title')
-    if 'introduction' in config:
-        make_group('introduction', config['introduction'])
-    for chapter in config['chapters'].keys():
-        make_group(chapter, config['chapters'][chapter])
-    if 'closing' in config:
-        make_group('closing', config['closing'])
-    make_file(args.target, 'end', 'end')
+    if FRONT_MATTER in config:
+        make_group(FRONT_MATTER, config[FRONT_MATTER])
+    for chapter in config[CHAPTERS].keys():
+        make_group(chapter, config[CHAPTERS][chapter])
+    if APPENDIX in config:
+        make_group(APPENDIX, config[APPENDIX])
+    end = config.get(END, END)
+    if end != SKIP:
+        make_file(args.target, 'end', 'end')
 
 
 class SectionCompiler():
     """Compile all source files relevant for building the slide deck:
         - title
-        - introduction
+        - front-matter
         - all chapters
-        - closing
+        - appendix
         - end
         into the temp folder.
 
@@ -158,34 +162,33 @@ class SectionCompiler():
             os.makedirs(self.target_folder)
 
         # title
-        self._copy_file('title.md')
+        self._copy_file('%s.md' % self.config.get(TITLE, TITLE))
         # intro
-        if 'introduction' in self.config:
-            self._compile_section_group(self.config['introduction'], 'introduction')
+        if FRONT_MATTER in self.config:
+            self._compile_section_group(self.config[FRONT_MATTER], FRONT_MATTER)
 
             # insert illustrations for all chapters between intro and chapters
             if self.args.add_chapter_illustration:
-                for i, chapter in enumerate(self.config['chapter_order']):
+                for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
                     self.target.write(self.GROUP_INDEX_IMAGE % str(i + 1))
                     self._append_section_break()
 
         # chapters
-        for i, chapter in enumerate(self.config['chapter_order']):
-                self._compile_section_group(self.config['chapters'][chapter], chapter, i + 1)
+        for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
+                self._compile_section_group(self.config[CHAPTERS][chapter], chapter, i + 1)
         # closing
-        if 'closing' in self.config:
-            self._compile_section_group(self.config['closing'], 'closing')
+        if APPENDIX in self.config:
+            self._compile_section_group(self.config[APPENDIX], APPENDIX)
         # end
-        try:
-            self._copy_file('end.md')
-        except IOError:
-            print "WARNING: missing end.md"
+        end = self.config.get(END, END)
+        if end != SKIP:
+            self._copy_file('%s.md' % end)
 
     def _copy_file(self, name):
         copyfile(os.path.join(self.source, name), os.path.join(self.target_folder, name))
 
     def _compile_section_group(self, group, group_name, chapter_index=None):
-        """Compile intros, chapters and closing."""
+        """Compile front matter, chapters and appendix."""
         folder = os.path.join(self.source, make_pathname(group_name))
 
         def is_chapter():

@@ -8,6 +8,16 @@ import markdown
 SLIDE_MARKERS = ['---', '***', '* * *']
 
 
+# section names
+CHAPTER_ORDER = 'chapter-order'
+TITLE = 'title'
+FRONT_MATTER = 'introduction'
+CHAPTERS = 'chapters'
+APPENDIX = 'appendix'
+END = 'end'
+SKIP = 'SKIP'
+
+
 def make_pathname(name):
     return name.lower().replace(" ", '-')
 

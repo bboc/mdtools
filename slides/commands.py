@@ -3,6 +3,7 @@
 import argparse
 
 from build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
+from index import cmd_build_index_db, cmd_build_deckset_index
 
 
 def add_parser_compile(subparsers):
@@ -51,6 +52,22 @@ def add_parser_skeleton(subparsers):
     sp.set_defaults(func=cmd_create_source_files_for_slides)
 
 
+def add_parser_build_index_db(subparsers):
+    sp = subparsers.add_parser('build-index-db',
+                               help="Build the index db to be used for creating the index.")
+    sp.add_argument('config', help='yaml file with presentation structure')
+    sp.add_argument('index_db', help='Yaml file to hold the index db.')
+    sp.set_defaults(func=cmd_build_index_db)
+
+
+def add_parser_build_deckset_index(subparsers):
+    sp = subparsers.add_parser('deckset-index',
+                               help="Build the index db to be used for creating the index.")
+    sp.add_argument('index_db')
+    sp.add_argument('target')
+    sp.set_defaults(func=cmd_build_deckset_index)
+
+
 def main():
     # setup argparse
     parser = argparse.ArgumentParser(
@@ -61,6 +78,8 @@ def main():
     add_parser_compile(subparsers)
     add_parser_convert(subparsers)
     add_parser_skeleton(subparsers)
+    add_parser_build_index_db(subparsers)
+    add_parser_build_deckset_index(subparsers)
 
     args = parser.parse_args()
     args.func(args)

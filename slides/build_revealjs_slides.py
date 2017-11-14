@@ -8,6 +8,8 @@ import codecs
 import os
 
 from common import make_pathname, read_config
+from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, APPENDIX, END, SKIP
+
 from glossary import HtmlGlossaryRenderer
 from revealjs_converter import RevealJsHtmlConverter
 
@@ -23,7 +25,6 @@ class RevealJsWriter(object):
         self.content_writer = content_writer
 
     def build(self):
-        print "RevealJsWriter"
         with codecs.open(self.target_path, 'w+', 'utf-8') as self.target:
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
 
@@ -44,7 +45,7 @@ class RevealJsWriter(object):
 
 
 class RevealJSBuilder(object):
-    """Convert title, intro, chapters, closing and end to HTML and write to target."""
+    """Convert title, front-matter, chapters, appendix and end to HTML and write to target."""
 
     def __init__(self, config, source, glossary_path, glossary_items):
         self.config = read_config(config)
@@ -55,23 +56,16 @@ class RevealJSBuilder(object):
         """Called from RevealJsWriter."""
 
         self.target = target
-        # title
         self._append_section(self.config.get('title', 'title'))
-        # introduction
-        if 'introduction' in self.config:
-            self._append_section('introduction')
-        # chapters
-        for chapter in self.config['chapter_order']:
+        if FRONT_MATTER in self.config:
+            self._append_section(FRONT_MATTER)
+        for chapter in self.config[CHAPTER_ORDER]:
             self._append_section(chapter)
-
-        # closing
-        if 'closing' in self.config:
-            self._append_section('closing')
-        # end
-        try:
-            self._append_section(self.config.get('end', 'end'))
-        except IOError:
-            print "no end file."
+        if APPENDIX in self.config:
+            self._append_section(APPENDIX)
+        end = self.config.get(END, END)
+        if end != SKIP:
+            self._append_section(end)
 
     def _start_section(self):
         self.target.write('<section>')
