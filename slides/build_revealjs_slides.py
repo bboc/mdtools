@@ -56,7 +56,7 @@ class RevealJSBuilder(object):
         """Called from RevealJsWriter."""
 
         self.target = target
-        self._append_section(self.config.get('title', 'title'))
+        self._append_section(self.config.get(TITLE, TITLE))
         if FRONT_MATTER in self.config:
             self._append_section(FRONT_MATTER)
         for chapter in self.config[CHAPTER_ORDER]:

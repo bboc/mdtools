@@ -154,16 +154,14 @@ class SectionCompiler():
             - title
             - introduction
             - all chapters
-            - closing
+            - appendix
             - end
             into the temp folder."""
 
         if not os.path.exists(self.target_folder):
             os.makedirs(self.target_folder)
 
-        # title
         self._copy_file('%s.md' % self.config.get(TITLE, TITLE))
-        # intro
         if FRONT_MATTER in self.config:
             self._compile_section_group(self.config[FRONT_MATTER], FRONT_MATTER)
 
@@ -172,14 +170,10 @@ class SectionCompiler():
                 for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
                     self.target.write(self.GROUP_INDEX_IMAGE % str(i + 1))
                     self._append_section_break()
-
-        # chapters
         for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
                 self._compile_section_group(self.config[CHAPTERS][chapter], chapter, i + 1)
-        # closing
         if APPENDIX in self.config:
             self._compile_section_group(self.config[APPENDIX], APPENDIX)
-        # end
         end = self.config.get(END, END)
         if end != SKIP:
             self._copy_file('%s.md' % end)
