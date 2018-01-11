@@ -17,6 +17,7 @@ def add_parser_compile(subparsers):
     sp.add_argument('--add-chapter-illustration', action='store_true',
                     help='add chapter overview')
     sp.add_argument('--glossary', help='yaml file with glossary terms')
+    sp.add_argument('--chapter-prefix', type=str, default='', help='string to prefix before each chapter headline, e.g. --chapter-prefix=" Pattern %(chapter)s.%(section)s:" ')
     sp.set_defaults(func=cmd_compile_slides)
 
 
@@ -31,7 +32,7 @@ def add_parser_build(subparsers):
     sp.add_argument('--footer', help='The footer to add to each group (wordpress output)')
     sp.add_argument('--template', help='The template to use (deckset and revealjs output)')
     sp.add_argument('--glossary', help='yaml file with glossary terms')
-    sp.add_argument('--glossary-items', type=int, default=20, help='number of glossary items per page (used for decset and revealjs)')
+    sp.add_argument('--glossary-items', type=int, default=20, help='number of glossary items per page (used for deckset and revealjs)')
     sp.set_defaults(func=cmd_build_slides)
 
 

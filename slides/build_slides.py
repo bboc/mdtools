@@ -122,9 +122,6 @@ class SectionCompiler():
 
     Chapters can optionally be prefixed with a title slide, an image slide, or both."""
 
-    # TODO: add those as defaults, and read from config
-    CHAPTER_NUMBER = ' Pattern %s.%s:'
-
     GROUP_INDEX_FILENAME = 'index.md'
     CHAPTER_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
     CHAPTER_TITLE_IMAGE = '\n![inline,fit](img/pattern-group-headers/header-group-%s.png)\n\n'
@@ -208,11 +205,11 @@ class SectionCompiler():
 
             # add individual sections
             for section_index, section in enumerate(group):
-                if is_chapter():
-                    number = self.CHAPTER_NUMBER % (chapter_index, section_index + 1)
+                if is_chapter() and self.args.chapter_prefix:
+                    headline_prefix = self.args.chapter_prefix % dict(chapter=chapter_index, section=section_index + 1)
                 else:
-                    number = None
-                self._append_section(folder, '%s.md' % make_pathname(section), number)
+                    headline_prefix = None
+                self._append_section(folder, '%s.md' % make_pathname(section), headline_prefix)
                 if section_index + 1 < len(group):
                     self._slide_break()
 
