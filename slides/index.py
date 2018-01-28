@@ -3,6 +3,7 @@
 
 import yaml
 import codecs
+from operator import itemgetter
 from string import Template
 from textwrap import dedent
 
@@ -25,8 +26,8 @@ def cmd_build_index_db(args):
             patterns.append(dict(name=make_title(pattern), gid=gid, pid=pid, path=md_filename(pattern)))
 
     with codecs.open(args.index_db, 'w', 'utf-8') as target:
-        yaml.dump(dict(patterns=sorted(patterns, key=lambda x: x['name']),
-                  groups=sorted(groups, key=lambda x: x['name'])),
+        yaml.dump(dict(patterns=sorted(patterns, key=itemgetter('name')),
+                  groups=sorted(groups, key=itemgetter('name'))),
                   target,
                   default_flow_style=False)
 

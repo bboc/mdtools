@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-
+from operator import itemgetter
 from common import SLIDE_MARKERS
 
 
@@ -141,7 +141,7 @@ def insert_index(marker, items, lines):
     """
     for line in lines:
         if line.strip() == marker:
-            for item in sorted(items, key=lambda x: x['name']):
+            for item in sorted(items, key=itemgetter('name')):
                 yield "- [%(name)s](%(path)s.html)\n" % dict(name=item['name'], path=item['path'][:-3])
         else:
             yield line

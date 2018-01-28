@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from common import read_config
-
+from operator import itemgetter
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
@@ -23,7 +23,7 @@ class GlossaryRenderer(object):
 
     def iterate_elements(self):
         self.emit_header()
-        for idx, item in enumerate(sorted(self.glossary['terms'].values(), key=lambda value: value['name'])):
+        for idx, item in enumerate(sorted(self.glossary['terms'].values(), key=itemgetter('name'))):
             if not (idx + 1) % self.items_per_page:
                 self.emit_header(True)
             self.emit_entry(item)
