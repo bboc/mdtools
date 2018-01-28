@@ -3,6 +3,7 @@ mdslides:
 		- class names and code layout can be improved @estimate(30min)
 		- add support for right aligned images
 		- refactor all places that use '%.md' to use common.md_filename()
+		- recator everything to use chapter and section instead of group and pattern!
 		add a set of simple tests: @estimate(1h)
 			- one test with introducion and closing and numbering of sections in chapters
 			- another one  without all three
@@ -24,6 +25,7 @@ mdslides:
 mdimg:
 	✔ add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png) @done (17-09-25 23:05)
 	- (optional) parse non-language assets?
+	- as of now, using one language only no longer works, this needs to be remedied @priority(high)
 	Multi-language Support:
 		- document structure in readme or help
 			Image repositories structure:
