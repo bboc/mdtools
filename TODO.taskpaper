@@ -2,6 +2,7 @@ mdslides:
 		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml @estimate(1h)
 		- class names and code layout can be improved @estimate(30min)
 		- add support for right aligned images
+		- refactor all places that use '%.md' to use common.md_filename()
 		add a set of simple tests: @estimate(1h)
 			- one test with introducion and closing and numbering of sections in chapters
 			- another one  without all three

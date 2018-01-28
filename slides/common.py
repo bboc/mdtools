@@ -6,7 +6,7 @@ import markdown
 
 
 SLIDE_MARKERS = ['---', '***', '* * *']
-
+FILENAME_PATTERN = '%s.md'
 
 # section names
 CHAPTER_ORDER = 'chapter-order'
@@ -20,6 +20,10 @@ SKIP = 'SKIP'
 
 def make_pathname(name):
     return name.lower().replace(" ", '-')
+
+
+def md_filename(name):
+    return FILENAME_PATTERN % make_pathname(name)
 
 
 def make_title(name):
