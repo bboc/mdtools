@@ -59,18 +59,19 @@ def write(target, lines):
 
 def prefix_headline(prefix, lines):
     """Prefix the first headline."""
-    line = lines.next()
-    try:
-        pos = line.index('# ')
-    except ValueError:
-        raise Exception(
-            "no headline in first line (%s)" % line)
-    yield ''.join((line[:pos + 1], prefix, line[pos + 1:]))
+    if prefix:
+        line = lines.next()
+        try:
+            pos = line.index('# ')
+        except ValueError:
+            raise Exception(
+                "no headline in first line (%s)" % line)
+        yield ''.join((line[:pos + 1], prefix, line[pos + 1:]))
     for line in lines:
         yield line
 
 
-HEADLINE_PATTERN = re.compile("#{0,7}(?P<title>.*)")
+HEADLINE_PATTERN = re.compile("#{0,7} (?P<title>.*)")
 
 
 def jekyll_front_matter(lines, params=None):
@@ -80,7 +81,7 @@ def jekyll_front_matter(lines, params=None):
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
     title = match.group('title')
-    yield "title:%s\n" % title
+    yield "title: \"%s\"\n" % title
     if params:
         # insert parameters into front matter if present
         # preserve order of parameters to avoid random changes in files
@@ -131,3 +132,17 @@ def remove_breaks_and_conts(lines):
         if line.strip().endswith("(cont.)"):
             continue
         yield line
+
+
+def insert_index(marker, items, lines):
+    """
+    Insert an index as markdown-links, can be used for groups and sections.
+    Items is a list of dictionaries with keys path and name.
+    """
+    for line in lines:
+        if line.strip() == marker:
+            for item in sorted(items, key=lambda x: x['name']):
+                yield "- [%(name)s](%(path)s.html)\n" % dict(name=item['name'], path=item['path'][:-3])
+        else:
+            yield line
+

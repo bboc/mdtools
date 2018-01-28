@@ -6,7 +6,7 @@ import codecs
 from string import Template
 from textwrap import dedent
 
-from common import make_title, read_config, CHAPTERS, CHAPTER_ORDER
+from common import make_title, read_config, md_filename, CHAPTERS, CHAPTER_ORDER
 
 
 def cmd_build_index_db(args):
@@ -18,12 +18,17 @@ def cmd_build_index_db(args):
         config = yaml.load(source)
 
     patterns = []
+    groups = []
     for gid, group in enumerate(config[CHAPTER_ORDER], 1):
+        groups.append(dict(name=make_title(group), gid=gid, path=md_filename(group)))
         for pid, pattern in enumerate(config[CHAPTERS][group], 1):
-            patterns.append(dict(name=make_title(pattern), gid=gid, pid=pid))
+            patterns.append(dict(name=make_title(pattern), gid=gid, pid=pid, path=md_filename(pattern)))
 
     with codecs.open(args.index_db, 'w', 'utf-8') as target:
-        yaml.dump(dict(patterns=sorted(patterns, key=lambda x: x['name'])), target, default_flow_style=False)
+        yaml.dump(dict(patterns=sorted(patterns, key=lambda x: x['name']),
+                  groups=sorted(groups, key=lambda x: x['name'])),
+                  target,
+                  default_flow_style=False)
 
 
 def cmd_build_deckset_index(args):

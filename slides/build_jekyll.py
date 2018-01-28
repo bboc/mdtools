@@ -3,10 +3,7 @@
 """
 Compile and preprocess all files so that jekyll can build a static (github) page out of it.
 
-- copy all source files from src to docs folder
-    - create front matter with title from fist header
-    - remove all duplicate headers
-    - inject patter number
+- inject patter number
 - build an index file with all patterns
 - build an index file for each group: index content: patterns + index.md
 - build introduction and appendix with complete content?
@@ -16,12 +13,11 @@ Compile and preprocess all files so that jekyll can build a static (github) page
 import codecs
 from functools import partial
 import os
-import re
 
-from common import make_pathname, read_config, md_filename
+from common import make_pathname, read_config, md_filename, make_headline_prefix
 from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
-from markdown_processor import MarkdownProcessor, jekyll_front_matter, prefix_headline, inject_glossary, write, remove_breaks_and_conts
-from glossary import HtmlGlossaryRenderer, read_glossary
+import markdown_processor as mdp
+from glossary import JekyllGlossaryRenderer, read_glossary
 
 
 class JekyllWriter(object):
@@ -32,7 +28,7 @@ class JekyllWriter(object):
         self.source_folder = args.source
         self.target_folder = args.target
         self.config = read_config(self.args.config)
-        self.glossary_renderer = HtmlGlossaryRenderer(self.args.glossary, self.args.glossary_items)
+        self.glossary_renderer = JekyllGlossaryRenderer(self.args.glossary, 9999)
         self.glossary = read_glossary(self.args.glossary)
 
     def build(self):
@@ -41,30 +37,48 @@ class JekyllWriter(object):
         # TODO: add index file for each chapter
 
         # add all the chapters
-        for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
+        for cidx, chapter in enumerate(self.config[CHAPTER_ORDER]):
             # TODO: add group indexes
             # self._append_section(chapter)
 
-            for j, section in enumerate(self.config[CHAPTERS][chapter]):
+            for sidx, section in enumerate(self.config[CHAPTERS][chapter]):
                 source_path = os.path.join(self.source_folder, make_pathname(chapter), md_filename(section))
                 target_path = os.path.join(self.target_folder, md_filename(section))
-                # TODO: add pattern prefix
-                self._copy_file(source_path, target_path)
+                self._copy_file(source_path, target_path, make_headline_prefix(self.args, self.config, cidx + 1, sidx + 1))
 
         # TODO: add appendix (skip glossary!!)
-        # TODO: copy images (maybe in bash script?)
         # TODO: add full index
-        # TODO: add full glossary        
+        self._build_index()
+        # TODO: add full glossary
+        with codecs.open(os.path.join(self.target_folder, md_filename("glossary")), 'w+', 'utf-8') as target:
+            self.glossary_renderer.render(target.write)
 
-    def _copy_file(self, source_path, target_path):
+    def _build_index(self):
+        index = read_config(self.args.index)
+        print self.args.template
+        with codecs.open(self.args.template, 'r', 'utf-8') as source:
+            with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
+                processor = mdp.MarkdownProcessor(source, filters=[
+                    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', index['groups']),
+                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', index['patterns']),
+                    partial(mdp.write, target),
+                ])
+                processor.process()
+
+    def _build_chapter_index(self):
+        pass
+
+    def _compile_section(sef):
+        pass
+
+    def _copy_file(self, source_path, target_path, headline_prefix):
         with codecs.open(source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                # setup the processor
-                processor = MarkdownProcessor(source, filters=[
-                    remove_breaks_and_conts,
-                    # partial(prefix_headline, 'my headline prefix'),
-                    jekyll_front_matter,
-                    partial(inject_glossary, self.glossary),
-                    partial(write, target),
+                processor = mdp.MarkdownProcessor(source, filters=[
+                    mdp.remove_breaks_and_conts,
+                    # partial(mdp.prefix_headline, headline_prefix),
+                    mdp.jekyll_front_matter,
+                    partial(mdp.inject_glossary, self.glossary),
+                    partial(mdp.write, target),
                 ])
                 processor.process()

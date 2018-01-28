@@ -71,3 +71,10 @@ class HtmlGlossaryRenderer(GlossaryRenderer):
     TEMPLATE = "**%(name)s**: %(glossary)s "
     HEADER_TEMPLATE = '\n# %s %s\n\n\n'
     PAGE_BREAK = '\n\n</section><section>\n'
+
+
+class JekyllGlossaryRenderer(GlossaryRenderer):
+
+    TEMPLATE = "**%(name)s**: %(glossary)s\n\n"
+    HEADER_TEMPLATE = '---\ntitle: %s %s\n---\n\n'
+    PAGE_BREAK = ''
