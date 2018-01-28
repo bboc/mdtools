@@ -4,6 +4,16 @@ mdslides:
 		- add support for right aligned images
 		- refactor all places that use '%.md' to use common.md_filename()
 		- recator everything to use chapter and section instead of group and pattern!
+jekyll builder:
+	- add group index files that contain
+		- a list of all patterns in a group (ordered as they are in the slide deck)
+		- a name that can be translated
+		- the contents of the groups index.md, if present
+	- compile appendix and introduction into one file each
+		- compile all individual files into one
+		- skip glossary (there's a separate file for that)
+		- add link to intro and appendix to menu
+		- add a small TOC at the top of both files
 		add a set of simple tests: @estimate(1h)
 			- one test with introducion and closing and numbering of sections in chapters
 			- another one  without all three
