@@ -13,11 +13,23 @@ Compile and preprocess all files so that jekyll can build a static (github) page
 import codecs
 from functools import partial
 import os
+from textwrap import dedent
 
 from common import make_pathname, read_config, md_filename, make_headline_prefix
 from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
 import markdown_processor as mdp
 from glossary import JekyllGlossaryRenderer, read_glossary
+
+CHAPTER_INDEX = dedent("""
+---
+title: <!-- CHAPTER-NAME -->
+---
+
+<!-- CHAPTER-INTRO -->
+
+<!-- SECTION-INDEX -->
+
+""")
 
 
 class JekyllWriter(object):
@@ -35,11 +47,12 @@ class JekyllWriter(object):
 
         # TODO: add front matter
         # TODO: add index file for each chapter
+        index = read_config(self.args.index)
 
         # add all the chapters
         for cidx, chapter in enumerate(self.config[CHAPTER_ORDER]):
             # TODO: add group indexes
-            # self._append_section(chapter)
+            # self._build_chapter_index(cidx, chapter)
 
             for sidx, section in enumerate(self.config[CHAPTERS][chapter]):
                 source_path = os.path.join(self.source_folder, make_pathname(chapter), md_filename(section))
@@ -48,13 +61,12 @@ class JekyllWriter(object):
 
         # TODO: add appendix (skip glossary!!)
         # TODO: add full index
-        self._build_index()
+        self._build_index(index)
         # TODO: add full glossary
         with codecs.open(os.path.join(self.target_folder, md_filename("glossary")), 'w+', 'utf-8') as target:
             self.glossary_renderer.render(target.write)
 
-    def _build_index(self):
-        index = read_config(self.args.index)
+    def _build_index(self, index):
         print self.args.template
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
