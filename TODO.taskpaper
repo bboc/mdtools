@@ -11,11 +11,11 @@ refactoring/methaphor:
 			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
 			- all keys sould use constants
 jekyll builder MVP:
-	- add navigation trails:
-		- each pattern: next pattern in group, prev. pattern, up (group index) (later: pulldown menu of group??)
-		- first pattern in group: no back, next pattern in group
-		- last patter in group: next group instead of next pattern
-		- group: first pattern, previous group, next group
+	✔ add navigation trails: @done (18-01-29 23:45)
+		✔ each pattern: next pattern in group, prev. pattern, up (group index) (later: pulldown menu of group??) @done (18-01-29 23:45)
+		✔ first pattern in group: no back, next pattern in group @done (18-01-29 23:45)
+		✔ last patter in group: next group instead of next pattern @done (18-01-29 23:45)
+		✔ group: first pattern, previous group, next group @done (18-01-29 23:45)
 	- add hover effect over many glossary terms (see markdown_processor.glossary_tooltip())
 	- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
 	✔ copy changelog to separate file @done (18-01-29 15:27)
