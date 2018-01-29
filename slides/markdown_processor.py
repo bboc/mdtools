@@ -150,15 +150,16 @@ def remove_breaks_and_conts(lines):
 INDEX_ELEMENT = "- [%(name)s](%(path)s.html)\n"
 
 
-def insert_index(marker, items, lines):
+def insert_index(marker, items, lines, sort=False):
     """
     Insert an index as markdown-links, can be used for groups and sections.
     Items is a list of dictionaries with keys path and name.
     """
+    if sort:
+        items = sorted(items, key=itemgetter('name'))
     for line in lines:
         if line.strip() == marker:
-            for item in sorted(items, key=itemgetter('name')):
+            for item in items:
                 yield INDEX_ELEMENT % dict(name=item['name'], path=item['path'][:-3])
         else:
             yield line
-
