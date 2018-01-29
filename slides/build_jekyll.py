@@ -43,14 +43,14 @@ class JekyllWriter(object):
 
         # add all the chapters
         for chapter in self.index['groups']:
-            # self._build_chapter_index(cidx, chapter)
+            self._build_chapter_index(chapter)
             for section in self.index['patterns-by-group'][chapter['path']]:
-                source_path = os.path.join(self.source_folder, chapter['path'][:-3], section['path'])
-                target_path = os.path.join(self.target_folder, section['path'])
-                self._copy_file(source_path,
-                                target_path,
-                                make_headline_prefix(self.args, self.config, chapter['gid'], section['pid']))
+                self._copy_section(chapter['path'][:-3],
+                                   section['path'],
+                                   make_headline_prefix(self.args, self.config, chapter['gid'], section['pid']))
 
+        self._compile_front_matter()
+        self._copy_appendix()
         self._build_index()
         self._build_glossary()
 
@@ -69,13 +69,59 @@ class JekyllWriter(object):
                 ])
                 processor.process()
 
-    def _build_chapter_index(self):
-        pass
+    def _build_chapter_index(self, chapter):
+        with codecs.open(os.path.join(self.target_folder, chapter['path']), 'w+', 'utf-8') as target:
+            target.write(mdp.FRONT_MATTER_SEPARATOR)
+            target.write(mdp.FRONT_MATTER_TITLE % chapter['name'])
+            target.write(mdp.FRONT_MATTER_SEPARATOR)
+            target.write('\n')
 
-    def _compile_section(sef):
-        pass
+            # copy in chapter index
+            chapter_index_file = os.path.join(self.source_folder, chapter['path'][:-3], 'index.md')
+            if os.path.exists(chapter_index_file):
+                print chapter_index_file
+                with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
+                    cif.next()  # skip headline
+                    processor = mdp.MarkdownProcessor(cif, filters=[
+                        mdp.remove_breaks_and_conts,
+                        partial(mdp.inject_glossary, self.glossary),
+                        partial(mdp.write, target),
+                    ])
+                    processor.process()
+                target.write('\n')
 
-    def _copy_file(self, source_path, target_path, headline_prefix):
+            # build section index
+            for section in self.index['patterns-by-group'][chapter['path']]:
+                target.write(mdp.INDEX_ELEMENT % dict(name=section['name'],
+                                                      path=section['path'][:-3]))
+
+    def _compile_front_matter(self):
+        with codecs.open(os.path.join(self.target_folder, md_filename(FRONT_MATTER)), 'w+', 'utf-8') as target:
+            target.write(mdp.FRONT_MATTER_SEPARATOR)
+            target.write(mdp.FRONT_MATTER_TITLE % FRONT_MATTER.title())
+            target.write(mdp.FRONT_MATTER_SEPARATOR)
+            target.write('\n')
+            for item in self.config[FRONT_MATTER]:
+                source_path = os.path.join(self.source_folder, FRONT_MATTER, md_filename(item))
+                with codecs.open(source_path, 'r', 'utf-8') as source:
+                    processor = mdp.MarkdownProcessor(source, filters=[
+                        mdp.remove_breaks_and_conts,
+                        partial(mdp.inject_glossary, self.glossary),
+                        partial(mdp.write, target),
+                    ])
+                    processor.process()
+                target.write('\n')
+
+    def _copy_appendix(self):
+        """Copy all files in the appendix to individual files (skip glossary)."""
+        for item in self.config[APPENDIX]:
+            if item not in ['glossary', 'authors']:
+                self._copy_section(APPENDIX, md_filename(item), '')
+
+    def _copy_section(self, chapter_path, section_path, headline_prefix):
+        """Copy each section to a separate file."""
+        source_path = os.path.join(self.source_folder, chapter_path, section_path)
+        target_path = os.path.join(self.target_folder, section_path)
         with codecs.open(source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
