@@ -11,6 +11,7 @@ from textwrap import dedent
 
 from common import make_pathname, read_config, md_filename, make_headline_prefix
 from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
+from index import read_index_db
 import markdown_processor as mdp
 from glossary import JekyllGlossaryRenderer, read_glossary
 
@@ -36,31 +37,34 @@ class JekyllWriter(object):
         self.config = read_config(self.args.config)
         self.glossary_renderer = JekyllGlossaryRenderer(self.args.glossary, 9999)
         self.glossary = read_glossary(self.args.glossary)
+        self.index = read_index_db(self.args.index)
 
     def build(self):
 
-        index = read_config(self.args.index)
-
         # add all the chapters
-        for cidx, chapter in enumerate(self.config[CHAPTER_ORDER]):
+        for chapter in self.index['groups']:
             # self._build_chapter_index(cidx, chapter)
+            for section in self.index['patterns-by-group'][chapter['path']]:
+                source_path = os.path.join(self.source_folder, chapter['path'][:-3], section['path'])
+                target_path = os.path.join(self.target_folder, section['path'])
+                self._copy_file(source_path,
+                                target_path,
+                                make_headline_prefix(self.args, self.config, chapter['gid'], section['pid']))
 
-            for sidx, section in enumerate(self.config[CHAPTERS][chapter]):
-                source_path = os.path.join(self.source_folder, make_pathname(chapter), md_filename(section))
-                target_path = os.path.join(self.target_folder, md_filename(section))
-                self._copy_file(source_path, target_path, make_headline_prefix(self.args, self.config, cidx + 1, sidx + 1))
+        self._build_index()
+        self._build_glossary()
 
-        self._build_index(index)
+    def _build_glossary(self):
         with codecs.open(os.path.join(self.target_folder, md_filename("glossary")), 'w+', 'utf-8') as target:
             self.glossary_renderer.render(target.write)
 
-    def _build_index(self, index):
-        """Build site index with from template Already translation-aware."""
+    def _build_index(self):
+        """Build site index with from template. Already translation-aware."""
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', index['groups']),
-                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', index['patterns']),
+                    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.index['groups']),
+                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.index['patterns']),
                     partial(mdp.write, target),
                 ])
                 processor.process()
