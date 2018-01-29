@@ -72,16 +72,17 @@ def prefix_headline(prefix, lines):
 
 
 HEADLINE_PATTERN = re.compile("#{0,7} (?P<title>.*)")
+FRONT_MATTER_TITLE = "title: \"%s\"\n"
+FRONT_MATTER_SEPARATOR = "---\n"
 
 
 def jekyll_front_matter(lines, params=None):
-    FRONT_MATTER_SEPARATOR = "---\n"
 
     line = lines.next()
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
     title = match.group('title')
-    yield "title: \"%s\"\n" % title
+    yield FRONT_MATTER_TITLE % title
     if params:
         # insert parameters into front matter if present
         # preserve order of parameters to avoid random changes in files
