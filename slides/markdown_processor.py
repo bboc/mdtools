@@ -122,6 +122,18 @@ def inject_glossary(glossary, lines):
         yield line
 
 
+TOOLTIP_TEMPLATE = """<dfn data-info="%(glossary_term)s: %(description)s">%(match)s</dfn>"""
+
+
+def glossary_tooltip(glossary, lines):
+    for line in lines:
+        if line.startswith('#') or line.strip() in SLIDE_MARKERS:
+            continue
+        # TODO: insert replace code here
+        # Do a non-case specific match for each glossary term (ordered by length descending)
+        # if match: replace with tooltip template, then split string after </dfn> and repeat match
+
+
 def remove_breaks_and_conts(lines):
     """
     Must be applied before jekyll_front_matter(), otherwise the front matter
@@ -135,6 +147,9 @@ def remove_breaks_and_conts(lines):
         yield line
 
 
+INDEX_ELEMENT = "- [%(name)s](%(path)s.html)\n"
+
+
 def insert_index(marker, items, lines):
     """
     Insert an index as markdown-links, can be used for groups and sections.
@@ -143,7 +158,7 @@ def insert_index(marker, items, lines):
     for line in lines:
         if line.strip() == marker:
             for item in sorted(items, key=itemgetter('name')):
-                yield "- [%(name)s](%(path)s.html)\n" % dict(name=item['name'], path=item['path'][:-3])
+                yield INDEX_ELEMENT % dict(name=item['name'], path=item['path'][:-3])
         else:
             yield line
 
