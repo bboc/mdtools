@@ -47,6 +47,7 @@ class JekyllWriter(object):
     def build(self):
 
         self._build_site_index()
+        self._build_section_index()
         self._compile_front_matter()
         self._build_glossary()
         self._copy_appendix()
@@ -65,6 +66,16 @@ class JekyllWriter(object):
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
                     partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.index['groups']),
+                    partial(mdp.write, target),
+                ])
+                processor.process()
+
+    def _build_section_index(self):
+        """Build index of all sections from template. Already translation-aware."""
+        # TODO: remove hardcoded path
+        with codecs.open("docs/_templates/pattern-index.md", 'r', 'utf-8') as source:
+            with codecs.open(os.path.join(self.target_folder, md_filename("pattern-index")), 'w+', 'utf-8') as target:
+                processor = mdp.MarkdownProcessor(source, filters=[
                     partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.index['patterns'], sort=True),
                     partial(mdp.write, target),
                 ])
@@ -98,10 +109,10 @@ class JekyllWriter(object):
 
     def _compile_front_matter(self):
         with codecs.open(os.path.join(self.target_folder, md_filename(FRONT_MATTER)), 'w+', 'utf-8') as target:
-            target.write(mdp.FRONT_MATTER_SEPARATOR)
-            target.write(mdp.FRONT_MATTER_TITLE % FRONT_MATTER.title())
-            target.write(mdp.FRONT_MATTER_SEPARATOR)
-            target.write('\n')
+            with codecs.open("docs/_templates/introduction.md", 'r', 'utf-8') as template:
+                for line in template:
+                    target.write(line)
+
             for item in self.config[FRONT_MATTER]:
                 source_path = os.path.join(self.source_folder, FRONT_MATTER, md_filename(item))
                 with codecs.open(source_path, 'r', 'utf-8') as source:
@@ -112,6 +123,7 @@ class JekyllWriter(object):
                     ])
                     processor.process()
                 target.write('\n')
+            self.intro_navigation(target)
 
     def _build_glossary(self):
         with codecs.open(os.path.join(self.target_folder, md_filename("glossary")), 'w+', 'utf-8') as target:
@@ -157,15 +169,6 @@ class JekyllWriter(object):
         target.write("\n\n")
         patterns = self.index['patterns-by-group'][chapter['path']]
 
-        # prev link = prev pattern or ???
-        if section['pid'] > 1:
-            p_next = patterns[(section['pid'] - 2)]
-            nav_el(target, PREV_ELEMENT, p_next)
-            target.write(" | ")
-        # up: group index
-        group = self.index['groups-by-gid'][section['gid']]
-        nav_el(target, UP_ELEMENT, group)
-        target.write(" | ")
         # next link: next pattern, next group, or first group
         if section['pid'] == len(patterns):
             if section['gid'] == len(self.index['groups']):
@@ -175,12 +178,25 @@ class JekyllWriter(object):
         else:
             item = patterns[(section['pid'])]
         nav_el(target, NEXT_ELEMENT, item)
+        target.write("<br/>")
+        # prev link = prev pattern or ???
+        if section['pid'] > 1:
+            p_next = patterns[(section['pid'] - 2)]
+            nav_el(target, PREV_ELEMENT, p_next)
+            target.write("<br/>")
+        # up: group index
+        group = self.index['groups-by-gid'][section['gid']]
+        nav_el(target, UP_ELEMENT, group)
         target.write("\n\n")
 
     def chapter_navigation(self, target, chapter):
         """Insert prev/next."""
         target.write("\n\n")
 
+        # next link: always first pattern in group
+        item = self.index['patterns-by-group'][chapter['path']][0]
+        nav_el(target, NEXT_ELEMENT, item)
+        target.write("<br/>")
         # back:
         if chapter['gid'] > 1:
             # last pattern of previous group
@@ -190,13 +206,16 @@ class JekyllWriter(object):
             target_group = self.index['groups'][-1]
         item = self.index['patterns-by-group'][target_group['path']][-1]
         nav_el(target, PREV_ELEMENT, item)
-
-        target.write(" | ")
-
-        # next link: always first pattern in group
-        item = self.index['patterns-by-group'][chapter['path']][0]
-        nav_el(target, NEXT_ELEMENT, item)
         target.write("\n\n")
+
+    def intro_navigation(self, target):
+        """Link to first group"""
+        target.write("\n\n")
+        item = self.index['groups-by-gid'][1]
+        nav_el(target, NEXT_ELEMENT, item)
+
+        target.write("\n\n")
+
 
 def nav_el(target, template, item):
     target.write(template % dict(name=item['name'], path=item['path'][:-3]))

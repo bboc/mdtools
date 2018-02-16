@@ -209,8 +209,8 @@ class SectionCompiler():
 
             # add individual sections
             for section_index, section in enumerate(group):
-                if is_chapter() and self.args.chapter_prefix:
-                    headline_prefix = self.args.chapter_prefix % dict(chapter=chapter_index, section=section_index + 1)
+                if is_chapter() and self.args.section_prefix:
+                    headline_prefix = self.args.section_prefix % dict(chapter=chapter_index, section=section_index + 1)
                 else:
                     headline_prefix = None
                 self._append_section(folder, '%s.md' % make_pathname(section), headline_prefix)
