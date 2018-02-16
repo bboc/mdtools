@@ -247,7 +247,7 @@ class SectionCompiler():
                     raise Exception(
                         "no headline in first line of %s" % os.path.join(folder, name))
                 self.target.write(
-                    ''.join((line[:pos + 1], headline_prefix, line[pos + 1:])))
+                    ' '.join((line[:pos + 1], headline_prefix, line[pos + 1:].lstrip())))
             for line in section:
                 if self.glossary:
                     # replace definitions from glossary

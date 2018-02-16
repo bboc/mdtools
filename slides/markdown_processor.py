@@ -66,7 +66,7 @@ def prefix_headline(prefix, lines):
         except ValueError:
             raise Exception(
                 "no headline in first line (%s)" % line)
-        yield ''.join((line[:pos + 1], prefix, line[pos + 1:]))
+        yield ' '.join((line[:pos + 1], prefix, line[pos + 1:].lstrip()))
     for line in lines:
         yield line
 
