@@ -16,6 +16,7 @@ from common import make_pathname, make_title, create_directory, read_config
 from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
 
 from glossary import read_glossary
+import translate
 
 from build_deckset_slides import DecksetWriter
 from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
@@ -24,6 +25,9 @@ from build_jekyll import JekyllWriter
 from revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
+
+
+translate.read_translation_memory('localization.po')
 
 
 def cmd_build_slides(args):

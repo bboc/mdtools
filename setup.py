@@ -10,6 +10,7 @@ def read(fname):
 setup(
     name="mdtools",
     packages=find_packages(),
+    install_requires=['polib'],
     author="Bernhard Bockelbrink",
     author_email="bernhard.bockelbrink@gmail.com",
     description="A set of commandline tools to maipulate and publish markdown files in various formats.",

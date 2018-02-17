@@ -5,6 +5,8 @@ import re
 from operator import itemgetter
 from common import SLIDE_MARKERS
 
+from translate import translate as _
+
 
 class MarkdownProcessor(object):
     """
@@ -142,7 +144,7 @@ def remove_breaks_and_conts(lines):
     for line in lines:
         if line.strip() in SLIDE_MARKERS:
             continue
-        if line.strip().endswith("(cont.)"):
+        if line.strip().endswith(_("(cont.)")):
             continue
         yield line
 

@@ -9,6 +9,7 @@ from string import Template
 from textwrap import dedent
 
 from common import make_title, read_config, md_filename, CHAPTERS, CHAPTER_ORDER
+from translate import translate as _
 
 
 def cmd_build_index_db(args):
@@ -89,10 +90,10 @@ def deckset_alphabetical_index(pattern_data, target, per_page=20):
 
     INDEX_ENTRY = Template("$name - $gid.$pid")
     INDEX_TABLE = Template(dedent("""
-        Patterns $cont | Patterns (cont.)
+        %(patterns)s $cont | %(patterns)s %(cont)s
         --- | ---
         $left_content | $right_content
-        """))
+        """) % dict(patterns=_("Patterns"), cont=_("(cont.)")))
 
     # sorting raw pattern data by name makes order independent of display format!
     pattern_data = sorted(pattern_data, key=lambda x: x['name'].lower())
@@ -115,4 +116,4 @@ def deckset_alphabetical_index(pattern_data, target, per_page=20):
         target.write(INDEX_TABLE.substitute(cont=cont,
                                             left_content=make_cell(lgroup),
                                             right_content=make_cell(rgroup)))
-        cont = "(cont.)"
+        cont = _("(cont.)")
