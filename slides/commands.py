@@ -24,8 +24,8 @@ def add_parser_compile(subparsers):
 def add_parser_build(subparsers):
     sp = subparsers.add_parser('build',
                                help="Build a slide deck.")
-    sp.add_argument('format', choices=['deckset', 'wordpress', 'revealjs', 'jekyll'],
-                    help="presentation format, either 'deckset', 'wordpress' or 'revealjs'.")
+    sp.add_argument('format', choices=['deckset', 'wordpress', 'revealjs', 'jekyll', "ebook"],
+                    help="Output format (deckset | ebook | jekyll | revealjs | wordpress)")
     sp.add_argument('config', help='yaml file with presentation structure')
     sp.add_argument('source', help='Directory with source files.')
     sp.add_argument('target', help='Target file (for reveal.js and deckset) or folder (for wordpress or jekyll).')

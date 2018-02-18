@@ -61,7 +61,7 @@ class JekyllWriter(object):
                                    make_headline_prefix(self.args, self.config, chapter['gid'], section['pid']))
 
     def _build_site_index(self):
-        """Build site index with from template. Already translation-aware."""
+        """Build site index from template. Already translation-aware."""
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[

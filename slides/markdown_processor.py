@@ -3,8 +3,9 @@
 
 import re
 from operator import itemgetter
-from common import SLIDE_MARKERS
 
+from common import SLIDE_MARKERS
+from glossary import GLOSSARY_MARKER
 from translate import translate as _
 
 
@@ -73,6 +74,34 @@ def prefix_headline(prefix, lines):
         yield line
 
 
+def increase_all_headline_levels(level_increase, lines):
+    """increase the level of ALL headlines."""
+    for line in lines:
+        if line.startswith('#'):
+            yield ''.join(("#" * level_increase, line))
+        else:
+            yield line
+
+
+IMG_PATTERN = re.compile("^\!\[(?P<format>.*)\]\((?P<url>.*)\)")
+
+
+def clean_images(lines):
+    """Remove deckset formatters like "inline,fit" from images, skip background images ([fit])."""
+    for line in lines:
+        if line.lstrip().startswith("!["):
+            # fix image
+            m = IMG_PATTERN.match(line)
+            img_format = m.group(2).lower()
+            img_url = m.group(2)
+            if img_format == 'fit':
+                yield '\n'
+            else:
+                yield '![](%s)\n' % img_url
+        else:
+            yield line
+
+
 HEADLINE_PATTERN = re.compile("#{0,7} (?P<title>.*)")
 FRONT_MATTER_TITLE = "title: \"%s\"\n"
 FRONT_MATTER_SEPARATOR = "---\n"
@@ -134,6 +163,23 @@ def glossary_tooltip(glossary, lines):
         # TODO: insert replace code here
         # Do a non-case specific match for each glossary term (ordered by length descending)
         # if match: replace with tooltip template, then split string after </dfn> and repeat match
+
+
+def insert_glossary(renderer, lines):
+    """Insert full glossary when GLOSSARY_MARKER is encountered."""
+
+    glossary_contents = []
+
+    def callback(text):
+        glossary_contents.append(text)
+
+    for line in lines:
+        if line.strip() == GLOSSARY_MARKER:
+            renderer.render(callback)
+            callback('\n')
+            yield '\n'.join(glossary_contents)
+        else:
+            yield line
 
 
 def remove_breaks_and_conts(lines):

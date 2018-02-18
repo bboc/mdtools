@@ -22,6 +22,7 @@ from build_deckset_slides import DecksetWriter
 from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
 from build_web_content import cmd_convert_to_web
 from build_jekyll import JekyllWriter
+from ebook_builder import EbookWriter
 from revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
@@ -42,6 +43,9 @@ def cmd_build_slides(args):
     elif args.format == 'jekyll':
         j = JekyllWriter(args)
         j.build()
+    elif args.format == 'ebook':
+        e = EbookWriter(args)
+        e.build()
     else:
         print("unknown format", args.format)
         sys.exit(1)
