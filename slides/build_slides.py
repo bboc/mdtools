@@ -16,13 +16,19 @@ from common import make_pathname, make_title, create_directory, read_config
 from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
 
 from glossary import read_glossary
+import translate
 
 from build_deckset_slides import DecksetWriter
 from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
 from build_web_content import cmd_convert_to_web
+from build_jekyll import JekyllWriter
+from ebook_builder import EbookWriter
 from revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
+
+
+translate.read_translation_memory('localization.po')
 
 
 def cmd_build_slides(args):
@@ -34,6 +40,12 @@ def cmd_build_slides(args):
         build_deckset_slides(args)
     elif args.format == 'wordpress':
         build_wordpress(args)
+    elif args.format == 'jekyll':
+        j = JekyllWriter(args)
+        j.build()
+    elif args.format == 'ebook':
+        e = EbookWriter(args)
+        e.build()
     else:
         print("unknown format", args.format)
         sys.exit(1)
@@ -147,7 +159,7 @@ class SectionCompiler():
         self.glossary = read_glossary(self.args.glossary)
 
     def compile_content(self):
-        """Compile one all source files relevant for building the slide deck:
+        """Compile all source files relevant for building the slide deck:
             - title
             - introduction
             - all chapters
@@ -205,8 +217,8 @@ class SectionCompiler():
 
             # add individual sections
             for section_index, section in enumerate(group):
-                if is_chapter() and self.args.chapter_prefix:
-                    headline_prefix = self.args.chapter_prefix % dict(chapter=chapter_index, section=section_index + 1)
+                if is_chapter() and self.args.section_prefix:
+                    headline_prefix = self.args.section_prefix % dict(chapter=chapter_index, section=section_index + 1)
                 else:
                     headline_prefix = None
                 self._append_section(folder, '%s.md' % make_pathname(section), headline_prefix)
@@ -243,7 +255,7 @@ class SectionCompiler():
                     raise Exception(
                         "no headline in first line of %s" % os.path.join(folder, name))
                 self.target.write(
-                    ''.join((line[:pos + 1], headline_prefix, line[pos + 1:])))
+                    ' '.join((line[:pos + 1], headline_prefix, line[pos + 1:].lstrip())))
             for line in section:
                 if self.glossary:
                     # replace definitions from glossary

@@ -6,7 +6,7 @@ import markdown
 
 
 SLIDE_MARKERS = ['---', '***', '* * *']
-
+FILENAME_PATTERN = '%s.md'
 
 # section names
 CHAPTER_ORDER = 'chapter-order'
@@ -20,6 +20,10 @@ SKIP = 'SKIP'
 
 def make_pathname(name):
     return name.lower().replace(" ", '-')
+
+
+def md_filename(name):
+    return FILENAME_PATTERN % make_pathname(name)
 
 
 def make_title(name):
@@ -45,6 +49,17 @@ def increase_headline_level(line):
 
 def markdown2html(text):
     return markdown.markdown(text, ['markdown.extensions.extra', 'markdown.extensions.meta'])
+
+
+def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
+    if commandline_args.section_prefix:
+        template = commandline_args.section_prefix
+    else:
+        template = config.get('section-prefix', None)
+    if template:
+        return template % dict(chapter=chapter_idx, section=section_idx)
+    else:
+        return None
 
 
 class LineWriter(object):
