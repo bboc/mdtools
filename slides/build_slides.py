@@ -13,14 +13,22 @@ import sys
 from shutil import copyfile
 
 from common import make_pathname, make_title, create_directory, read_config
+from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
+
 from glossary import read_glossary
+import translate
 
 from build_deckset_slides import DecksetWriter
 from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
 from build_web_content import cmd_convert_to_web
+from build_jekyll import JekyllWriter
+from ebook_builder import EbookWriter
 from revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
+
+
+translate.read_translation_memory('localization.po')
 
 
 def cmd_build_slides(args):
@@ -32,6 +40,12 @@ def cmd_build_slides(args):
         build_deckset_slides(args)
     elif args.format == 'wordpress':
         build_wordpress(args)
+    elif args.format == 'jekyll':
+        j = JekyllWriter(args)
+        j.build()
+    elif args.format == 'ebook':
+        e = EbookWriter(args)
+        e.build()
     else:
         print("unknown format", args.format)
         sys.exit(1)
@@ -98,28 +112,27 @@ def cmd_create_source_files_for_slides(args):
                 print "skipped %s" % title_root
 
     make_file(args.target, 'title', 'title')
-    if 'introduction' in config:
-        make_group('introduction', config['introduction'])
-    for chapter in config['chapters'].keys():
-        make_group(chapter, config['chapters'][chapter])
-    if 'closing' in config:
-        make_group('closing', config['closing'])
-    make_file(args.target, 'end', 'end')
+    if FRONT_MATTER in config:
+        make_group(FRONT_MATTER, config[FRONT_MATTER])
+    for chapter in config[CHAPTERS].keys():
+        make_group(chapter, config[CHAPTERS][chapter])
+    if APPENDIX in config:
+        make_group(APPENDIX, config[APPENDIX])
+    end = config.get(END, END)
+    if end != SKIP:
+        make_file(args.target, 'end', 'end')
 
 
 class SectionCompiler():
     """Compile all source files relevant for building the slide deck:
         - title
-        - introduction
+        - front-matter
         - all chapters
-        - closing
+        - appendix
         - end
         into the temp folder.
 
     Chapters can optionally be prefixed with a title slide, an image slide, or both."""
-
-    # TODO: add those as defaults, and read from config
-    CHAPTER_NUMBER = ' Pattern %s.%s:'
 
     GROUP_INDEX_FILENAME = 'index.md'
     CHAPTER_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
@@ -146,46 +159,39 @@ class SectionCompiler():
         self.glossary = read_glossary(self.args.glossary)
 
     def compile_content(self):
-        """Compile one all source files relevant for building the slide deck:
+        """Compile all source files relevant for building the slide deck:
             - title
             - introduction
             - all chapters
-            - closing
+            - appendix
             - end
             into the temp folder."""
 
         if not os.path.exists(self.target_folder):
             os.makedirs(self.target_folder)
 
-        # title
-        self._copy_file('title.md')
-        # intro
-        if 'introduction' in self.config:
-            self._compile_section_group(self.config['introduction'], 'introduction')
+        self._copy_file('%s.md' % self.config.get(TITLE, TITLE))
+        if FRONT_MATTER in self.config:
+            self._compile_section_group(self.config[FRONT_MATTER], FRONT_MATTER)
 
             # insert illustrations for all chapters between intro and chapters
             if self.args.add_chapter_illustration:
-                for i, chapter in enumerate(self.config['chapter_order']):
+                for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
                     self.target.write(self.GROUP_INDEX_IMAGE % str(i + 1))
                     self._append_section_break()
-
-        # chapters
-        for i, chapter in enumerate(self.config['chapter_order']):
-                self._compile_section_group(self.config['chapters'][chapter], chapter, i + 1)
-        # closing
-        if 'closing' in self.config:
-            self._compile_section_group(self.config['closing'], 'closing')
-        # end
-        try:
-            self._copy_file('end.md')
-        except IOError:
-            print "WARNING: missing end.md"
+        for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
+                self._compile_section_group(self.config[CHAPTERS][chapter], chapter, i + 1)
+        if APPENDIX in self.config:
+            self._compile_section_group(self.config[APPENDIX], APPENDIX)
+        end = self.config.get(END, END)
+        if end != SKIP:
+            self._copy_file('%s.md' % end)
 
     def _copy_file(self, name):
         copyfile(os.path.join(self.source, name), os.path.join(self.target_folder, name))
 
     def _compile_section_group(self, group, group_name, chapter_index=None):
-        """Compile intros, chapters and closing."""
+        """Compile front matter, chapters and appendix."""
         folder = os.path.join(self.source, make_pathname(group_name))
 
         def is_chapter():
@@ -211,11 +217,11 @@ class SectionCompiler():
 
             # add individual sections
             for section_index, section in enumerate(group):
-                if is_chapter():
-                    number = self.CHAPTER_NUMBER % (chapter_index, section_index + 1)
+                if is_chapter() and self.args.section_prefix:
+                    headline_prefix = self.args.section_prefix % dict(chapter=chapter_index, section=section_index + 1)
                 else:
-                    number = None
-                self._append_section(folder, '%s.md' % make_pathname(section), number)
+                    headline_prefix = None
+                self._append_section(folder, '%s.md' % make_pathname(section), headline_prefix)
                 if section_index + 1 < len(group):
                     self._slide_break()
 
@@ -249,7 +255,7 @@ class SectionCompiler():
                     raise Exception(
                         "no headline in first line of %s" % os.path.join(folder, name))
                 self.target.write(
-                    ''.join((line[:pos + 1], headline_prefix, line[pos + 1:])))
+                    ' '.join((line[:pos + 1], headline_prefix, line[pos + 1:].lstrip())))
             for line in section:
                 if self.glossary:
                     # replace definitions from glossary

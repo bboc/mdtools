@@ -9,6 +9,7 @@ import codecs
 import os
 
 from common import make_pathname, read_config
+from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, APPENDIX, END, SKIP
 from glossary import GLOSSARY_MARKER, DecksetGlossaryRenderer
 
 
@@ -24,24 +25,25 @@ class DecksetWriter(object):
         self.glossary_renderer = DecksetGlossaryRenderer(self.args.glossary, self.args.glossary_items)
 
     def build(self):
-        print "build deckset"
         with codecs.open(self.args.target, 'w+', 'utf-8') as self.target:
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
                 self._copy_template_header()
 
-                self._append_section(self.config.get('title', 'title'))
+                self._append_section(self.config.get(TITLE, TITLE))
 
-                if 'introduction' in self.config:
-                    self._append_section('introduction')
+                if FRONT_MATTER in self.config:
+                    self._append_section(FRONT_MATTER)
 
                 # add all the groups
-                for i, chapter in enumerate(self.config['chapter_order']):
+                for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
                     self._append_section(chapter)
 
-                if 'closing' in self.config:
-                    self._append_section('closing')
+                if APPENDIX in self.config:
+                    self._append_section(APPENDIX)
 
-                self._append_section(self.config.get('end', 'end'), skip_section_break=True)
+                end = self.config.get(END, END)
+                if end != SKIP:
+                    self._append_section(end, skip_section_break=True)
 
                 self._copy_template_footer()
 

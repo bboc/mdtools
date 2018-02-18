@@ -2,6 +2,32 @@ mdslides:
 		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml @estimate(1h)
 		- class names and code layout can be improved @estimate(30min)
 		- add support for right aligned images
+refactoring/methaphor:
+		- refactor all places that use '%.md' to use common.md_filename()
+		- recator everything to use chapter and section instead of group and pattern!
+		- rename config to "structure"
+		index keys are messed up: 
+			- gid, pid should be cid, sid
+			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
+			- all keys sould use constants
+jekyll builder MVP:
+	✔ add navigation trails: @done (18-01-29 23:45)
+		✔ each pattern: next pattern in group, prev. pattern, up (group index) (later: pulldown menu of group??) @done (18-01-29 23:45)
+		✔ first pattern in group: no back, next pattern in group @done (18-01-29 23:45)
+		✔ last patter in group: next group instead of next pattern @done (18-01-29 23:45)
+		✔ group: first pattern, previous group, next group @done (18-01-29 23:45)
+	- add hover effect over many glossary terms (see markdown_processor.glossary_tooltip())
+	- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
+	✔ copy changelog to separate file @done (18-01-29 15:27)
+	✔ add group index files that contain @done (18-01-29 19:48)
+		✔ a list of all patterns in a group (ordered as they are in the slide deck) @done (18-01-29 10:52)
+		✔ a name that can be translated @done (18-01-29 10:52)
+		✔ the contents of the groups index.md, if present @done (18-01-29 19:48)
+	✔ compile appendix and introduction into one file each @done (18-01-29 15:41)
+		✔ compile all individual files into one @done (18-01-29 15:40)
+		✔ skip glossary (there's a separate file for that) @done (18-01-29 15:40)
+		✔ add link to intro and appendix to menu @done (18-01-29 15:40)
+		✔ (not possible due to translations) add a small TOC at the top of both files @done (18-01-29 15:41)
 		add a set of simple tests: @estimate(1h)
 			- one test with introducion and closing and numbering of sections in chapters
 			- another one  without all three
@@ -23,6 +49,7 @@ mdslides:
 mdimg:
 	✔ add support for images in multiple languages, language code is at root level of image repo (en/../image_name.png) @done (17-09-25 23:05)
 	- (optional) parse non-language assets?
+	- as of now, using one language only no longer works, this needs to be remedied @priority(high)
 	Multi-language Support:
 		- document structure in readme or help
 			Image repositories structure:

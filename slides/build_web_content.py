@@ -16,6 +16,7 @@ import sys
 
 from common import LineWriter, SLIDE_MARKERS
 from glossary import GLOSSARY_MARKER, WordpressGlossaryRenderer
+from translate import translate as _
 
 
 STATUS_TEMPLATE = """
@@ -91,7 +92,7 @@ def convert_file_for_web(source_path, result_path, footer, glossary_renderer, in
                     # omit line, do not change empty line marker!
                     pass
                 elif L.startswith('#'):
-                    if L.endswith("(cont.)"):
+                    if L.endswith(_("(cont.)")):
                         pass  # omit slides with continued headlines
                     else:
                         if increase_headline_level:
