@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import codecs
 import os
 import yaml
 import markdown
@@ -53,7 +54,7 @@ def markdown2html(text):
 
 def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
     if commandline_args.section_prefix:
-        template = commandline_args.section_prefix
+        template = codecs.decode(commandline_args.section_prefix, 'utf-8')
     else:
         template = config.get('section-prefix', None)
     if template:
