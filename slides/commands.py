@@ -36,6 +36,8 @@ def add_parser_build(subparsers):
     sp.add_argument('--index', help='yaml file the index of all sections')
     sp.add_argument('--glossary-items', type=int, default=20, help='number of glossary items per page (used for deckset and revealjs)')
     sp.add_argument('--section-prefix', type=str, default='', help='string to prefix before each chapter headline, e.g. --section-prefix="Pattern %(chapter)s.%(section)s:" ')
+    sp.add_argument('--section-index-template', help='[jekyll] Template for the alphabetical section index page.')
+    sp.add_argument('--introduction-template', help='[jekyll] Template for the introduction page.')
 
     sp.set_defaults(func=cmd_build_slides)
 
