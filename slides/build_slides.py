@@ -28,7 +28,7 @@ from revealjs_converter import RevealJsHtmlConverter
 TMP_FOLDER = 'tmp-groups'
 
 
-translate.read_translation_memory('localization.po')
+translate.read_translation_memory('content/localization.po')
 
 
 def cmd_build_slides(args):

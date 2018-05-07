@@ -211,3 +211,30 @@ def insert_index(marker, items, lines, sort=False):
                 yield INDEX_ELEMENT % dict(name=item['name'], path=item['path'][:-3])
         else:
             yield line
+
+
+TRANSLATION_MARKER = re.compile('\$\{_\("(?P<text>.*?)"\)\}')
+PARAMETER_MARKER = re.compile('\$\{(?P<name>.*?)\}')
+
+
+def template(config, lines):
+    """Insert translations und config parameters marked in the text like
+    ${_("a string to translate")} or ${my_parameter}.
+    """
+
+    def insert_translation(match):
+        text = match.group('text')
+        return _(text, warnings=True)
+
+    def insert_parameter(match):
+        name = match.group('name')
+        try:
+            return config[name]
+        except KeyError:
+            print "ERROR: Unknown Parameter", name
+            return "${%s}" % name
+
+    for line in lines:
+        line = TRANSLATION_MARKER.sub(insert_translation, line)
+        line = PARAMETER_MARKER.sub(insert_parameter, line)
+        yield line
