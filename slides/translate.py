@@ -23,8 +23,10 @@ def read_translation_memory(filename):
     globals()["translation_memory"] = tm
 
 
-def translate(message):
+def translate(message, warnings=None):
     if message in translation_memory:
         return translation_memory[message]
     else:
+        if warnings:
+            print "WARNING: ", message, "not in translation translation_memory"
         return message

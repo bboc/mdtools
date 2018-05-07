@@ -73,7 +73,7 @@ class JekyllWriter(object):
     def _build_section_index(self):
         """Build index of all sections from template. Already translation-aware."""
         # TODO: remove hardcoded path
-        with codecs.open("docs/_templates/pattern-index.md", 'r', 'utf-8') as source:
+        with codecs.open("content/website/_templates/pattern-index.md", 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("pattern-index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
                     partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.index['patterns'], sort=True),
@@ -109,7 +109,7 @@ class JekyllWriter(object):
 
     def _compile_front_matter(self):
         with codecs.open(os.path.join(self.target_folder, md_filename(FRONT_MATTER)), 'w+', 'utf-8') as target:
-            with codecs.open("docs/_templates/introduction.md", 'r', 'utf-8') as template:
+            with codecs.open("content/website/_templates/introduction.md", 'r', 'utf-8') as template:
                 for line in template:
                     target.write(line)
 
