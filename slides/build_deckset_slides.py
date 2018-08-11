@@ -5,12 +5,13 @@ Build the All Patterns Explained slide deck in Deckset format.
 """
 
 import codecs
-
+from functools import partial
 import os
 
 from common import make_pathname, read_config
 from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, APPENDIX, END, SKIP
-from glossary import GLOSSARY_MARKER, DecksetGlossaryRenderer
+from glossary import DecksetGlossaryRenderer
+import markdown_processor as mdp
 
 
 class DecksetWriter(object):
@@ -60,11 +61,13 @@ class DecksetWriter(object):
 
     def _append_section(self, name, skip_section_break=False):
         name = '%s.md' % make_pathname(name)
-        with codecs.open(os.path.join(self.source_folder, name), 'r', 'utf-8') as section:
-            for line in section:
-                if line.strip() == GLOSSARY_MARKER:
-                    self.glossary_renderer.render(self.target.write)
-                else:
-                    self.target.write(line)
+        with codecs.open(os.path.join(self.source_folder, name), 'r', 'utf-8') as source:
+            processor = mdp.MarkdownProcessor(source, filters=[
+                partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
+                partial(mdp.insert_glossary, self.glossary_renderer),
+                partial(mdp.write, self.target),
+            ])
+            processor.process()
+
         if not skip_section_break:
             self.target.write('\n\n---\n\n')

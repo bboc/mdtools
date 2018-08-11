@@ -52,6 +52,14 @@ Title slides as text or image (or both) can be generated for each chapter with c
 
 Between introduction and chapters a set of illustrations for each chapter can be added (used for showing all patterns in groups in "S3- All Patterns Explained", probably less useful in other slide decks.)
 
+## Chapter Links
+
+In some output formats (currently only Jekyll), chapter links
+
+    [Title](chapter:chapter-slug) 
+
+are rendered as links to that chapter. This will later be also added to epub and reveal.js formats.
+
 
 ## Notes about the glossary
 
@@ -75,6 +83,9 @@ The text of a single glossary entry can be placed anywhere in the text with the 
 
 The full glossary is rendered in the build step, as it depends on the output format, but the directives 'define' and 'glossary' are replaced in the compile step.
 
+There's special markup for glossary terms that will be rendered as overlays in HTML output. Example:
+    
+    Sometimes it helps to have a few [Foobars](glossary:foobar).
 
 ### Glossary Output
 

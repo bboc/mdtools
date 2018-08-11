@@ -49,8 +49,8 @@ class GlossaryRenderer(object):
 
 class DecksetGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s**: %(glossary)s\n"
-    HEADER_TEMPLATE = '\n# %s %s\n\n\n'
+    TEMPLATE = "**%(name)s**: %(glossary)s"
+    HEADER_TEMPLATE = '# %s %s\n\n'
     PAGE_BREAK = '\n\n---\n\n'
 
 

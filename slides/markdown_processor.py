@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import re
+from functools import partial
 from operator import itemgetter
+import re
 
 from common import SLIDE_MARKERS
 from glossary import GLOSSARY_MARKER
@@ -153,16 +154,49 @@ def inject_glossary(glossary, lines):
         yield line
 
 
-TOOLTIP_TEMPLATE = """<dfn data-info="%(glossary_term)s: %(description)s">%(match)s</dfn>"""
+GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>.*?)\]\(glossary:(?P<glossary_term>.*?)\)")
+
+GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
+GLOSSARY_TERM_PLAIN_TEMPLATE = """%(title)s"""
 
 
-def glossary_tooltip(glossary, lines):
+def glossary_tooltip(glossary, template, lines):
+    """Add tooltip for marked glossary entries."""
+    def glossary_replace(match):
+        """Replace term with glossary tooltip or other template."""
+        term = match.group('glossary_term')
+        data = {
+            'title': match.group('title'),
+            'glossary_term': term,
+            'name': glossary['terms'][term]['name'],
+            'description': glossary['terms'][term]['glossary'],
+        }
+        return template % data
+
     for line in lines:
-        if line.startswith('#') or line.strip() in SLIDE_MARKERS:
-            continue
-        # TODO: insert replace code here
-        # Do a non-case specific match for each glossary term (ordered by length descending)
-        # if match: replace with tooltip template, then split string after </dfn> and repeat match
+        line = GLOSSARY_TERM_PATTERN.sub(glossary_replace, line)
+        yield line
+
+
+SECTION_LINK_PATTERN = re.compile("\[(?P<title>.*?)\]\(section:(?P<section>.*?)\)")
+SECTION_LINK_TITLE_ONLY = "_%(title)s_"
+SECTION_LINK_TO_HMTL = "[%(title)s](%(section)s.html)"
+SECTION_LINK_TO_SLIDE = "_%(title)s_"
+
+
+def convert_section_links(template, lines):
+    """Convert section links for various output formats."""
+    def link_replace(template, match):
+        """Replace link with template."""
+        data = {
+            'title': match.group('title'),
+            'section': match.group('section'),
+        }
+        return template % data
+
+    for line in lines:
+        line = SECTION_LINK_PATTERN.sub(partial(link_replace, template), line)
+        yield line
 
 
 def insert_glossary(renderer, lines):
@@ -190,7 +224,7 @@ def remove_breaks_and_conts(lines):
     for line in lines:
         if line.strip() in SLIDE_MARKERS:
             continue
-        if line.strip().endswith(_("(cont.)")):
+        if line.strip().endswith(_(u"(…)")):
             continue
         yield line
 
