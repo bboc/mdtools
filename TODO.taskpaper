@@ -1,4 +1,5 @@
 mdslides:
+		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
 		- add support for right aligned images
 	section links:
 		parse section links [Governance Facilitator](section:governance-facilitator) 
@@ -43,7 +44,7 @@ mdslides:
 		- revealjs: add html overlay for glossary terms
 	epub renderer:
 		- add section links so they link to the section headers
-
+	
 	jekyll builder MVP:
 		- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
 		Style/Theming:
