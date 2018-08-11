@@ -1,22 +1,53 @@
 mdslides:
-		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml @estimate(1h)
-		- class names and code layout can be improved @estimate(30min)
 		- add support for right aligned images
-refactoring/methaphor:
+	section links:
+		parse section links [Governance Facilitator](section:governance-facilitator) 
+		- deckset: replace by "_Governance Facilitator_" @done(2018-08-10)
+		- jekyll: replace by "_[Governance Facilitator](governance-facilitator.html)_" @done(2018-08-10)
+		- revealjs: replace with emphasis on title
+		- ebook: replace with emphasis on tile @done(2018-08-11)
+		- add to documentation @done(2018-08-11)
+	glossary overlays:
+		parse glossary markers [Driver](glossary:driver)
+		- deckset:  replace with plain title @done(2018-08-11)
+		- revealjs: add html overlay
+		- epub: replace with plain title @done(2018-08-11)
+		- ebook: replace with plain title @done(2018-08-11)
+		- jekyll: replace with html overlay @done(2018-08-11)
+		- add to documentation @done(2018-08-11)
+	
+	general refactoring:
+		- make config, glossary, structure and translations available to the pipelines @30min
+		- remove duplication of markdown filters in  jekyll and ebook builder @30min @done(2018-08-11)
+		-  use constant (or config) in remove_breaks_and_conts() @15min
+		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml  @later @estimate(1h)
+		- class names and code layout can be improved @estimate(30min)
 		- refactor all places that use '%.md' to use common.md_filename()
-		- recator everything to use chapter and section instead of group and pattern!
-		- rename config to "structure"
+	aligning the methaphor:
+		- refactor everything to use chapter and section instead of group and pattern!
+		- rename config to "structure" @done(2018-08-10)
 		index keys are messed up: 
 			- gid, pid should be cid, sid
 			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
 			- all keys sould use constants
+	deckset-renderer:
+		- integrate compile step into renderer
+		- refactor renderer to use markdown processor @1h @done(2018-08-11)
+	reveal.js renderer:
+		- refactor revealjs.writer to use markdown processor @1h
+		- integrate compile step into renderer
+		- have chapter links link to slide https://github.com/hakimel/reveal.js/#internal-links
+		- revealjs: add html overlay for glossary terms
+		
+	epub renderer:
+		- add section links so they link to the section headers
 jekyll builder MVP:
 	✔ add navigation trails: @done (18-01-29 23:45)
 		✔ each pattern: next pattern in group, prev. pattern, up (group index) (later: pulldown menu of group??) @done (18-01-29 23:45)
 		✔ first pattern in group: no back, next pattern in group @done (18-01-29 23:45)
 		✔ last patter in group: next group instead of next pattern @done (18-01-29 23:45)
 		✔ group: first pattern, previous group, next group @done (18-01-29 23:45)
-	- add hover effect over many glossary terms (see markdown_processor.glossary_tooltip())
+	- add hover effect over many glossary terms (see markdown_processor.glossary_tooltip()) @done(2018-08-11)
 	- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
 	✔ copy changelog to separate file @done (18-01-29 15:27)
 	✔ add group index files that contain @done (18-01-29 19:48)
@@ -70,5 +101,5 @@ mdimg:
 		- probe the image repo for presence of all images @done(2017-09-23)
 		- should duplication exception also be raised when image path is unchanged? probably not... @done(2017-09-23)
 		- TEST: [![foobar](…)](target)!! image links!! @done(2017-09-23)
-		
+
 
