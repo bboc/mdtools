@@ -1,0 +1,36 @@
+title: title
+end: SKIP
+
+section-prefix: "%(chapter)s.%(section)s:"
+
+introduction:
+  - usecases
+
+appendix:
+  - glossary
+  - changelog
+  - license
+
+chapter-order:
+  - formats
+  - features
+  - data structure
+  - commands
+  - translation
+
+chapters:
+  formats:
+    - deckset
+    - jekyll
+  features:
+    - glossary
+    - section links
+    - chapter headers
+    - index files
+  data structure:
+    - templates
+  commands:
+    - mdslides
+    - mdimg
+  translation:
+    - translating templates

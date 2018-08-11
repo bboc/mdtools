@@ -2,6 +2,10 @@
 
 commandline scripts for processing (multi-)markdown files
 
+You can find an introduction and documentation to mdtools in the example project, which is also the source of the Github page for this repository. 
+
+The simples way for getting started with your own project is to copy the example project and play around with it.
+
 
 ## mdslides
 
