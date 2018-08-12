@@ -85,8 +85,7 @@ def add_parser_template(subparsers):
     sp.set_defaults(func=cmd_template)
 
 
-def main():
-    # setup argparse
+def get_parser():
     parser = argparse.ArgumentParser(
         description='Tools for creating and converting Markdown slide decks with Deckset and reveal.js',
         fromfile_prefix_chars='@'
@@ -101,5 +100,12 @@ def main():
     add_parser_build_deckset_index(subparsers)
     add_parser_template(subparsers)
 
+    return parser
+
+
+def main():
+    # setup argparse
+
+    parser = get_parser()
     args = parser.parse_args()
     args.func(args)

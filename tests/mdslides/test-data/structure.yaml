@@ -1,0 +1,24 @@
+title: title
+end: SKIP
+
+section-prefix: "%(chapter)s.%(section)s:"
+
+introduction:
+  - intro-a
+
+appendix:
+  - glossary
+  - appendix-a
+
+chapter-order:
+  - text
+  - images
+
+chapters:
+  text:
+    - glossary-entries
+    - section-links
+    - slide-breaks
+  images:
+    - background-images
+    - right-aligned-images

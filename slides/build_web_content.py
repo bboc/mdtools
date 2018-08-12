@@ -92,7 +92,7 @@ def convert_file_for_web(source_path, result_path, footer, glossary_renderer, in
                     # omit line, do not change empty line marker!
                     pass
                 elif L.startswith('#'):
-                    if L.endswith(_("(cont.)")):
+                    if L.endswith(_(u'(…)')):
                         pass  # omit slides with continued headlines
                     else:
                         if increase_headline_level:
