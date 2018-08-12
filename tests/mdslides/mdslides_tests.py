@@ -30,6 +30,7 @@ class CompileSlidesTests(FileBasedTestCase):
         self.parser = get_parser()
 
     def test_compile_slides(self):
+        """Slides are correctly compiled into chapters."""
         args = self.parser.parse_args(['compile',
                                       '--glossary', make_path('glossary.yaml'),
                                        make_path('structure.yaml'),
@@ -61,3 +62,20 @@ class CompileSlidesTests(FileBasedTestCase):
 
         self.assertTrue(os.path.exists(index_db))
         self.compare_results(index_db, make_path('index-db.yaml'))
+
+    def test_build_reveal_js(self):
+        """Compile output is injected into a reveal.js template."""
+        self.fail("not implemented")
+
+    def test_build_deckset(self):
+        """Compile output is injected into a deckset template."""
+        self.fail("not implemented")
+
+    def test_build_jekyll_site(self):
+        """Jekyll site is built from source files."""
+        self.fail("not implemented")
+
+    def test_build_ebook(self):
+        """Ebook master is build from source."""
+        self.fail("not implemented")
+
