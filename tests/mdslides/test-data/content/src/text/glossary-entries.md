@@ -2,7 +2,7 @@
 
 What follows is a definition from the glossary:
 
-{{definition:glossary}}
+{{define:glossary}}
 
 And now a glossary entry:
 

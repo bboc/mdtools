@@ -6,7 +6,7 @@ This is the content of the index file for the chapter "Text".
 
 What follows is a definition from the glossary:
 
-{{definition:glossary}}
+_A **glossary** is collection of explanations for words the reader might not be familiar with._
 
 And now a glossary entry:
 
