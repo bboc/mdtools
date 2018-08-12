@@ -11,7 +11,7 @@ from tests.common import FileBasedTestCase
 
 from slides.index import cmd_build_index_db
 from slides.commands import get_parser
-from slides.build_slides import SectionCompiler
+from slides.build_slides import build_reveal_slides, SectionCompiler
 
 
 def data_dir():
@@ -40,15 +40,15 @@ class CompileSlidesTests(FileBasedTestCase):
         c = SectionCompiler(args)
         c.compile_content()
         self.compare_results(os.path.join(self.document_root, 'title.md'),
-                             make_path('sections-compiled', 'title.md'))
+                             make_path('compiled', 'title.md'))
         self.compare_results(os.path.join(self.document_root, 'introduction.md'),
-                             make_path('sections-compiled', 'introduction.md'))
+                             make_path('compiled', 'introduction.md'))
         self.compare_results(os.path.join(self.document_root, 'images.md'),
-                             make_path('sections-compiled', 'images.md'))
+                             make_path('compiled', 'images.md'))
         self.compare_results(os.path.join(self.document_root, 'text.md'),
-                             make_path('sections-compiled', 'text.md'))
+                             make_path('compiled', 'text.md'))
         self.compare_results(os.path.join(self.document_root, 'appendix.md'),
-                             make_path('sections-compiled', 'appendix.md'))
+                             make_path('compiled', 'appendix.md'))
 
     def test_build_index_db(self):
         """The index-db is build correctly from structure.yaml."""
@@ -67,16 +67,18 @@ class CompileSlidesTests(FileBasedTestCase):
         """Build reveal.js slide deck from output of compile step."""
         args = self.parser.parse_args(['build', 'revealjs',
                                        make_path('structure.yaml'),
-                                       make_path('content', 'src'),
-                                       os.path.join(self.document_root, 'slides.html'),
-                                       '--template', 'foo',
+                                       make_path('compiled'),
+                                       self.tmp_path('slides.html'),
+                                       '--template', make_path('templates', 'revealjs-template.html'),
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', 'foo',
+                                       '--index', make_path('templates', 'index-template.md'),
                                        '--glossary-items', '2',
-                                       '--section-prefix', "Pattern %(chapter)s.%(section)s:",
+                                       '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
 
-        self.fail("not implemented")
+        build_reveal_slides(args)
+        self.compare_results(self.tmp_path('slides.html'),
+                             make_path('slides.html'))
 
     def test_build_deckset(self):
         """Build markdown for deckset from output of compile step."""

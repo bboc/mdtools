@@ -4,6 +4,7 @@ Helpers for tests
 """
 
 import filecmp
+import os
 import shutil
 import tempfile
 import unittest
@@ -26,3 +27,6 @@ class FileBasedTestCase(unittest.TestCase):
 
     def compare_files(self, a, b):
         self.assertTrue(filecmp.cmp(a, b, shallow=False))
+
+    def tmp_path(self, *args):
+        return os.path.join(self.document_root, *args)
