@@ -1,0 +1,28 @@
+groups:
+- gid: 2
+  name: Images
+  path: images.md
+- gid: 1
+  name: Text
+  path: text.md
+patterns:
+- gid: 2
+  name: Background-Images
+  path: background-images.md
+  pid: 1
+- gid: 1
+  name: Glossary-Entries
+  path: glossary-entries.md
+  pid: 1
+- gid: 2
+  name: Right-Aligned-Images
+  path: right-aligned-images.md
+  pid: 2
+- gid: 1
+  name: Section-Links
+  path: section-links.md
+  pid: 2
+- gid: 1
+  name: Slide-Breaks
+  path: slide-breaks.md
+  pid: 3

@@ -93,7 +93,7 @@ def deckset_alphabetical_index(pattern_data, target, per_page=20):
         %(patterns)s $cont | %(patterns)s %(cont)s
         --- | ---
         $left_content | $right_content
-        """) % dict(patterns=_("Patterns"), cont=_("(cont.)")))
+        """) % dict(patterns=_("Patterns"), cont=_(u'(…)')))
 
     # sorting raw pattern data by name makes order independent of display format!
     pattern_data = sorted(pattern_data, key=lambda x: x['name'].lower())
@@ -116,4 +116,4 @@ def deckset_alphabetical_index(pattern_data, target, per_page=20):
         target.write(INDEX_TABLE.substitute(cont=cont,
                                             left_content=make_cell(lgroup),
                                             right_content=make_cell(rgroup)))
-        cont = _("(cont.)")
+        cont = _(u'(…)')

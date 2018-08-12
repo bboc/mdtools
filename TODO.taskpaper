@@ -1,20 +1,13 @@
 mdslides:
-		- add support for right aligned images
-	section links:
-		parse section links [Governance Facilitator](section:governance-facilitator) 
-		- revealjs: replace with emphasis on title
-	glossary overlays:
-		parse glossary markers [Driver](glossary:driver)
-		- revealjs: add html overlay
-	
+		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
 	set up basic test for all important formats (gold master): @1h
-		- use s3 practical guide as a template and strip it down to a minimal example
+		- use s3 practical guide as a template and strip it down to a minimal example @done(2018-08-12)
 		- make sure all relevant features are covered:
-			- glossary overlays
-			- chapter links
+			- glossary overlays @done(2018-08-12)
+			- chapter links @done(2018-08-12)
 			- speaker notes
-			- background images
-			- floating images
+			- background images @done(2018-08-12)
+			- floating images @done(2018-08-12)
 			- inline images
 			- section numbering
 		- set up a unit test each for the following formats
@@ -22,6 +15,12 @@ mdslides:
 			- jekyll
 			- reveal.js
 			- ebook
+	section links:
+		parse section links [Governance Facilitator](section:governance-facilitator) 
+		- revealjs: replace with emphasis on title
+	glossary overlays:
+		parse glossary markers [Driver](glossary:driver)
+		- revealjs: add html overlay
 	general refactoring:
 		- make config, glossary, structure and translations available to the pipelines @30min
 		-  use constant (or config) in remove_breaks_and_conts() @15min
@@ -35,15 +34,15 @@ mdslides:
 			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
 			- all keys sould use constants
 	deckset-renderer:
-		- integrate compile step into renderer
+		empty
 	reveal.js renderer:
-		- refactor revealjs.writer to use markdown processor @1h
-		- integrate compile step into renderer
+		- refactor revealjs.writer to use markdown processor (after basic tests are in place @1h
+		- add support for right aligned images
 		- have chapter links link to slide https://github.com/hakimel/reveal.js/#internal-links
 		- revealjs: add html overlay for glossary terms
 	epub renderer:
 		- add section links so they link to the section headers
-
+	
 	jekyll builder MVP:
 		- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
 		Style/Theming:
