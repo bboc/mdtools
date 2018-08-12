@@ -17,7 +17,7 @@ from slides.build_slides import (
     build_wordpress,
     SectionCompiler,
 )
-
+from slides.ebook_builder import EbookWriter
 
 def data_dir():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -76,7 +76,6 @@ class CompileSlidesTests(FileBasedTestCase):
                                        self.tmp_path('slides.html'),
                                        '--template', make_path('templates', 'revealjs-template.html'),
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('templates', 'index-template.md'),
                                        '--glossary-items', '2',
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
@@ -93,7 +92,6 @@ class CompileSlidesTests(FileBasedTestCase):
                                        self.tmp_path('deckset.md'),
                                        '--template', make_path('templates', 'deckset-template.md'),
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('templates', 'index-template.md'),
                                        '--glossary-items', '2',
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
@@ -109,7 +107,6 @@ class CompileSlidesTests(FileBasedTestCase):
                                        self.document_root,
                                        '--footer', make_path('templates', 'wordpress-footer.txt'),
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('templates', 'index-template.md'),
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
 
@@ -149,8 +146,16 @@ class CompileSlidesTests(FileBasedTestCase):
                                        make_path('content', 'src'),
                                        self.document_root,
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', 'foo',
+                                       '--index', make_path('index-db.yaml'),
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
 
-        self.fail("not implemented")
+        e = EbookWriter(args)
+        e.build()
+        self.compare_results(self.tmp_path('tmp-introduction.md'),
+                             make_path('ebook', 'tmp-introduction.md'))
+        self.compare_results(self.tmp_path('tmp-chapters.md'),
+                             make_path('ebook', 'tmp-chapters.md'))
+        self.compare_results(self.tmp_path('tmp-appendix.md'),
+                             make_path('ebook', 'tmp-appendix.md'))
+
