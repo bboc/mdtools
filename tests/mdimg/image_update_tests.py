@@ -17,8 +17,8 @@ import filecmp
 import os
 import shutil
 import sys
-import tempfile
-import unittest
+
+from tests.common import FileBasedTestCase
 
 from mdimg.image_update import update_images_cmd, Document, ImageRepo
 from mdimg.command import get_parser
@@ -33,14 +33,13 @@ def make_path(*args):
     return os.path.join(data_dir(), *args)
 
 
-class ImageTestBase(unittest.TestCase):
+class ImageTestBase(FileBasedTestCase):
 
     def setUp(self):
         """Create temp folder, copy test case data."""
+        super(ImageTestBase, self).setUp()
         self.maxDiff = None
-        self.document_root = tempfile.mkdtemp()
         self.image_root = os.path.join(data_dir(), 'img')
-        self.addCleanup(shutil.rmtree, self.document_root)
         self.parser = get_parser()
         # suppress error out
         Document.ERROR_OUT = sys.stdout
@@ -60,6 +59,7 @@ class ImageTestBase(unittest.TestCase):
         """Copy testcase to tempfolder."""
         shutil.copytree(make_path('testcases', *args),
                         os.path.join(self.document_root, 'documents'))
+
 
 class ImageUpdateTests(ImageTestBase):
 
