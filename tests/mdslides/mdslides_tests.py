@@ -8,16 +8,17 @@ import os
 
 from tests.common import FileBasedTestCase
 
-
 from slides.index import cmd_build_index_db
-from slides.commands import get_parser
+from slides.build_jekyll import JekyllWriter
 from slides.build_slides import (
     build_deckset_slides,
     build_reveal_slides,
     build_wordpress,
     SectionCompiler,
 )
+from slides.commands import get_parser
 from slides.ebook_builder import EbookWriter
+
 
 def data_dir():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -128,16 +129,40 @@ class CompileSlidesTests(FileBasedTestCase):
                                        make_path('structure.yaml'),
                                        make_path('content', 'src'),
                                        self.document_root,
-                                       '--template', 'foo',
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', 'foo',
+                                       '--index', make_path('index-db.yaml'),
                                        '--glossary-items', '2',
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
-                                       '--section-index-template', 'foo',
-                                       '--introduction-template', 'foo',
+                                       '--section-index-template', make_path('templates', 'index-template.md'),
+                                       '--template', make_path('templates', 'site-home.md'),
+                                       '--introduction-template', make_path('templates', 'index-template.md'),
                                        ])
-
-        self.fail("not implemented")
+        j = JekyllWriter(args)
+        j.build()
+        self.compare_results(self.tmp_path('appendix-a.md'),
+                             make_path('jekyll', 'appendix-a.md'))
+        self.compare_results(self.tmp_path('background-images.md'),
+                             make_path('jekyll', 'background-images.md'))
+        self.compare_results(self.tmp_path('glossary-entries.md'),
+                             make_path('jekyll', 'glossary-entries.md'))
+        self.compare_results(self.tmp_path('glossary.md'),
+                             make_path('jekyll', 'glossary.md'))
+        self.compare_results(self.tmp_path('images.md'),
+                             make_path('jekyll', 'images.md'))
+        self.compare_results(self.tmp_path('index-template.md'),
+                             make_path('jekyll', 'index-template.md'))
+        self.compare_results(self.tmp_path('index.md'),
+                             make_path('jekyll', 'index.md'))
+        self.compare_results(self.tmp_path('introduction.md'),
+                             make_path('jekyll', 'introduction.md'))
+        self.compare_results(self.tmp_path('right-aligned-images.md'),
+                             make_path('jekyll', 'right-aligned-images.md'))
+        self.compare_results(self.tmp_path('section-links.md'),
+                             make_path('jekyll', 'section-links.md'))
+        self.compare_results(self.tmp_path('slide-breaks.md'),
+                             make_path('jekyll', 'slide-breaks.md'))
+        self.compare_results(self.tmp_path('text.md'),
+                             make_path('jekyll', 'text.md'))
 
     def test_build_ebook(self):
         """Ebook master is build from source."""
