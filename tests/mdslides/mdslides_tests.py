@@ -32,10 +32,10 @@ class CompileSlidesTests(FileBasedTestCase):
     def test_compile_slides(self):
         """Slides are correctly compiled into chapters."""
         args = self.parser.parse_args(['compile',
-                                      '--glossary', make_path('glossary.yaml'),
                                        make_path('structure.yaml'),
                                        make_path('content', 'src'),
-                                       self.document_root
+                                       self.document_root,
+                                      '--glossary', make_path('glossary.yaml'),
                                        ])
         c = SectionCompiler(args)
         c.compile_content()
@@ -64,18 +64,75 @@ class CompileSlidesTests(FileBasedTestCase):
         self.compare_results(index_db, make_path('index-db.yaml'))
 
     def test_build_reveal_js(self):
-        """Compile output is injected into a reveal.js template."""
+        """Build reveal.js slide deck from output of compile step."""
+        args = self.parser.parse_args(['build', 'revealjs',
+                                       make_path('structure.yaml'),
+                                       make_path('content', 'src'),
+                                       os.path.join(self.document_root, 'slides.html'),
+                                       '--template', 'foo',
+                                       '--glossary', make_path('glossary.yaml'),
+                                       '--index', 'foo',
+                                       '--glossary-items', '2',
+                                       '--section-prefix', "Pattern %(chapter)s.%(section)s:",
+                                       ])
+
         self.fail("not implemented")
 
     def test_build_deckset(self):
-        """Compile output is injected into a deckset template."""
+        """Build markdown for deckset from output of compile step."""
+        args = self.parser.parse_args(['build', 'deckset',
+                                       make_path('structure.yaml'),
+                                       make_path('content', 'src'),
+                                       self.document_root,
+                                       '--template', 'foo',
+                                       '--glossary', make_path('glossary.yaml'),
+                                       '--index', 'foo',
+                                       '--glossary-items', '2',
+                                       '--section-prefix', "Pattern %(chapter)s.%(section)s:",
+                                       ])
+
+        self.fail("not implemented")
+
+    def test_build_wordpress(self):
+        """Build markdown for wordpress from output of compile step."""
+        args = self.parser.parse_args(['build', 'wordpress',
+                                       make_path('structure.yaml'),
+                                       make_path('content', 'src'),
+                                       self.document_root,
+                                       '--footer', 'foo',
+                                       '--glossary', make_path('glossary.yaml'),
+                                       '--index', 'foo',
+                                       '--section-prefix', "Section %(chapter)s.%(section)s:",
+                                       ])
+
         self.fail("not implemented")
 
     def test_build_jekyll_site(self):
         """Jekyll site is built from source files."""
+        args = self.parser.parse_args(['build', 'jekyll',
+                                       make_path('structure.yaml'),
+                                       make_path('content', 'src'),
+                                       self.document_root,
+                                       '--template', 'foo',
+                                       '--glossary', make_path('glossary.yaml'),
+                                       '--index', 'foo',
+                                       '--glossary-items', '2',
+                                       '--section-prefix', "Section %(chapter)s.%(section)s:",
+                                       '--section-index-template', 'foo',
+                                       '--introduction-template', 'foo',
+                                       ])
+
         self.fail("not implemented")
 
     def test_build_ebook(self):
         """Ebook master is build from source."""
-        self.fail("not implemented")
+        args = self.parser.parse_args(['build', "ebook",
+                                       make_path('structure.yaml'),
+                                       make_path('content', 'src'),
+                                       self.document_root,
+                                       '--glossary', make_path('glossary.yaml'),
+                                       '--index', 'foo',
+                                       '--section-prefix', "Section %(chapter)s.%(section)s:",
+                                       ])
 
+        self.fail("not implemented")
