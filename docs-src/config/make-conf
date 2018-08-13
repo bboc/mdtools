@@ -3,7 +3,7 @@
 TARGETFILE=mdtools-docs
 
 # template pattern numbers
-SECTIONPREFIX= Pattern %(chapter)s.%(section)s:
+SECTIONPREFIX=%(chapter)s.%(section)s:
 
 # build index database?
 BUILD_INDEX=YES
