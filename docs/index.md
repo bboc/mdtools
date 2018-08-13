@@ -4,7 +4,7 @@ title: mdtools documentation
 
 
 
-Start with the [&#9654; introduction](introduction.html).
+Start with the [&#9654; introduction](introduction.html), or view this document as a [reveal.js slide deck](slides.html) instead.
 
 Refer to the [&#9654; glossary](glossary.html) for terms you are not familiar with. You can also select a specific section from the [&#9654;section index](pattern-index.html), or browse the chapters groups below.
 

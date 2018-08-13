@@ -24,8 +24,8 @@ patterns:
   path: deckset.md
   pid: 1
 - gid: 2
-  name: Glossary
-  path: glossary.md
+  name: Glossary Entries
+  path: glossary-entries.md
   pid: 1
 - gid: 2
   name: Index Files

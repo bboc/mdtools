@@ -23,7 +23,7 @@ chapters:
     - deckset
     - jekyll
   features:
-    - glossary
+    - glossary entries
     - section links
     - chapter headers
     - index files

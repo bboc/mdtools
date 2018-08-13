@@ -79,12 +79,12 @@
 
 <section>
 <h2>2.1: Glossary</h2>
-<p>{{definition:glossary}}</p>
+<p><em>A <strong>glossary</strong> is collection of explanations for words the reader might not be familiar with.</em></p>
 <p>mdtools expects the glossary in a YAML-file, and can do a few tricks with it: </p>
 <ul>
-<li>insert glossary explanations or definitions into the text</li>
-<li>render a full glossary</li>
-<li>add an explanation for a <a href="glossary:glossary">glossary</a> term as an overlay (in html output)</li>
+<li>insert glossary explanations or definitions into the text using &#0123;&#0123;glossary:glossary-term&#0125;&#0125; or &#0123;&#0123;define:glossary-term&#0125;&#0125;</li>
+<li>render a full glossary using &#0123;&#0123;insert-full-glossary&#0125;&#0125;</li>
+<li>add an explanation for a <a href="glossary:glossary">glossary</a> term as an overlay (in html output) using &#0091;glossary&#0093;&#0040;glossary:glossary&#0041;</li>
 </ul>
 </section>
 
@@ -100,7 +100,7 @@ glossary: what you want to put into the glossary
 
 <section>
 <h2>2.2: Section Links</h2>
-<p>You can link to another section, e.g. the <a href="section:glossary">section about the glossary</a> using a section link.</p>
+<p>You can link to another section, e.g. the <a href="section:glossary">section about the glossary</a> using a section link of the format &#0091;link title&#0093;&#0040;section:section-slug&#0041;</p>
 <p>Section links will be replaced with a link suitable for the output format, for some formats, which do not support link targets, it makes sense to render them only as text (e.g. in a Deckset slide deck)</p>
 </section>
 
@@ -167,7 +167,34 @@ glossary: what you want to put into the glossary
 
 <section>
 <h2>Changelog</h2>
-<p>{&gt;&gt;TODO:  &lt;&lt;}</p>
+<h3>August 2018</h3>
+<ul>
+<li>fixed a bug in the section navigation on the jekyll site</li>
+<li>added added a github page as a showcase that is built thorugh mdtools</li>
+<li>added section links and overlays for glossary terms</li>
+<li>added basic tests for all output formats of mdslides</li>
+</ul>
+<h3>May 2018</h3>
+<ul>
+<li>added a new subcommand 'templates' to 'mdslides' to insert variables and translations into template files</li>
+</ul>
+<h3>February 2018</h3>
+<ul>
+<li>added commands to build ebooks (ePub and PDF from LaTex)</li>
+</ul>
+<h3>January 2018</h3>
+<ul>
+<li>added basic section navigation to Jekyll site</li>
+<li>added translatable index and localization for Jekyll site</li>
+</ul>
+<h3>November 2017</h3>
+<ul>
+<li>added support for glossaries</li>
+</ul>
+<h3>September 2017</h3>
+<ul>
+<li>mdimg now handles images in multiple languages</li>
+</ul>
 </section>
 
 <section>

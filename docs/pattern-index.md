@@ -4,7 +4,7 @@ title: Alphabetical List Of All Sections
 
 - [Chapter Headers](chapter-headers.html)
 - [Deckset](deckset.html)
-- [Glossary](glossary.html)
+- [Glossary Entries](glossary-entries.html)
 - [Index Files](index-files.html)
 - [Jekyll](jekyll.html)
 - [Mdimg](mdimg.html)
