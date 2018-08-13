@@ -1,3 +1,17 @@
+documentation/showcase:
+	Showcase features and document usage of mdtools in a documentation that is created with mdtools
+	- set up basic page structure
+	- make reveal.js slides 
+		- integrate reveal.js templates
+		- link to slides.html in documentation
+	- set up jekyll site
+	  - set up skeleton dir
+	  - set up templates and styles
+	- set up github page
+	- find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing)
+		- test if backticks work: `[[`deinfe:thing``]]``
+		- or introduce a build step that replaces \{\{define:thing\}\} with \{\{define:thing\}\}
+
 mdslides:
 		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
 	set up basic test for all important formats (gold master): @1h
@@ -6,15 +20,16 @@ mdslides:
 			- glossary overlays @done(2018-08-12)
 			- chapter links @done(2018-08-12)
 			- speaker notes
+			- glossary renderer and page breaks (at least 3 glossary entries)
 			- background images @done(2018-08-12)
 			- floating images @done(2018-08-12)
 			- inline images
 			- section numbering
-		- set up a unit test each for the following formats
-			- deckset
-			- jekyll
-			- reveal.js
-			- ebook
+		✔ set up a unit test each for the following formats @done (18-08-13 12:47)
+			✔ deckset @done (18-08-13 12:33)
+			✔ jekyll @done (18-08-13 12:33)
+			✔ reveal.js @done (18-08-13 12:33)
+			✔ ebook @done (18-08-13 12:33)
 	section links:
 		parse section links [Governance Facilitator](section:governance-facilitator) 
 		- revealjs: replace with emphasis on title
@@ -36,7 +51,7 @@ mdslides:
 	deckset-renderer:
 		empty
 	reveal.js renderer:
-		- refactor revealjs.writer to use markdown processor (after basic tests are in place @1h
+		- refactor revealjs.writer to use markdown processor (after basic tests are in place) @1h
 		- add support for right aligned images
 		- have chapter links link to slide https://github.com/hakimel/reveal.js/#internal-links
 		- revealjs: add html overlay for glossary terms
