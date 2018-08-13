@@ -1,13 +1,13 @@
 documentation/showcase:
 	Showcase features and document usage of mdtools in a documentation that is created with mdtools
-	- set up basic page structure
-	- make reveal.js slides 
-		- integrate reveal.js templates
-		- link to slides.html in documentation
+	✔ set up basic page structure @done (18-08-13 13:42)
+	✔ make reveal.js slides @done (18-08-13 15:15)
+		✔ integrate reveal.js templates @done (18-08-13 15:15)
+	- link to slides.html in documentation
 	- set up jekyll site
-	  - set up skeleton dir
-	  - set up templates and styles
-	- set up github page
+	  ✔ set up skeleton dir @done (18-08-13 15:15)
+	  ✔ set up templates and styles @done (18-08-13 15:15)
+	- set up github page (decide on CNAME!!!)
 	- find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing)
 		- test if backticks work: `[[`deinfe:thing``]]``
 		- or introduce a build step that replaces \{\{define:thing\}\} with \{\{define:thing\}\}
@@ -37,6 +37,16 @@ mdslides:
 		parse glossary markers [Driver](glossary:driver)
 		- revealjs: add html overlay
 	general refactoring:
+		- remove the need for make-conf: all that should be in conig.yaml
+		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatiable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
+			chapters:
+				- title: Foo and the Seven Bars
+				  directory: foo-and-the-seven-bars
+				  sections:
+					  - title: Some Section Title
+					    file: some-section-title.md
+					  - title: Some Other Section Title
+					    file: some-other-section-title.md
 		- make config, glossary, structure and translations available to the pipelines @30min
 		-  use constant (or config) in remove_breaks_and_conts() @15min
 		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml  @later @estimate(1h)

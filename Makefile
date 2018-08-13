@@ -3,6 +3,8 @@ CONFIG=$(ROOT)/structure.yaml
 GLOSSARY=$(ROOT)/en/glossary.yaml
 SECTIONINDEX=$(ROOT)/en/section-index.yaml
 
+TMPFOLDER=$(ROOT)/tmp
+
 LOC=$(ROOT)/en/localization.po
 PRJ=$(ROOT)/config/project.yaml
 MKTPL=mdslides template
@@ -29,6 +31,14 @@ test:
 
 dev:
 	python setup.py develop
+
+revealjs:
+	$(update-make-conf)
+
+	$(MKTPL) $(ROOT)/templates/revealjs-template.html $(TMPFOLDER)/revealjs-template.html $(LOC) $(PRJ)
+
+	mdslides compile $(CONFIG) $(ROOT)/en/src $(TMPFOLDER) --chapter-title=text --glossary=$(GLOSSARY) --section-prefix="$(SECTIONPREFIX)"
+	mdslides build revealjs $(CONFIG) $(TMPFOLDER) docs/slides.html --template=$(TMPFOLDER)/revealjs-template.html  --glossary=$(GLOSSARY) --glossary-items=8
 
 site:
 	# build jekyll site

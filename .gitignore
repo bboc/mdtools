@@ -60,5 +60,6 @@ mdtools.sublime-workspace
 
 /mdtools.sublime-project
 
-# github page
+# github page and tmp folder
 docs/_site/*
+docs-src/tmp/*
