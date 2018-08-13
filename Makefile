@@ -47,7 +47,7 @@ site:
 	# prepare templates
 	$(MKTPL) $(ROOT)/templates/docs/_layouts/default.html docs/_layouts/default.html $(LOC) $(PRJ)
 	$(MKTPL) $(ROOT)/templates/docs/_config.yml docs/_config.yml $(LOC) $(PRJ)
-	$(MKTPL) $(ROOT)/templates/docs/CNAME docs/CNAME $(LOC) $(PRJ)
+	#$(MKTPL) $(ROOT)/templates/docs/CNAME docs/CNAME $(LOC) $(PRJ)
 	$(MKTPL) $(ROOT)/en/website/_includes/footer.html docs/_includes/footer.html $(LOC) $(PRJ)
 	cp $(ROOT)/en/website/_includes/header.html docs/_includes/header.html
 
