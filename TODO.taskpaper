@@ -1,15 +1,3 @@
-documentation/showcase:
-	Showcase features and document usage of mdtools in a documentation that is created with mdtools
-	✔ set up basic page structure @done (18-08-13 13:42)
-	✔ make reveal.js slides @done (18-08-13 15:15)
-		✔ integrate reveal.js templates @done (18-08-13 15:15)
-	✔ link to slides.html in documentation @done (18-08-13 22:53)
-	✔ set up jekyll site @done (18-08-13 18:16)
-	  ✔ set up skeleton dir @done (18-08-13 15:15)
-	  ✔ set up templates and styles @done (18-08-13 15:15)
-	- set up github page (decide on CNAME!!!)
-	✔ find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing) @done (18-08-13 18:16)
-		✔ test if backticks work: `[[`deinfe:thing``]]`` @done (18-08-13 18:16)
 
 mdslides:
 		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
@@ -35,6 +23,13 @@ mdslides:
 	glossary overlays:
 		parse glossary markers [Driver](glossary:driver)
 		- revealjs: add html overlay
+new config format:
+		Introduce a new config format that is simpler to tranlsate and contains more parameters, eliminating the need for the index-db. The old structure format must still be understood, so that my slide decks can still be built.
+		Implementation:
+			- read config file
+			- if it contains a key 'content', build in-memory object and process accordingly
+			- ??? otherwise, process legacy config file
+
 	general refactoring:
 		- remove the need for make-conf: all that should be in conig.yaml
 		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatiable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
@@ -89,3 +84,15 @@ mdimg:
 					/de/…
 					/en/…
 
+documentation/showcase:
+	Showcase features and document usage of mdtools in a documentation that is created with mdtools
+	✔ set up basic page structure @done (18-08-13 13:42)
+	✔ make reveal.js slides @done (18-08-13 15:15)
+		✔ integrate reveal.js templates @done (18-08-13 15:15)
+	✔ link to slides.html in documentation @done (18-08-13 22:53)
+	✔ set up jekyll site @done (18-08-13 18:16)
+	  ✔ set up skeleton dir @done (18-08-13 15:15)
+	  ✔ set up templates and styles @done (18-08-13 15:15)
+	✔ set up github page (decide on CNAME!!!) @done (18-08-14 13:14)
+	✔ find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing) @done (18-08-13 18:16)
+		✔ test if backticks work: `[[`deinfe:thing``]]`` @done (18-08-13 18:16)

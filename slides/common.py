@@ -41,6 +41,92 @@ def read_config(filename):
     return yaml.load(stream)
 
 
+def parse_config(data):
+    """
+    Parse raw config data structure into efficient in-memory structure.
+
+    content: each node contains slug and title.
+    """
+    def parse_element(item, name):
+        new_item = {}
+        if type(item) == dict:
+            if 'title' in item:
+                new_item['title'] = item['title']
+            else:
+                new_item['title'] = make_title(name)
+            if 'slug' in item:
+                new_item['slug'] = item['slug']
+            else:
+                new_item['slug'] = make_pathname(name)
+
+            new_item['sections'] = []
+            for s in item['sections']:
+                new_item['sections'].append(parse_element(s, s))
+        elif type(item) == list:
+            new_item['title'] = make_title(name)
+            new_item['slug'] = make_pathname(name)
+            new_item['sections'] = []
+            for s in item:
+                new_item['sections'].append(parse_element(s, s))
+        else:
+            new_item['title'] = make_title(name)
+            new_item['slug'] = make_pathname(name)
+
+        return new_item
+
+    def parse_chapter(item):
+        new_item = {}
+        new_item['sections'] = []
+        print item
+        if 'sections' in item:
+            if 'slug' not in item:
+                new_item['slug'] = make_pathname(item['title'])
+            elif 'title' not in item:
+                new_item['title'] = make_title(item['title'])
+            for s in item['sections']:
+                new_item['sections'].append(parse_section(s))
+        else:
+            name = item.keys()[0]
+            new_item['title'] = make_title(name)
+            new_item['slug'] = make_pathname(name)
+
+            for s in item[name]:
+                new_item['sections'].append(parse_section(s))
+        return new_item
+
+    def parse_section(item):
+        if type(item) == str:
+            new_item = {}
+            new_item['slug'] = make_pathname(item)
+            new_item['title'] = make_title(item)
+            return new_item
+        else:
+            return item
+
+    if 'content' in data:
+        # parse new config format
+        content = {}
+        content['introduction'] = parse_element(data['content']['introduction'], 'introduction')
+        content['chapters'] = []
+        for chapter in data['content']['chapters']:
+            content['chapters'].append(parse_chapter(chapter))
+        content['appendix'] = parse_element(data['content']['appendix'], 'appendix')
+        if TITLE in data['content']:
+            content[TITLE] = data['content'][TITLE]
+        else:
+            content[TITLE] = SKIP
+        if END in data['content']:
+            content[END] = data['content'][END]
+        else:
+            content[END] = SKIP
+
+        data['content'] = content
+    else:
+        # pass old config format
+        pass
+    return data
+
+
 def increase_headline_level(line):
     line = '#' + line
     if line.endswith('#'):
