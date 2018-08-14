@@ -33,7 +33,6 @@ def add_parser_build(subparsers):
     sp.add_argument('--footer', help='The footer to add to each group (wordpress output)')
     sp.add_argument('--template', help='The template to use (deckset, revealjs, and jekyll output)')
     sp.add_argument('--glossary', help='yaml file with glossary terms')
-    sp.add_argument('--index', help='yaml file the index of all sections')
     sp.add_argument('--glossary-items', type=int, default=20, help='number of glossary items per page (used for deckset and revealjs)')
     sp.add_argument('--section-prefix', type=str, default='', help='string to prefix before each chapter headline, e.g. --section-prefix="Pattern %(chapter)s.%(section)s:" ')
     sp.add_argument('--section-index-template', help='[jekyll] Template for the alphabetical section index page.')
@@ -61,8 +60,8 @@ def add_parser_skeleton(subparsers):
 
 def add_parser_build_deckset_index(subparsers):
     sp = subparsers.add_parser('deckset-index',
-                               help="Build the index db to be used for creating the index.")
-    sp.add_argument('config', help='yaml file with presentation structure')
+                               help="Append an alphabetical index to a deckset slide deck.")
+    sp.add_argument('config', help='yaml file with the document structure')
     sp.add_argument('target')
     sp.set_defaults(func=cmd_build_deckset_index)
 

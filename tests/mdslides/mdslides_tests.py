@@ -116,7 +116,6 @@ class CompileSlidesTests(FileBasedTestCase):
                                        make_path('content', 'src'),
                                        self.document_root,
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('index-db.yaml'),
                                        '--glossary-items', '2',
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        '--section-index-template', make_path('templates', 'index-template.md'),
@@ -157,7 +156,6 @@ class CompileSlidesTests(FileBasedTestCase):
                                        make_path('content', 'src'),
                                        self.document_root,
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('index-db.yaml'),
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
 
