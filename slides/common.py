@@ -18,6 +18,10 @@ APPENDIX = 'appendix'
 END = 'end'
 SKIP = 'SKIP'
 SLUG = 'slug'
+CONTENT = 'content'
+SECTIONS = 'sections'
+CHAPTER_INDEX = 'chapter_index'
+INDEX = 'index'
 
 
 def make_pathname(name):
@@ -56,64 +60,64 @@ def parse_config(data):
         """Parse introduction, appendix and old-style chapters."""
         new_item = {}
         # set defaults:
-        new_item['title'] = make_title(name)
-        new_item['slug'] = make_pathname(name)
+        new_item[TITLE] = make_title(name)
+        new_item[SLUG] = make_pathname(name)
         if idx:
-            new_item['index'] = idx
+            new_item[INDEX] = idx
         if type(item) == dict:
-            if 'title' in item:
-                new_item['title'] = item['title']
-            if 'slug' in item:
-                new_item['slug'] = item['slug']
-            sections = item['sections']
+            if TITLE in item:
+                new_item[TITLE] = item[TITLE]
+            if SLUG in item:
+                new_item[SLUG] = item[SLUG]
+            sections = item[SECTIONS]
         elif type(item) == list:
             sections = item
-        new_item['sections'] = [parse_section(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
+        new_item[SECTIONS] = [parse_section(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
         return new_item
 
     def parse_chapter(item, idx):
-        new_item = {'index': idx}
-        if 'sections' in item:
-            new_item['title'] = item['title']
-            new_item['slug'] = item['slug']
-            if 'slug' not in item:
-                new_item['slug'] = make_pathname(item['title'])
-            elif 'title' not in item:
-                new_item['title'] = make_title(item['slug'])
-            sections = item['sections']
+        new_item = {INDEX: idx}
+        if SECTIONS in item:
+            new_item[TITLE] = item[TITLE]
+            new_item[SLUG] = item[SLUG]
+            if SLUG not in item:
+                new_item[SLUG] = make_pathname(item[TITLE])
+            elif TITLE not in item:
+                new_item[TITLE] = make_title(item[SLUG])
+            sections = item[SECTIONS]
         else:
             name = item.keys()[0]
-            new_item['title'] = make_title(name)
-            new_item['slug'] = make_pathname(name)
+            new_item[TITLE] = make_title(name)
+            new_item[SLUG] = make_pathname(name)
             sections = item[name]
-        new_item['sections'] = [parse_section(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
+        new_item[SECTIONS] = [parse_section(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
         return new_item
 
-    def parse_section(item, group_index=None, section_index=None):
+    def parse_section(item, chapter_index=None, section_index=None):
         if type(item) == str:
             section = {}
-            section['slug'] = make_pathname(item)
-            section['title'] = make_title(item)
+            section[SLUG] = make_pathname(item)
+            section[TITLE] = make_title(item)
         else:
             section = item
-        if group_index:
-            section['group_index'] = group_index
+        if chapter_index:
+            section[CHAPTER_INDEX] = chapter_index
         if section_index:
-            section['index'] = section_index
+            section[INDEX] = section_index
         return section
 
     content = {}
-    if 'content' in data:
+    if CONTENT in data:
         # parse new config format
-        content[FRONT_MATTER] = parse_element(data['content'][FRONT_MATTER], FRONT_MATTER)
+        content[FRONT_MATTER] = parse_element(data[CONTENT][FRONT_MATTER], FRONT_MATTER)
         content[CHAPTERS] = []
-        content[CHAPTERS] = [parse_chapter(chapter, idx) for idx, chapter in enumerate(data['content'][CHAPTERS], 1)]
-        content['appendix'] = parse_element(data['content']['appendix'], 'appendix')
+        content[CHAPTERS] = [parse_chapter(chapter, idx) for idx, chapter in enumerate(data[CONTENT][CHAPTERS], 1)]
+        content[APPENDIX] = parse_element(data[CONTENT][APPENDIX], APPENDIX)
 
-        content[TITLE] = data['content'].get(TITLE, TITLE)
-        content[END] = data['content'].get(END, END)
+        content[TITLE] = data[CONTENT].get(TITLE, TITLE)
+        content[END] = data[CONTENT].get(END, END)
 
-        data['content'] = content
+        data[CONTENT] = content
     else:
         # parse old config format
         content[FRONT_MATTER] = parse_element(data[FRONT_MATTER], FRONT_MATTER)
@@ -121,8 +125,8 @@ def parse_config(data):
         content[CHAPTERS] = [parse_element(data[CHAPTERS][chapter_name], chapter_name, idx) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
         del data[CHAPTERS]
         del data[CHAPTER_ORDER]
-        content['appendix'] = parse_element(data['appendix'], 'appendix')
-        del(data['appendix'])
+        content[APPENDIX] = parse_element(data[APPENDIX], APPENDIX)
+        del(data[APPENDIX])
 
         content[TITLE] = data.get(TITLE, TITLE)
         if TITLE in data:
@@ -131,7 +135,7 @@ def parse_config(data):
         if END in data:
             del data[END]
 
-        data['content'] = content
+        data[CONTENT] = content
 
     return data
 

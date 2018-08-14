@@ -26,10 +26,22 @@ mdslides:
 new config format:
 		Introduce a new config format that is simpler to tranlsate and contains more parameters, eliminating the need for the index-db. The old structure format must still be understood, so that my slide decks can still be built.
 		Implementation:
-			- read config file
-			- if it contains a key 'content', build in-memory object and process accordingly
-			- ??? otherwise, process legacy config file
+			✔ read config file @done (18-08-14 18:45)
+			✔ if it contains a key 'content', build in-memory object and process accordingly @done (18-08-14 18:45)
+			✔ ??? otherwise, process legacy config file @done (18-08-14 18:46)
+			✔ implement in compiler @done (18-08-14 19:47)
+			✔ implement in deckset export @done (18-08-14 19:47)
+			- implement in index builder for deckset export
+			✔ implement in ebook builder @done (18-08-14 21:23)
+			- implement in reveal.js builder
+			- implement in jekyll export
+			- implement in wordpress builder
+			- eliminate index builder completely
+			- use sectionprefix from config file 
+			- implement in cmd_create_source_files_for_slides
 
+	section compiler:
+		- refactor SectionCompiler._append_section() to use mardown processor
 	general refactoring:
 		- remove the need for make-conf: all that should be in conig.yaml
 		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatiable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
