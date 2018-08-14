@@ -12,8 +12,8 @@ import re
 import sys
 from shutil import copyfile
 
-from common import make_pathname, make_title, create_directory, read_config
-from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END, SKIP
+from common import make_pathname, make_title, create_directory, read_config, get_config
+from common import TITLE, FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP
 
 from glossary import read_glossary
 import translate
@@ -154,7 +154,7 @@ class SectionCompiler():
         elif self.args.chapter_title == 'both':
             self.INSERT_CHAPTER_IMG_TITLE_SLIDE = True
             self.INSERT_CHAPTER_TEXT_TITLE_SLIDE = True
-        self.config = read_config(self.args.config)
+        self.config = get_config(self.args.config)
 
         self.glossary = read_glossary(self.args.glossary)
 
@@ -169,39 +169,39 @@ class SectionCompiler():
 
         if not os.path.exists(self.target_folder):
             os.makedirs(self.target_folder)
-
-        self._copy_file('%s.md' % self.config.get(TITLE, TITLE))
-        if FRONT_MATTER in self.config:
-            self._compile_section_group(self.config[FRONT_MATTER], FRONT_MATTER)
+        content = self.config['content']
+        if TITLE in content and content[TITLE] != SKIP:
+            self._copy_file('%s.md' % content[TITLE])
+        if FRONT_MATTER in content:
+            self._compile_section_group(content[FRONT_MATTER])
 
             # insert illustrations for all chapters between intro and chapters
             if self.args.add_chapter_illustration:
-                for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
+                for i, chapter in enumerate(self.content['chapters']):
                     self.target.write(self.GROUP_INDEX_IMAGE % str(i + 1))
                     self._append_section_break()
-        for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
-                self._compile_section_group(self.config[CHAPTERS][chapter], chapter, i + 1)
-        if APPENDIX in self.config:
-            self._compile_section_group(self.config[APPENDIX], APPENDIX)
-        end = self.config.get(END, END)
-        if end != SKIP:
-            self._copy_file('%s.md' % end)
+        for i, chapter in enumerate(content['chapters']):
+                self._compile_section_group(chapter, i + 1)
+        if APPENDIX in content:
+            self._compile_section_group(content[APPENDIX])
+        if END in content and content[END] != SKIP:
+            self._copy_file('%s.md' % content[END])
 
     def _copy_file(self, name):
         copyfile(os.path.join(self.source, name), os.path.join(self.target_folder, name))
 
-    def _compile_section_group(self, group, group_name, chapter_index=None):
+    def _compile_section_group(self, group, chapter_index=None):
         """Compile front matter, chapters and appendix."""
-        folder = os.path.join(self.source, make_pathname(group_name))
+        folder = os.path.join(self.source, group['slug'])
 
         def is_chapter():
             return chapter_index
 
-        with codecs.open(os.path.join(self.target_folder, '%s.md' % make_pathname(group_name)), 'w+', 'utf-8') as self.target:
+        with codecs.open(os.path.join(self.target_folder, '%s.md' % group['slug']), 'w+', 'utf-8') as self.target:
             if is_chapter():
                 # chapter title and index slides
                 if self.INSERT_CHAPTER_TEXT_TITLE_SLIDE:
-                    self.target.write('\n# %s. %s' % (chapter_index, make_title(group_name)))
+                    self.target.write('\n# %s. %s' % (chapter_index, make_title(group['slug'])))
                     self._slide_break()
                 if self.INSERT_CHAPTER_IMG_TITLE_SLIDE:
                     self.target.write(self.CHAPTER_TITLE_IMAGE % str(chapter_index))
@@ -216,13 +216,13 @@ class SectionCompiler():
                 self._slide_break()
 
             # add individual sections
-            for section_index, section in enumerate(group):
+            for section_index, section in enumerate(group['sections']):
                 if is_chapter() and self.args.section_prefix:
                     headline_prefix = self.args.section_prefix % dict(chapter=chapter_index, section=section_index + 1)
                 else:
                     headline_prefix = None
-                self._append_section(folder, '%s.md' % make_pathname(section), headline_prefix)
-                if section_index + 1 < len(group):
+                self._append_section(folder, '%s.md' % section['slug'], headline_prefix)
+                if section_index + 1 < len(group['sections']):
                     self._slide_break()
 
     def _slide_break(self):
