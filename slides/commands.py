@@ -70,7 +70,7 @@ def add_parser_build_index_db(subparsers):
 def add_parser_build_deckset_index(subparsers):
     sp = subparsers.add_parser('deckset-index',
                                help="Build the index db to be used for creating the index.")
-    sp.add_argument('index_db')
+    sp.add_argument('config', help='yaml file with presentation structure')
     sp.add_argument('target')
     sp.set_defaults(func=cmd_build_deckset_index)
 

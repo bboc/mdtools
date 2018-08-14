@@ -13,7 +13,7 @@ import sys
 from shutil import copyfile
 
 from common import make_pathname, make_title, create_directory, read_config, get_config
-from common import TITLE, FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP
+from common import TITLE, FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP, SLUG, ID, TITLE
 
 from glossary import read_glossary
 import translate
@@ -111,7 +111,7 @@ def cmd_create_source_files_for_slides(args):
             if args.verbose:
                 print "skipped %s" % title_root
 
-    make_file(args.target, 'title', 'title')
+    make_file(args.target, TITLE, TITLE)
     if FRONT_MATTER in config:
         make_group(FRONT_MATTER, config[FRONT_MATTER])
     for chapter in config[CHAPTERS].keys():
@@ -120,7 +120,7 @@ def cmd_create_source_files_for_slides(args):
         make_group(APPENDIX, config[APPENDIX])
     end = config.get(END, END)
     if end != SKIP:
-        make_file(args.target, 'end', 'end')
+        make_file(args.target, END, END)
 
 
 class SectionCompiler():
@@ -178,7 +178,7 @@ class SectionCompiler():
             # insert illustrations for all chapters between intro and chapters
             if self.args.add_chapter_illustration:
                 for chapter in content['chapters']:
-                    self.target.write(self.GROUP_INDEX_IMAGE % str(chapter['index']))
+                    self.target.write(self.GROUP_INDEX_IMAGE % str(chapter[ID]))
                     self._append_section_break()
         for chapter in content['chapters']:
                 self._compile_section_group(chapter)
@@ -192,22 +192,22 @@ class SectionCompiler():
 
     def _compile_section_group(self, group):
         """Compile front matter, chapters and appendix."""
-        folder = os.path.join(self.source, group['slug'])
+        folder = os.path.join(self.source, group[SLUG])
 
         def is_chapter():
-            return 'index' in group
+            return ID in group
 
-        with codecs.open(os.path.join(self.target_folder, '%s.md' % group['slug']), 'w+', 'utf-8') as self.target:
+        with codecs.open(os.path.join(self.target_folder, '%s.md' % group[SLUG]), 'w+', 'utf-8') as self.target:
             if is_chapter():
                 # chapter title and index slides
                 if self.INSERT_CHAPTER_TEXT_TITLE_SLIDE:
-                    self.target.write('\n# %s. %s' % (group['index'], group['title']))
+                    self.target.write('\n# %s. %s' % (group[ID], group[TITLE]))
                     self._slide_break()
                 if self.INSERT_CHAPTER_IMG_TITLE_SLIDE:
-                    self.target.write(self.CHAPTER_TITLE_IMAGE % str(group['index']))
+                    self.target.write(self.CHAPTER_TITLE_IMAGE % str(group[ID]))
                     self._slide_break()
                 if self.args.add_chapter_illustration:
-                    self.target.write(self.CHAPTER_INDEX_IMAGE % str(group['index']))
+                    self.target.write(self.CHAPTER_INDEX_IMAGE % str(group[ID]))
                     self._slide_break()
 
             # insert group preamble if present
@@ -218,11 +218,11 @@ class SectionCompiler():
             # add individual sections
             for section in group['sections']:
                 if is_chapter() and self.args.section_prefix:
-                    headline_prefix = self.args.section_prefix % dict(chapter=group['index'], section=section['index'])
+                    headline_prefix = self.args.section_prefix % dict(chapter=group[ID], section=section[ID])
                 else:
                     headline_prefix = None
-                self._append_section(folder, '%s.md' % section['slug'], headline_prefix)
-                if section['index'] < len(group['sections']):
+                self._append_section(folder, '%s.md' % section[SLUG], headline_prefix)
+                if section[ID] < len(group['sections']):
                     self._slide_break()
 
     def _slide_break(self):

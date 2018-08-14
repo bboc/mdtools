@@ -9,7 +9,7 @@ from functools import partial
 import os
 
 from common import get_config, md_filename, make_headline_prefix
-from common import FRONT_MATTER, APPENDIX, CONTENT, SLUG, CHAPTERS, TITLE, SECTIONS
+from common import FRONT_MATTER, APPENDIX, CONTENT, SLUG, CHAPTERS, TITLE, SECTIONS, ID
 import markdown_processor as mdp
 from glossary import EbookGlossaryRenderer, read_glossary
 
@@ -48,7 +48,7 @@ class EbookWriter(object):
                                          chapter,
                                          section,
                                          headline_level_increase=1,
-                                         headline_prefix=make_headline_prefix(self.args, self.config, chapter['index'], section['index']))
+                                         headline_prefix=make_headline_prefix(self.args, self.config, chapter[ID], section[ID]))
 
         # finally build appendix
         build_intro_and_appendix('tmp-appendix.md', content[APPENDIX])
@@ -82,7 +82,7 @@ class EbookWriter(object):
         target.write('## %s \n' % chapter[TITLE])
         target.write('\n')
         # this image is not rendered directly under the headline, so it makes no sense to have this
-        # target.write('\n![](img/pattern-groups/group-%s.png)\n\n' % chapter['index'])
+        # target.write('\n![](img/pattern-groups/group-%s.png)\n\n' % chapter[ID])
         chapter_index_file = os.path.join(self.source_folder, chapter[SLUG], 'index.md')
         if os.path.exists(chapter_index_file):
             with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:

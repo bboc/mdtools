@@ -10,7 +10,7 @@ import os
 from textwrap import dedent
 
 from common import get_config, md_filename, make_headline_prefix
-from common import FRONT_MATTER, APPENDIX, CHAPTERS, SECTIONS, SLUG, TITLE, CONTENT, INDEX, SECTION_INDEX, CHAPTER_INDEX
+from common import FRONT_MATTER, APPENDIX, CHAPTERS, SECTIONS, SLUG, TITLE, CONTENT, ID, INDEX, CHAPTER_ID
 import markdown_processor as mdp
 from glossary import JekyllGlossaryRenderer, read_glossary
 
@@ -56,7 +56,7 @@ class JekyllWriter(object):
             for section in chapter[SECTIONS]:
                 self._copy_section(chapter,
                                    section,
-                                   make_headline_prefix(self.args, self.config, chapter[INDEX], section[INDEX]))
+                                   make_headline_prefix(self.args, self.config, chapter[ID], section[ID]))
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
@@ -82,7 +82,7 @@ class JekyllWriter(object):
         with codecs.open(self.args.section_index_template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, os.path.basename(self.args.section_index_template)), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[SECTION_INDEX], sort=True),
+                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[INDEX], sort=True),
                     partial(mdp.write, target),
                 ])
                 processor.process()
@@ -164,21 +164,21 @@ class JekyllWriter(object):
         target.write("\n\n")
 
         # next link: next pattern, next group, or first group
-        if section[INDEX] < len(chapter[SECTIONS]):
+        if section[ID] < len(chapter[SECTIONS]):
             # next section in pattern (if any)
-            next_item = chapter[SECTIONS][section[INDEX]]
+            next_item = chapter[SECTIONS][section[ID]]
         else:
-            if section[CHAPTER_INDEX] < len(self.config[CONTENT][CHAPTERS]):
+            if section[CHAPTER_ID] < len(self.config[CONTENT][CHAPTERS]):
                 # next chapter
-                next_item = self.config[CONTENT][CHAPTERS][section[CHAPTER_INDEX]]
+                next_item = self.config[CONTENT][CHAPTERS][section[CHAPTER_ID]]
             else:
                 # last chapter: wrap around to first chapter index
                 next_item = self.config[CONTENT][CHAPTERS][0]
         nav_el(target, NEXT_ELEMENT, next_item)
         target.write("<br/>")
         # prev link = prev pattern TODO: or prev group index (wrap around to last group)
-        if section[INDEX] > 1:
-            p_next = chapter[SECTIONS][section[INDEX] - 2]
+        if section[ID] > 1:
+            p_next = chapter[SECTIONS][section[ID] - 2]
             nav_el(target, PREV_ELEMENT, p_next)
             target.write("<br/>")
         # up: group index
@@ -194,9 +194,9 @@ class JekyllWriter(object):
         nav_el(target, NEXT_ELEMENT, item)
         target.write("<br/>")
         # back:
-        if chapter[INDEX] > 1:
+        if chapter[ID] > 1:
             # last pattern of previous group
-            target_chapter = self.config[CONTENT][CHAPTERS][chapter[INDEX] - 2]
+            target_chapter = self.config[CONTENT][CHAPTERS][chapter[ID] - 2]
         else:
             # last pattern of last group
             target_chapter = self.config[CONTENT][CHAPTERS][-1]

@@ -8,7 +8,7 @@ from operator import itemgetter
 from string import Template
 from textwrap import dedent
 
-from common import make_title, read_config, md_filename, CHAPTERS, CHAPTER_ORDER
+from common import make_title, get_config, md_filename, CHAPTERS, CHAPTER_ORDER, INDEX, TITLE
 from translate import translate as _
 
 
@@ -35,12 +35,12 @@ def cmd_build_index_db(args):
 
 
 def cmd_build_deckset_index(args):
-    c = read_config(args.index_db)
+    cfg = get_config(args.config)
     with codecs.open(args.target, 'a', 'utf-8') as target:
-        deckset_alphabetical_index(c['patterns'], target)
+        deckset_alphabetical_index(cfg[INDEX], target)
 
 
-def read_index_db(index_file):
+def read_index_db_deprecated(index_file):
     """Create read index from index.yaml and provide a sorted data structure:
 
     index = {
@@ -85,29 +85,29 @@ def make_cell(items):
     return '<br\>'.join(items)
 
 
-def deckset_alphabetical_index(pattern_data, target, per_page=20):
-    """Create an alphabetical index of patterns as a deckset table."""
+def deckset_alphabetical_index(section_index, target, per_page=20):
+    """Create an alphabetical index of sections as a deckset table."""
 
-    INDEX_ENTRY = Template("$name - $gid.$pid")
+    INDEX_ENTRY = Template("${title} - ${chapter_id}.${id}")
     INDEX_TABLE = Template(dedent("""
-        %(patterns)s $cont | %(patterns)s %(cont)s
+        %(sections)s $cont | %(sections)s %(cont)s
         --- | ---
         $left_content | $right_content
-        """) % dict(patterns=_("Patterns"), cont=_(u'(…)')))
+        """) % dict(sections=_("Patterns"), cont=_(u'(…)')))
 
     # sorting raw pattern data by name makes order independent of display format!
-    pattern_data = sorted(pattern_data, key=lambda x: x['name'].lower())
-    patterns = [INDEX_ENTRY.substitute(p) for p in pattern_data]
+    section_index = sorted(section_index, key=lambda x: x[TITLE].lower())
+    sections = [INDEX_ENTRY.substitute(p) for p in section_index]
 
     cont = ''
 
-    def cut_patterns(patterns):
-        return patterns[:per_page], patterns[per_page:]
+    def cut_sections(sections):
+        return sections[:per_page], sections[per_page:]
 
-    for idx in range(0, len(patterns), per_page * 2):
-        lgroup, patterns = cut_patterns(patterns)
-        if patterns:
-            rgroup, patterns = cut_patterns(patterns)
+    for idx in range(0, len(sections), per_page * 2):
+        lgroup, sections = cut_sections(sections)
+        if sections:
+            rgroup, sections = cut_sections(sections)
         else:
             rgroup = []
 

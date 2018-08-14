@@ -21,9 +21,9 @@ SKIP = 'SKIP'
 SLUG = 'slug'
 CONTENT = 'content'
 SECTIONS = 'sections'
-CHAPTER_INDEX = 'chapter-index'
+CHAPTER_ID = 'chapter_id'
+ID = 'id'
 INDEX = 'index'
-SECTION_INDEX = 'section-index'
 
 
 def make_pathname(name):
@@ -65,7 +65,7 @@ def parse_config(data):
         new_item[TITLE] = make_title(name)
         new_item[SLUG] = make_pathname(name)
         if idx:
-            new_item[INDEX] = idx
+            new_item[ID] = idx
         if type(item) == dict:
             if TITLE in item:
                 new_item[TITLE] = item[TITLE]
@@ -78,7 +78,7 @@ def parse_config(data):
         return new_item
 
     def parse_chapter(item, idx):
-        new_item = {INDEX: idx}
+        new_item = {ID: idx}
         if SECTIONS in item:
             new_item[TITLE] = item[TITLE]
             new_item[SLUG] = item[SLUG]
@@ -103,9 +103,9 @@ def parse_config(data):
         else:
             section = item
         if cidx:
-            section[CHAPTER_INDEX] = cidx
+            section[CHAPTER_ID] = cidx
         if sidx:
-            section[INDEX] = sidx
+            section[ID] = sidx
         return section
 
     content = {}
@@ -139,11 +139,11 @@ def parse_config(data):
 
         data[CONTENT] = content
 
-    data[SECTION_INDEX] = []
+    data[INDEX] = []
     for chapter in data[CONTENT][CHAPTERS]:
         for section in chapter[SECTIONS]:
-            data[SECTION_INDEX].append(section)
-    data[SECTION_INDEX].sort(key=itemgetter(TITLE))
+            data[INDEX].append(section)
+    data[INDEX].sort(key=itemgetter(TITLE))
     return data
 
 
