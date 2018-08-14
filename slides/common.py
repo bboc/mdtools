@@ -17,6 +17,7 @@ CHAPTERS = 'chapters'
 APPENDIX = 'appendix'
 END = 'end'
 SKIP = 'SKIP'
+SLUG = 'slug'
 
 
 def make_pathname(name):
