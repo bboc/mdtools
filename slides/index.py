@@ -48,7 +48,7 @@ def read_index_db(index_file):
         'patterns-by-group': { # used to create group index files
             'group1-path': [ pattern1, pattern2] # ordered by pattern order in group
         }
-        'groups-by-path': {  # used to build navigation
+        'group-by-path': {  # used to build navigation
             'group-path': group,
         }
         'groups-by-gid': {
