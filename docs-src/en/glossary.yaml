@@ -1,0 +1,16 @@
+# this is the database for the glossary.
+# each entry has a key that is used to reference it in the source files 
+# {define:driver}
+# and some translatable strings
+# - name: the name of the glossary entry
+# - definition: the definition of the term in the form "a **x** is …"
+# - glossary: glossary text for a term
+# - note: a note that will be added as a second paragraph to the glossary after the definition
+
+title: Glossary
+continued: (…)
+terms:
+  glossary:
+    name: Glossary
+    definition: A **glossary** is collection of explanations for words the reader might not be familiar with. 
+    glossary: A collection of explanations for words the reader might not be familiar with.

@@ -59,3 +59,7 @@ target/
 mdtools.sublime-workspace
 
 /mdtools.sublime-project
+
+# github page and tmp folder
+docs/_site/*
+docs-src/tmp/*

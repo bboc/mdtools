@@ -54,19 +54,25 @@ class EbookWriter(object):
             for item in self.config[APPENDIX]:
                     self._append_section(target, APPENDIX, md_filename(item))
 
+    def common_filters(self):
+        """Return the set of filters common to all pipelines."""
+        return [
+            mdp.remove_breaks_and_conts,
+            partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
+            partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
+            partial(mdp.inject_glossary, self.glossary),
+            mdp.clean_images,
+        ]
+
     def _append_section(self, target, chapter, section, headline_level_increase=0, headline_prefix=None):
         """Append each section to self.target."""
         source_path = os.path.join(self.source_folder, chapter, section)
         with codecs.open(source_path, 'r', 'utf-8') as source:
-                processor = mdp.MarkdownProcessor(source, filters=[
-                    mdp.remove_breaks_and_conts,
-                    partial(mdp.prefix_headline, headline_prefix),
-                    partial(mdp.increase_all_headline_levels, headline_level_increase),
-                    partial(mdp.insert_glossary, self.glossary_renderer),
-                    mdp.clean_images,
-                    partial(mdp.inject_glossary, self.glossary),
-                    partial(mdp.write, target),
-                ])
+                processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
+                processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
+                processor.add_filter(partial(mdp.increase_all_headline_levels, headline_level_increase))
+                processor.add_filter(partial(mdp.insert_glossary, self.glossary_renderer))
+                processor.add_filter(partial(mdp.write, target))
                 processor.process()
         target.write("\n\n")
 
@@ -82,11 +88,7 @@ class EbookWriter(object):
         if os.path.exists(chapter_index_file):
             with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
                 cif.next()  # skip headline
-                processor = mdp.MarkdownProcessor(cif, filters=[
-                    mdp.remove_breaks_and_conts,
-                    partial(mdp.inject_glossary, self.glossary),
-                    mdp.clean_images,
-                    partial(mdp.write, target),
-                ])
+                processor = mdp.MarkdownProcessor(cif, filters=self.common_filters())
+                processor.add_filter(partial(mdp.write, target))
                 processor.process()
             target.write('\n')

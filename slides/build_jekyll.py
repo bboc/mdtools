@@ -60,6 +60,15 @@ class JekyllWriter(object):
                                    section,
                                    make_headline_prefix(self.args, self.config, chapter['gid'], section['pid']))
 
+    def common_filters(self):
+        """Return the set of filters common to all pipelines."""
+        return [
+            mdp.remove_breaks_and_conts,
+            partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
+            partial(mdp.inject_glossary, self.glossary),
+            partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+        ]
+
     def _build_site_index(self):
         """Build site index from template. Already translation-aware."""
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
@@ -92,11 +101,8 @@ class JekyllWriter(object):
             if os.path.exists(chapter_index_file):
                 with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
                     cif.next()  # skip headline
-                    processor = mdp.MarkdownProcessor(cif, filters=[
-                        mdp.remove_breaks_and_conts,
-                        partial(mdp.inject_glossary, self.glossary),
-                        partial(mdp.write, target),
-                    ])
+                    processor = mdp.MarkdownProcessor(cif, filters=self.common_filters())
+                    processor.add_filter(partial(mdp.write, target))
                     processor.process()
                 target.write('\n')
 
@@ -115,11 +121,8 @@ class JekyllWriter(object):
             for item in self.config[FRONT_MATTER]:
                 source_path = os.path.join(self.source_folder, FRONT_MATTER, md_filename(item))
                 with codecs.open(source_path, 'r', 'utf-8') as source:
-                    processor = mdp.MarkdownProcessor(source, filters=[
-                        mdp.remove_breaks_and_conts,
-                        partial(mdp.inject_glossary, self.glossary),
-                        partial(mdp.write, target),
-                    ])
+                    processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
+                    processor.add_filter(partial(mdp.write, target))
                     processor.process()
                 target.write('\n')
             self.intro_navigation(target)
@@ -140,11 +143,9 @@ class JekyllWriter(object):
         target_path = os.path.join(self.target_folder, section_path)
         with codecs.open(source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=[
-                    mdp.remove_breaks_and_conts,
-                    mdp.jekyll_front_matter,
-                    partial(mdp.write, target),
-                ])
+                processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
+                processor.add_filter(mdp.jekyll_front_matter)
+                processor.add_filter(partial(mdp.write, target))
                 processor.process()
 
     def _copy_section(self, chapter, section, headline_prefix):
@@ -153,13 +154,10 @@ class JekyllWriter(object):
         target_path = os.path.join(self.target_folder, section['path'])
         with codecs.open(source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=[
-                    mdp.remove_breaks_and_conts,
-                    # partial(mdp.prefix_headline, headline_prefix),
-                    mdp.jekyll_front_matter,
-                    partial(mdp.inject_glossary, self.glossary),
-                    partial(mdp.write, target),
-                ])
+                processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
+                processor.add_filter(mdp.jekyll_front_matter)
+                #processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
+                processor.add_filter(partial(mdp.write, target))
                 processor.process()
                 self.section_navigation(target, chapter, section)
 
@@ -169,16 +167,19 @@ class JekyllWriter(object):
         patterns = self.index['patterns-by-group'][chapter['path']]
 
         # next link: next pattern, next group, or first group
-        if section['pid'] == len(patterns):
-            if section['gid'] == len(self.index['groups']):
-                item = self.index['groups-by-gid'][1]
-            else:
-                item = self.index['groups-by-gid'][section['pid'] - 2]
+        if section['pid'] < len(patterns):
+            # next section in pattern (if any)
+            next_item = patterns[(section['pid'])]
         else:
-            item = patterns[(section['pid'])]
-        nav_el(target, NEXT_ELEMENT, item)
+            if section['gid'] < len(self.index['groups']):
+                # next chapter
+                next_item = self.index['groups-by-gid'][section['gid'] + 1]
+            else:
+                # last chapter: wrap around to first chapter index
+                next_item = self.index['groups-by-gid'][1]
+        nav_el(target, NEXT_ELEMENT, next_item)
         target.write("<br/>")
-        # prev link = prev pattern or ???
+        # prev link = prev pattern TODO: or prev group index (wrap around to last group)
         if section['pid'] > 1:
             p_next = patterns[(section['pid'] - 2)]
             nav_el(target, PREV_ELEMENT, p_next)

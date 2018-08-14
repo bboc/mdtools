@@ -1,0 +1,57 @@
+groups:
+- gid: 4
+  name: Commands
+  path: commands.md
+- gid: 3
+  name: Data Structure
+  path: data-structure.md
+- gid: 2
+  name: Features
+  path: features.md
+- gid: 1
+  name: Formats
+  path: formats.md
+- gid: 5
+  name: Translation
+  path: translation.md
+patterns:
+- gid: 2
+  name: Chapter Headers
+  path: chapter-headers.md
+  pid: 3
+- gid: 1
+  name: Deckset
+  path: deckset.md
+  pid: 1
+- gid: 2
+  name: Glossary Entries
+  path: glossary-entries.md
+  pid: 1
+- gid: 2
+  name: Index Files
+  path: index-files.md
+  pid: 4
+- gid: 1
+  name: Jekyll
+  path: jekyll.md
+  pid: 2
+- gid: 4
+  name: Mdimg
+  path: mdimg.md
+  pid: 2
+- gid: 4
+  name: Mdslides
+  path: mdslides.md
+  pid: 1
+- gid: 2
+  name: Section Links
+  path: section-links.md
+  pid: 2
+- gid: 3
+  name: Templates
+  path: templates.md
+  pid: 1
+- gid: 5
+  name: Translating Templates
+  path: translating-templates.md
+  pid: 1

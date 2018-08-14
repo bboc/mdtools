@@ -1,0 +1,332 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>mdtools Documentation v2018-08-13</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="reveal.js/custom-theme.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+		<!-- Some fixes (mainly for images) -->
+		<link rel="stylesheet" href="reveal.js/custom-styles.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+<section><section data-background-image="img/some-logo.png">
+<h1>mdtools</h1>
+<h1>A Toolkit for Markdown Content</h1>
+<h4>Turn your content into slide decks, ebooks and websites</h4>
+<h4><a href="https://github.com/bboc/mdtools">https://github.com/bboc/mdtools</a></h4>
+</section>
+
+</section><section><section>
+<h2>What is this?</h2>
+<p><em>mdtools</em> is a set of command line tools written in Python that to render markdown content into ebooks, slide decks and static websites you can host on any web server, or as a GitHub page.</p>
+</section>
+
+<section>
+<h2>Usecases</h2>
+<p>The biggest use case at the moment is the <a href="https://patterns-sociocracy30.org">S3 Practical Guide</a>, the "official" documentation for Sociocracy 3.0. It's compiled from ~100 source files into static website, ebooks and pdfs, and translated into several languages.</p>
+<p>I also use it for all my slide for trainings, workshops and conferences, some <a href="https://www.slideshare.net/BernhardBockelbrink/">examples are on slideshare</a></p>
+</section>
+
+</section><section><section>
+<h1>1. Formats</h1>
+
+</section>
+
+<section>
+<h2>Formats</h2>
+<p><em>mdslides</em> can render the output in various formats:</p>
+<ul>
+<li>Markdown for Deckset</li>
+<li>epub (using pandoc)</li>
+<li>a HTML file for reveal.js</li>
+<li>a PDF</li>
+<li>a static website using Jekyll</li>
+</ul>
+</section>
+
+<section>
+<h2>1.1: Deckset</h2>
+<p>Deckset is a presenter for markdown slides. It is nice for small slide decks, but lacks a few features one would want when creating larger decks. </p>
+</section>
+
+<section>
+<h2>1.2: Jekyll</h2>
+<p>Jekyll is a static website generator, also which is used for creating github pages.</p>
+</section>
+
+</section><section><section>
+<h1>2. Features</h1>
+
+</section>
+
+<section>
+<h2>2.1: Glossary</h2>
+<p><em>A <strong>glossary</strong> is collection of explanations for words the reader might not be familiar with.</em></p>
+<p>mdtools expects the glossary in a YAML-file, and can do a few tricks with it: </p>
+<ul>
+<li>insert glossary explanations or definitions into the text using &#0123;&#0123;glossary:glossary-term&#0125;&#0125; or &#0123;&#0123;define:glossary-term&#0125;&#0125;</li>
+<li>render a full glossary using &#0123;&#0123;insert-full-glossary&#0125;&#0125;</li>
+<li>add an explanation for a <a href="glossary:glossary">glossary</a> term as an overlay (in html output) using &#0091;glossary&#0093;&#0040;glossary:glossary&#0041;</li>
+</ul>
+</section>
+
+<section>
+<h2>Glossary Format:</h2>
+<pre><code>terms:
+  my-term:
+    name: My Term
+definition: what you want to display in the definition of the term
+glossary: what you want to put into the glossary
+</code></pre>
+</section>
+
+<section>
+<h2>2.2: Section Links</h2>
+<p>You can link to another section, e.g. the <a href="section:glossary">section about the glossary</a> using a section link of the format &#0091;link title&#0093;&#0040;section:section-slug&#0041;</p>
+<p>Section links will be replaced with a link suitable for the output format, for some formats, which do not support link targets, it makes sense to render them only as text (e.g. in a Deckset slide deck)</p>
+</section>
+
+<section>
+<h2>2.3: Chapter Headers</h2>
+<p>{&gt;&gt;TODO: insert section about chapter headers &lt;&lt;}</p>
+</section>
+
+<section>
+<h2>2.4: Index Files</h2>
+<p>{&gt;&gt;TODO: explain automatic transfusion of chapter index files &lt;&lt;}</p>
+</section>
+
+</section><section><section>
+<h1>3. Data Structure</h1>
+
+</section>
+
+<section>
+<h2>Data Structure</h2>
+<p><em>mdslides</em> expects your content in specific directories, and relies on a set of configuration files. It also requires certain directories for temp files, which can be set up with a command in <em>mdslides</em>.</p>
+</section>
+
+<section>
+<h2>3.1: Templates</h2>
+<p>{&gt;&gt;TODO:  &lt;&lt;} </p>
+</section>
+
+</section><section><section>
+<h1>4. Commands</h1>
+
+</section>
+
+<section>
+<h2>4.1: mdslides</h2>
+<p>{&gt;&gt;TODO: write this section &lt;&lt;}</p>
+</section>
+
+<section>
+<h2>4.2: mdimg</h2>
+<p>{&gt;&gt;TODO: write &lt;&lt;}</p>
+</section>
+
+</section><section><section>
+<h1>5. Translation</h1>
+
+</section>
+
+<section>
+<h2>Translation</h2>
+<p>It is very simple to translate a <em>mdtools</em> project into another language, as all translatable content is kept in a single directory and is stored in text files which all common translation platforms can easily pick up. </p>
+<p>Simply drop the translated content into a new project, and you're ready to go.</p>
+</section>
+
+<section>
+<h2>5.1: Translating Templates</h2>
+<p>If templates contain translatable content, simply store them inside the content directory, and copy them to where you need them in the makefile.</p>
+</section>
+
+</section><section><section>
+<h1>Glossary</h1>
+<p><strong>Glossary</strong>: A collection of explanations for words the reader might not be familiar with. </p>
+</section>
+
+<section>
+<h2>Changelog</h2>
+<h3>August 2018</h3>
+<ul>
+<li>fixed a bug in the section navigation on the jekyll site</li>
+<li>added added a github page as a showcase that is built thorugh mdtools</li>
+<li>added section links and overlays for glossary terms</li>
+<li>added basic tests for all output formats of mdslides</li>
+</ul>
+<h3>May 2018</h3>
+<ul>
+<li>added a new subcommand 'templates' to 'mdslides' to insert variables and translations into template files</li>
+</ul>
+<h3>February 2018</h3>
+<ul>
+<li>added commands to build ebooks (ePub and PDF from LaTex)</li>
+</ul>
+<h3>January 2018</h3>
+<ul>
+<li>added basic section navigation to Jekyll site</li>
+<li>added translatable index and localization for Jekyll site</li>
+</ul>
+<h3>November 2017</h3>
+<ul>
+<li>added support for glossaries</li>
+</ul>
+<h3>September 2017</h3>
+<ul>
+<li>mdimg now handles images in multiple languages</li>
+</ul>
+</section>
+
+<section>
+<h2>License</h2>
+<p>mdtools is licensed under the GNU General Public License v3.0</p>
+<p>The full license is available under <a href="https://github.com/bboc/mdtools/blob/master/LICENSE">https://github.com/bboc/mdtools/blob/master/LICENSE</a></p>
+<p>Contact me if you need another license for some reason.</p>
+</section>
+
+</section>			</div>
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				// The "normal" size of the presentation, aspect ratio will be preserved
+				// when the presentation is scaled to fit different resolutions. Can be
+				// specified using percentage units.
+				width: 960,
+				height: 700,
+
+				// Factor of the display size that should remain empty around the content
+				margin: 0.3,
+
+				// Bounds for smallest/largest possible scale to apply to content
+				minScale: 0.2,
+				maxScale: 1.5,
+
+			    // Display controls in the bottom right corner
+			    controls: true,
+
+			    // Display a presentation progress bar
+			    progress: true,
+
+			    // Display the page number of the current slide
+			    slideNumber: true,
+
+			    // Push each slide change to the browser history
+			    history: true,
+
+			    // Enable keyboard shortcuts for navigation
+			    keyboard: true,
+
+			    // Enable the slide overview mode
+			    overview: true,
+
+			    // Vertical centering of slides
+			    center: true,
+
+			    // Enables touch navigation on devices with touch input
+			    touch: true,
+
+			    // Loop the presentation
+			    loop: false,
+
+			    // Change the presentation direction to be RTL
+			    rtl: false,
+
+			    // Randomizes the order of slides each time the presentation loads
+			    shuffle: false,
+
+			    // Turns fragments on and off globally
+			    fragments: true,
+
+			    // Flags if the presentation is running in an embedded mode,
+			    // i.e. contained within a limited portion of the screen
+			    embedded: false,
+
+			    // Flags if we should show a help overlay when the questionmark
+			    // key is pressed
+			    help: true,
+
+			    // Flags if speaker notes should be visible to all viewers
+			    showNotes: false,
+
+			    // Number of milliseconds between automatically proceeding to the
+			    // next slide, disabled when set to 0, this value can be overwritten
+			    // by using a data-autoslide attribute on your slides
+			    autoSlide: 5000,
+
+			    // Stop auto-sliding after user input
+			    autoSlideStoppable: true,
+
+			    // Use this method for navigation when auto-sliding
+			    autoSlideMethod: Reveal.navigateNext,
+
+			    // Enable slide navigation via mouse wheel
+			    mouseWheel: true,
+
+			    // Hides the address bar on mobile devices
+			    hideAddressBar: true,
+
+			    // Opens links in an iframe preview overlay
+			    previewLinks: true,
+
+			    // Transition style
+			    transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+			    // Transition speed
+			    transitionSpeed: 'default', // default/fast/slow
+
+			    // Transition style for full page slide backgrounds
+			    backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+			    // Number of slides away from the current that are visible
+			    viewDistance: 3,
+
+			    // Parallax background image
+			    parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+			    // Parallax background size
+			    parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+			    // Number of pixels to move the parallax background per slide
+			    // - Calculated automatically unless specified
+			    // - Set to 0 to disable movement along an axis
+			    parallaxBackgroundHorizontal: null,
+			    parallaxBackgroundVertical: null,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal.js/plugin/markdown/marked.js' },
+					{ src: 'reveal.js/plugin/markdown/markdown.js' },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+					{ src: 'reveal.js/plugin/search/search.js' },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
