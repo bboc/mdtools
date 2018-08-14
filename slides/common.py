@@ -36,6 +36,10 @@ def create_directory(directory):
         os.mkdir(directory)
 
 
+def get_config(filename):
+    return parse_config(read_config(filename))
+
+
 def read_config(filename):
     stream = open(filename, "r")
     return yaml.load(stream)
@@ -93,39 +97,31 @@ def parse_config(data):
     content = {}
     if 'content' in data:
         # parse new config format
-        content['introduction'] = parse_element(data['content']['introduction'], 'introduction')
+        content[FRONT_MATTER] = parse_element(data['content'][FRONT_MATTER], FRONT_MATTER)
         content[CHAPTERS] = []
         content[CHAPTERS] = [parse_chapter(chapter) for chapter in data['content'][CHAPTERS]]
         content['appendix'] = parse_element(data['content']['appendix'], 'appendix')
-        if TITLE in data['content']:
-            content[TITLE] = data['content'][TITLE]
-        else:
-            content[TITLE] = SKIP
-        if END in data['content']:
-            content[END] = data['content'][END]
-        else:
-            content[END] = SKIP
+
+        content[TITLE] = data['content'].get(TITLE, TITLE)
+        content[END] = data['content'].get(END, END)
 
         data['content'] = content
     else:
         # parse old config format
-        content['introduction'] = parse_element(data['introduction'], 'introduction')
-        del(data['introduction'])
+        content[FRONT_MATTER] = parse_element(data[FRONT_MATTER], FRONT_MATTER)
+        del(data[FRONT_MATTER])
         content[CHAPTERS] = [parse_element(data[CHAPTERS][chapter_name], chapter_name) for chapter_name in data[CHAPTER_ORDER]]
         del data[CHAPTERS]
         del data[CHAPTER_ORDER]
         content['appendix'] = parse_element(data['appendix'], 'appendix')
         del(data['appendix'])
+        
+        content[TITLE] = data.get(TITLE, TITLE)
         if TITLE in data:
-            content[TITLE] = data[TITLE]
             del data[TITLE]
-        else:
-            content[TITLE] = SKIP
+        content[END] = data.get(END, END)
         if END in data:
-            content[END] = data[END]
             del data[END]
-        else:
-            content[END] = SKIP
 
         data['content'] = content
 
