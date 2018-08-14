@@ -4,8 +4,8 @@ email: bernhard.bockelbrink@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
    A set of commandlinetools for publishing slide decks, ebooks and websites.
 
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://bboc.github.io" # the base hostname & protocol for your site
+baseurl: "/mdtools" # the subpath of your site, e.g. /blog
+url: "https://bboc.github.io" # the base hostname & protocol for your site
 
 # Build settings
 source:   .
@@ -32,7 +32,4 @@ defaults:
 
 
 exclude:      [
-  "_export",
-  "_python",
-  "_templates",
   ]

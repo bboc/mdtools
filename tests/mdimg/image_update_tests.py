@@ -74,7 +74,7 @@ class ImageUpdateTests(ImageTestBase):
 
     def test_update_images_with_commit(self):
         self.create_fixture('full-test', 'documents')
-        args = self.parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit'])
+        args = self.parser.parse_args(['update', self.document_root, '-i', self.image_root, '--commit'])
         update_images_cmd(args)
 
         # make sure document contens are valid
@@ -88,7 +88,7 @@ class ImageUpdateTests(ImageTestBase):
     def test_update_images_with_commit_and_keep_backups(self):
 
         self.create_fixture('full-test', 'documents')
-        args = self.parser.parse_args(['update-images', self.document_root, '-i', self.image_root, '--commit', '--keep'])
+        args = self.parser.parse_args(['update', self.document_root, '-i', self.image_root, '--commit', '--keep'])
         update_images_cmd(args)
 
         # make sure document contens are valid
@@ -108,7 +108,7 @@ class ImageRepositoryTests(ImageTestBase):
 
     def setup_image_repo(self):
         self.create_fixture('full-test', 'documents')
-        args = self.parser.parse_args(['update-images', self.document_root, '-i', self.image_root])
+        args = self.parser.parse_args(['update', self.document_root, '-i', self.image_root])
         return ImageRepo(args.image_root)
 
     def test_probe_image_repository(self):
