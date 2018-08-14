@@ -17,48 +17,78 @@ from slides.common import parse_config
 class ConfigTests(TestCase):
 
     result = {
-        'content': {'appendix': {'sections': [{'slug': 'glossary',
+        'content': {'appendix': {'sections': [{'index': 1,
+                                               'slug': 'glossary',
                                                'title': 'Glossary'},
-                                              {'slug': 'changelog',
+                                              {'index': 2,
+                                               'slug': 'changelog',
                                                'title': 'Changelog'},
-                                              {'slug': 'license',
+                                              {'index': 3,
+                                               'slug': 'license',
                                                'title': 'License'}],
                                  'slug': 'appendix',
                                  'title': 'Appendix'},
-                    'chapters': [{'sections': [{'slug': 'deckset',
+                    'chapters': [{'index': 1,
+                                  'sections': [{'group_index': 1,
+                                                'index': 1,
+                                                'slug': 'deckset',
                                                 'title': 'Deckset'},
-                                               {'slug': 'jekyll',
+                                               {'group_index': 1,
+                                                'index': 2,
+                                                'slug': 'jekyll',
                                                 'title': 'Jekyll'}],
                                   'slug': 'formats',
                                   'title': 'Formats'},
-                                 {'sections': [{'slug': 'glossary-entries',
+                                 {'index': 2,
+                                  'sections': [{'group_index': 2,
+                                                'index': 1,
+                                                'slug': 'glossary-entries',
                                                 'title': 'Glossary Entries'},
-                                               {'slug': 'section-links',
+                                               {'group_index': 2,
+                                                'index': 2,
+                                                'slug': 'section-links',
                                                 'title': 'Section Links'},
-                                               {'slug': 'chapter-headers',
+                                               {'group_index': 2,
+                                                'index': 3,
+                                                'slug': 'chapter-headers',
                                                 'title': 'Chapter Headers'},
-                                               {'slug': 'index-files',
+                                               {'group_index': 2,
+                                                'index': 4,
+                                                'slug': 'index-files',
                                                 'title': 'Index Files'}],
                                   'slug': 'features',
                                   'title': 'Features'},
-                                 {'sections': [{'slug': 'templates',
+                                 {'index': 3,
+                                  'sections': [{'group_index': 3,
+                                                'index': 1,
+                                                'slug': 'templates',
                                                 'title': 'Templates'}],
                                   'slug': 'data-structure',
                                   'title': 'Data Structure'},
-                                 {'sections': [{'slug': 'mdslides',
+                                 {'index': 4,
+                                  'sections': [{'group_index': 4,
+                                                'index': 1,
+                                                'slug': 'mdslides',
                                                 'title': 'Mdslides'},
-                                               {'slug': 'mdimg',
+                                               {'group_index': 4,
+                                                'index': 2,
+                                                'slug': 'mdimg',
                                                 'title': 'Mdimg'}],
                                   'slug': 'commands',
                                   'title': 'Commands'},
-                                 {'sections': [{'slug': 'translating-templates',
+                                 {'index': 5,
+                                  'sections': [{'group_index': 5,
+                                                'index': 1,
+                                                'slug': 'translating-templates',
                                                 'title': 'Translating Templates'}],
                                   'slug': 'translation',
                                   'title': 'Translation'}],
                     'end': 'SKIP',
-                    'introduction': {'sections': [{'slug': 'overview',
+                    'introduction': {'sections': [{'index': 1,
+                                                   'slug': 'overview',
                                                    'title': 'Overview'},
-                                                  {'slug': 'usecases',
+                                                  {'index': 2,
+                                                   'slug': 'usecases',
                                                    'title': 'Usecases'}],
                                      'slug': 'introduction',
                                      'title': 'Introduction'},
@@ -70,40 +100,40 @@ class ConfigTests(TestCase):
         self.maxDiff = None
         cfg = dedent("""
 
-          section-prefix: "%(chapter)s.%(section)s:"
-          content:
-            title: title
-            end: SKIP
-            introduction:
-              title: Introduction
-              slug: introduction
-              sections:
-                - overview
-                - usecases
-            chapters:
-              - formats:
-                - deckset
-                - jekyll
-              - features:
-                - title: Glossary Entries
-                  slug: glossary-entries
-                - section links
-                - chapter headers
-                - index files
-              - title: Data Structure
-                slug: data-structure
-                sections:
-                  - title: Templates
-                    slug: templates
-              - commands:
-                - mdslides
-                - mdimg
-              - translation:
-                - translating templates
-            appendix:
-              - glossary
-              - changelog
-              - license
+            section-prefix: "%(chapter)s.%(section)s:"
+            content:
+                title: title
+                end: SKIP
+                introduction:
+                    title: Introduction
+                    slug: introduction
+                    sections:
+                        - overview
+                        - usecases
+                chapters:
+                    - formats:
+                        - deckset
+                        - jekyll
+                    - features:
+                        - title: Glossary Entries
+                          slug: glossary-entries
+                        - section links
+                        - chapter headers
+                        - index files
+                    - title: Data Structure
+                      slug: data-structure
+                      sections:
+                        - title: Templates
+                          slug: templates
+                    - commands:
+                        - mdslides
+                        - mdimg
+                    - translation:
+                        - translating templates
+                appendix:
+                    - glossary
+                    - changelog
+                    - license
          """)
         parsed = parse_config(yaml.load(cfg))
         import pprint
@@ -120,37 +150,37 @@ class ConfigTests(TestCase):
             section-prefix: "%(chapter)s.%(section)s:"
 
             introduction:
-              - overview
-              - usecases
+                - overview
+                - usecases
 
             appendix:
-              - glossary
-              - changelog
-              - license
+                - glossary
+                - changelog
+                - license
 
             chapter-order:
-              - formats
-              - features
-              - data structure
-              - commands
-              - translation
+                - formats
+                - features
+                - data structure
+                - commands
+                - translation
 
             chapters:
-              formats:
-                - deckset
-                - jekyll
-              features:
-                - glossary entries
-                - section links
-                - chapter headers
-                - index files
-              data structure:
-                - templates
-              commands:
-                - mdslides
-                - mdimg
-              translation:
-                - translating templates
+                formats:
+                    - deckset
+                    - jekyll
+                features:
+                    - glossary entries
+                    - section links
+                    - chapter headers
+                    - index files
+                data structure:
+                    - templates
+                commands:
+                    - mdslides
+                    - mdimg
+                translation:
+                    - translating templates
         """)
         parsed = parse_config(yaml.load(cfg))
         import pprint
