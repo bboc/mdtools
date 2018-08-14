@@ -29,10 +29,14 @@ class EbookWriter(object):
         """Build three files: intro/patterns/appendix."""
         content = self.config[CONTENT]
         # build introduction
-        target_path = os.path.join(self.target_folder, 'tmp-introduction.md')
-        with codecs.open(target_path, 'w+', 'utf-8') as target:
-            for item in content[FRONT_MATTER][SECTIONS]:
-                self._append_section(target, content[FRONT_MATTER], item)
+
+        def build_intro_and_appendix(filename, part):
+            target_path = os.path.join(self.target_folder, filename)
+            with codecs.open(target_path, 'w+', 'utf-8') as target:
+                for item in part[SECTIONS]:
+                    self._append_section(target, part, item)
+
+        build_intro_and_appendix('tmp-introduction.md', content[FRONT_MATTER])
 
         # build all the chapters/sections
         target_path = os.path.join(self.target_folder, 'tmp-chapters.md')
@@ -47,10 +51,7 @@ class EbookWriter(object):
                                          headline_prefix=make_headline_prefix(self.args, self.config, chapter['index'], section['index']))
 
         # finally build appendix
-        target_path = os.path.join(self.target_folder, 'tmp-appendix.md')
-        with codecs.open(target_path, 'w+', 'utf-8') as target:
-            for item in content[APPENDIX][SECTIONS]:
-                    self._append_section(target, content[APPENDIX], item)
+        build_intro_and_appendix('tmp-appendix.md', content[APPENDIX])
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
