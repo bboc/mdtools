@@ -50,7 +50,6 @@ def parse_config(data):
     def parse_element(item, name):
         new_item = {}
         # set defaults:
-        new_item['sections'] = []
         new_item['title'] = make_title(name)
         new_item['slug'] = make_pathname(name)
         if type(item) == dict:
@@ -58,16 +57,14 @@ def parse_config(data):
                 new_item['title'] = item['title']
             if 'slug' in item:
                 new_item['slug'] = item['slug']
-            for s in item['sections']:
-                new_item['sections'].append(parse_section(s))
+            sections = item['sections']
         elif type(item) == list:
-            for s in item:
-                new_item['sections'].append(parse_section(s))
+            sections = item
+        new_item['sections'] = [parse_section(s) for s in sections]
         return new_item
 
     def parse_chapter(item):
         new_item = {}
-        new_item['sections'] = []
         if 'sections' in item:
             new_item['title'] = item['title']
             new_item['slug'] = item['slug']
@@ -75,15 +72,13 @@ def parse_config(data):
                 new_item['slug'] = make_pathname(item['title'])
             elif 'title' not in item:
                 new_item['title'] = make_title(item['slug'])
-            for s in item['sections']:
-                new_item['sections'].append(parse_section(s))
+            sections = item['sections']
         else:
             name = item.keys()[0]
             new_item['title'] = make_title(name)
             new_item['slug'] = make_pathname(name)
-
-            for s in item[name]:
-                new_item['sections'].append(parse_section(s))
+            sections = item[name]
+        new_item['sections'] = [parse_section(s) for s in sections]
         return new_item
 
     def parse_section(item):
@@ -95,13 +90,12 @@ def parse_config(data):
         else:
             return item
 
+    content = {}
     if 'content' in data:
         # parse new config format
-        content = {}
         content['introduction'] = parse_element(data['content']['introduction'], 'introduction')
-        content['chapters'] = []
-        for chapter in data['content']['chapters']:
-            content['chapters'].append(parse_chapter(chapter))
+        content[CHAPTERS] = []
+        content[CHAPTERS] = [parse_chapter(chapter) for chapter in data['content'][CHAPTERS]]
         content['appendix'] = parse_element(data['content']['appendix'], 'appendix')
         if TITLE in data['content']:
             content[TITLE] = data['content'][TITLE]
@@ -114,8 +108,27 @@ def parse_config(data):
 
         data['content'] = content
     else:
-        # pass old config format
-        pass
+        # parse old config format
+        content['introduction'] = parse_element(data['introduction'], 'introduction')
+        del(data['introduction'])
+        content[CHAPTERS] = [parse_element(data[CHAPTERS][chapter_name], chapter_name) for chapter_name in data[CHAPTER_ORDER]]
+        del data[CHAPTERS]
+        del data[CHAPTER_ORDER]
+        content['appendix'] = parse_element(data['appendix'], 'appendix')
+        del(data['appendix'])
+        if TITLE in data:
+            content[TITLE] = data[TITLE]
+            del data[TITLE]
+        else:
+            content[TITLE] = SKIP
+        if END in data:
+            content[END] = data[END]
+            del data[END]
+        else:
+            content[END] = SKIP
+
+        data['content'] = content
+
     return data
 
 

@@ -31,7 +31,7 @@ class ConfigTests(TestCase):
                                                 'title': 'Jekyll'}],
                                   'slug': 'formats',
                                   'title': 'Formats'},
-                                 {'sections': [{'slug': 'glossary entries',
+                                 {'sections': [{'slug': 'glossary-entries',
                                                 'title': 'Glossary Entries'},
                                                {'slug': 'section-links',
                                                 'title': 'Section Links'},
@@ -67,6 +67,7 @@ class ConfigTests(TestCase):
 
     def test_new_format(self):
         """Config in new format is properly parsed"""
+        self.maxDiff = None
         cfg = dedent("""
 
           section-prefix: "%(chapter)s.%(section)s:"
@@ -85,7 +86,7 @@ class ConfigTests(TestCase):
                 - jekyll
               - features:
                 - title: Glossary Entries
-                  slug: glossary entries
+                  slug: glossary-entries
                 - section links
                 - chapter headers
                 - index files
@@ -105,13 +106,13 @@ class ConfigTests(TestCase):
               - license
          """)
         parsed = parse_config(yaml.load(cfg))
-        # import pprint
-        # pprint.pprint(parsed)
-        # pprint.pprint(self.result)
+        import pprint
+        pprint.pprint(parsed)
+        pprint.pprint(self.result)
         self.failUnlessEqual(parsed, self.result)
 
     def test_old_format(self):
-        #self.maxDiff = None
+        self.maxDiff = None
         cfg = dedent("""
             title: title
             end: SKIP
