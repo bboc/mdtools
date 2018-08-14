@@ -1,3 +1,16 @@
+documentation/showcase:
+	Showcase features and document usage of mdtools in a documentation that is created with mdtools
+	✔ set up basic page structure @done (18-08-13 13:42)
+	✔ make reveal.js slides @done (18-08-13 15:15)
+		✔ integrate reveal.js templates @done (18-08-13 15:15)
+	✔ link to slides.html in documentation @done (18-08-13 22:53)
+	✔ set up jekyll site @done (18-08-13 18:16)
+	  ✔ set up skeleton dir @done (18-08-13 15:15)
+	  ✔ set up templates and styles @done (18-08-13 15:15)
+	- set up github page (decide on CNAME!!!)
+	✔ find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing) @done (18-08-13 18:16)
+		✔ test if backticks work: `[[`deinfe:thing``]]`` @done (18-08-13 18:16)
+
 mdslides:
 		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
 	set up basic test for all important formats (gold master): @1h
@@ -6,15 +19,16 @@ mdslides:
 			- glossary overlays @done(2018-08-12)
 			- chapter links @done(2018-08-12)
 			- speaker notes
+			- glossary renderer and page breaks (at least 3 glossary entries)
 			- background images @done(2018-08-12)
 			- floating images @done(2018-08-12)
 			- inline images
 			- section numbering
-		- set up a unit test each for the following formats
-			- deckset
-			- jekyll
-			- reveal.js
-			- ebook
+		✔ set up a unit test each for the following formats @done (18-08-13 12:47)
+			✔ deckset @done (18-08-13 12:33)
+			✔ jekyll @done (18-08-13 12:33)
+			✔ reveal.js @done (18-08-13 12:33)
+			✔ ebook @done (18-08-13 12:33)
 	section links:
 		parse section links [Governance Facilitator](section:governance-facilitator) 
 		- revealjs: replace with emphasis on title
@@ -22,6 +36,16 @@ mdslides:
 		parse glossary markers [Driver](glossary:driver)
 		- revealjs: add html overlay
 	general refactoring:
+		- remove the need for make-conf: all that should be in conig.yaml
+		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatiable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
+			chapters:
+				- title: Foo and the Seven Bars
+				  slug	: foo-and-the-seven-bars
+				  sections:
+					  - title: Some Section Title
+					    slug: some-section-title
+					  - title: Some Other Section Title
+					    slug: some-other-section-title
 		- make config, glossary, structure and translations available to the pipelines @30min
 		-  use constant (or config) in remove_breaks_and_conts() @15min
 		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml  @later @estimate(1h)
@@ -36,7 +60,7 @@ mdslides:
 	deckset-renderer:
 		empty
 	reveal.js renderer:
-		- refactor revealjs.writer to use markdown processor (after basic tests are in place @1h
+		- refactor revealjs.writer to use markdown processor (after basic tests are in place) @1h
 		- add support for right aligned images
 		- have chapter links link to slide https://github.com/hakimel/reveal.js/#internal-links
 		- revealjs: add html overlay for glossary terms

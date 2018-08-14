@@ -167,16 +167,19 @@ class JekyllWriter(object):
         patterns = self.index['patterns-by-group'][chapter['path']]
 
         # next link: next pattern, next group, or first group
-        if section['pid'] == len(patterns):
-            if section['gid'] == len(self.index['groups']):
-                item = self.index['groups-by-gid'][1]
-            else:
-                item = self.index['groups-by-gid'][section['pid'] - 2]
+        if section['pid'] < len(patterns):
+            # next section in pattern (if any)
+            next_item = patterns[(section['pid'])]
         else:
-            item = patterns[(section['pid'])]
-        nav_el(target, NEXT_ELEMENT, item)
+            if section['gid'] < len(self.index['groups']):
+                # next chapter
+                next_item = self.index['groups-by-gid'][section['gid'] + 1]
+            else:
+                # last chapter: wrap around to first chapter index
+                next_item = self.index['groups-by-gid'][1]
+        nav_el(target, NEXT_ELEMENT, next_item)
         target.write("<br/>")
-        # prev link = prev pattern or ???
+        # prev link = prev pattern TODO: or prev group index (wrap around to last group)
         if section['pid'] > 1:
             p_next = patterns[(section['pid'] - 2)]
             nav_el(target, PREV_ELEMENT, p_next)
