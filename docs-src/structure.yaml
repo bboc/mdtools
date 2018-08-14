@@ -4,6 +4,7 @@ end: SKIP
 section-prefix: "%(chapter)s.%(section)s:"
 
 introduction:
+  - overview
   - usecases
 
 appendix:

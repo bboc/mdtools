@@ -37,6 +37,7 @@
 </section><section><section>
 <h2>What is this?</h2>
 <p><em>mdtools</em> is a set of command line tools written in Python that to render markdown content into ebooks, slide decks and static websites you can host on any web server, or as a GitHub page.</p>
+<p>You can read this documentation as a <a href="https://bboc.github.io/mdtools/slides.html">slide deck</a> or as a <a href="">website</a></p>
 </section>
 
 <section>
@@ -136,12 +137,27 @@ glossary: what you want to put into the glossary
 
 <section>
 <h2>4.1: mdslides</h2>
-<p>{&gt;&gt;TODO: write this section &lt;&lt;}</p>
+<p><code>mdslides</code> brings several commands for</p>
+<ul>
+<li><code>compile</code> creates one Markdown file per chapter</li>
+<li><code>build</code> builds the output in various <a href="section:formats">formats</a></li>
+<li><code>convert</code> converts a Deckset slide deck to reveal.js or to output for Wordpress (with Jetpack or another Markdown plugin)</li>
+<li><code>skeleton</code> parses a config file and creates folders for chapters and files for sections</li>
+<li><code>deckset-index</code> (deprecated) build a translatable index file (the new config format will make this obsolete)</li>
+<li>'template' Inject translations (and optionally parameters from a config) into a template file.</li>
+</ul>
 </section>
 
 <section>
 <h2>4.2: mdimg</h2>
-<p>{&gt;&gt;TODO: write &lt;&lt;}</p>
+<p><code>mdimg</code> brings two tools that are helpful when maintaining a large set of illustrations used in a large number of markdown file: </p>
+<ul>
+<li>check for duplicates images</li>
+<li>update image references </li>
+</ul>
+<p>This allows for changing the folder structure of the illustrations without having to worry about updating all the references in your slide decks or other texts. </p>
+<p>The only prerequsite is that each image has an unique filename.</p>
+<p>Usage: see <code>mdimg -h</code></p>
 </section>
 
 </section><section><section>
