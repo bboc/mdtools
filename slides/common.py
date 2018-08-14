@@ -49,40 +49,32 @@ def parse_config(data):
     """
     def parse_element(item, name):
         new_item = {}
+        # set defaults:
+        new_item['sections'] = []
+        new_item['title'] = make_title(name)
+        new_item['slug'] = make_pathname(name)
         if type(item) == dict:
             if 'title' in item:
                 new_item['title'] = item['title']
-            else:
-                new_item['title'] = make_title(name)
             if 'slug' in item:
                 new_item['slug'] = item['slug']
-            else:
-                new_item['slug'] = make_pathname(name)
-
-            new_item['sections'] = []
             for s in item['sections']:
-                new_item['sections'].append(parse_element(s, s))
+                new_item['sections'].append(parse_section(s))
         elif type(item) == list:
-            new_item['title'] = make_title(name)
-            new_item['slug'] = make_pathname(name)
-            new_item['sections'] = []
             for s in item:
-                new_item['sections'].append(parse_element(s, s))
-        else:
-            new_item['title'] = make_title(name)
-            new_item['slug'] = make_pathname(name)
-
+                new_item['sections'].append(parse_section(s))
         return new_item
 
     def parse_chapter(item):
         new_item = {}
         new_item['sections'] = []
-        print item
         if 'sections' in item:
+            new_item['title'] = item['title']
+            new_item['slug'] = item['slug']
             if 'slug' not in item:
                 new_item['slug'] = make_pathname(item['title'])
             elif 'title' not in item:
-                new_item['title'] = make_title(item['title'])
+                new_item['title'] = make_title(item['slug'])
             for s in item['sections']:
                 new_item['sections'].append(parse_section(s))
         else:
