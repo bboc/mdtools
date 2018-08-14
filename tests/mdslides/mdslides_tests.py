@@ -8,7 +8,6 @@ import os
 
 from tests.common import FileBasedTestCase
 
-from slides.index import cmd_build_index_db
 from slides.build_jekyll import JekyllWriter
 from slides.build_slides import (
     build_deckset_slides,
@@ -55,19 +54,6 @@ class CompileSlidesTests(FileBasedTestCase):
                              make_path('compiled', 'text.md'))
         self.compare_results(self.tmp_path('appendix.md'),
                              make_path('compiled', 'appendix.md'))
-
-    def test_build_index_db(self):
-        """The index-db is build correctly from structure.yaml."""
-
-        index_db = self.tmp_path('index-db.yaml')
-        args = self.parser.parse_args(['build-index-db',
-                                      make_path('structure.yaml'),
-                                      index_db])
-
-        cmd_build_index_db(args)
-
-        self.assertTrue(os.path.exists(index_db))
-        self.compare_results(index_db, make_path('index-db.yaml'))
 
     def test_build_reveal_js(self):
         """Build reveal.js slide deck from output of compile step."""
