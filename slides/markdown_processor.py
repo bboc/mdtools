@@ -5,7 +5,7 @@ from functools import partial
 from operator import itemgetter
 import re
 
-from common import SLIDE_MARKERS
+from common import SLIDE_MARKERS, TITLE, SLUG
 from glossary import GLOSSARY_MARKER
 from translate import translate as _
 
@@ -238,11 +238,11 @@ def insert_index(marker, items, lines, sort=False):
     Items is a list of dictionaries with keys path and name.
     """
     if sort:
-        items = sorted(items, key=itemgetter('name'))
+        items.sort(key=itemgetter(TITLE))
     for line in lines:
         if line.strip() == marker:
             for item in items:
-                yield INDEX_ELEMENT % dict(name=item['name'], path=item['path'][:-3])
+                yield INDEX_ELEMENT % dict(name=item[TITLE], path=item[SLUG])
         else:
             yield line
 

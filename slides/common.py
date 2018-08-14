@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import codecs
-import os
-import yaml
 import markdown
+import os
+from operator import itemgetter
+import yaml
 
 
 SLIDE_MARKERS = ['---', '***', '* * *']
@@ -20,8 +21,9 @@ SKIP = 'SKIP'
 SLUG = 'slug'
 CONTENT = 'content'
 SECTIONS = 'sections'
-CHAPTER_INDEX = 'chapter_index'
+CHAPTER_INDEX = 'chapter-index'
 INDEX = 'index'
+SECTION_INDEX = 'section-index'
 
 
 def make_pathname(name):
@@ -93,17 +95,17 @@ def parse_config(data):
         new_item[SECTIONS] = [parse_section(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
         return new_item
 
-    def parse_section(item, chapter_index=None, section_index=None):
+    def parse_section(item, cidx=None, sidx=None):
         if type(item) == str:
             section = {}
             section[SLUG] = make_pathname(item)
             section[TITLE] = make_title(item)
         else:
             section = item
-        if chapter_index:
-            section[CHAPTER_INDEX] = chapter_index
-        if section_index:
-            section[INDEX] = section_index
+        if cidx:
+            section[CHAPTER_INDEX] = cidx
+        if sidx:
+            section[INDEX] = sidx
         return section
 
     content = {}
@@ -137,6 +139,11 @@ def parse_config(data):
 
         data[CONTENT] = content
 
+    data[SECTION_INDEX] = []
+    for chapter in data[CONTENT][CHAPTERS]:
+        for section in chapter[SECTIONS]:
+            data[SECTION_INDEX].append(section)
+    data[SECTION_INDEX].sort(key=itemgetter(TITLE))
     return data
 
 

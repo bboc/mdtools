@@ -9,13 +9,12 @@ from functools import partial
 import os
 from textwrap import dedent
 
-from common import read_config, md_filename, make_headline_prefix
-from common import FRONT_MATTER, APPENDIX
-from index import read_index_db
+from common import get_config, md_filename, make_headline_prefix
+from common import FRONT_MATTER, APPENDIX, CHAPTERS, SECTIONS, SLUG, TITLE, CONTENT, INDEX, SECTION_INDEX, CHAPTER_INDEX
 import markdown_processor as mdp
 from glossary import JekyllGlossaryRenderer, read_glossary
 
-CHAPTER_INDEX = dedent("""
+CHAPTER_INDEX_TEMPLATE = dedent("""
 ---
 title: <!-- CHAPTER-NAME -->
 ---
@@ -39,10 +38,9 @@ class JekyllWriter(object):
         self.args = args
         self.source_folder = args.source
         self.target_folder = args.target
-        self.config = read_config(self.args.config)
+        self.config = get_config(self.args.config)
         self.glossary_renderer = JekyllGlossaryRenderer(self.args.glossary, 9999)
         self.glossary = read_glossary(self.args.glossary)
-        self.index = read_index_db(self.args.index)
 
     def build(self):
 
@@ -53,12 +51,12 @@ class JekyllWriter(object):
         self._copy_appendix()
 
         # add all the chapters/sections
-        for chapter in self.index['groups']:
+        for chapter in self.config[CONTENT][CHAPTERS]:
             self._build_chapter_index(chapter)
-            for section in self.index['patterns-by-group'][chapter['path']]:
+            for section in chapter[SECTIONS]:
                 self._copy_section(chapter,
                                    section,
-                                   make_headline_prefix(self.args, self.config, chapter['gid'], section['pid']))
+                                   make_headline_prefix(self.args, self.config, chapter[INDEX], section[INDEX]))
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
@@ -74,7 +72,7 @@ class JekyllWriter(object):
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.index['groups']),
+                    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.config[CONTENT][CHAPTERS]),
                     partial(mdp.write, target),
                 ])
                 processor.process()
@@ -84,20 +82,20 @@ class JekyllWriter(object):
         with codecs.open(self.args.section_index_template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, os.path.basename(self.args.section_index_template)), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.index['patterns'], sort=True),
+                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[SECTION_INDEX], sort=True),
                     partial(mdp.write, target),
                 ])
                 processor.process()
 
     def _build_chapter_index(self, chapter):
-        with codecs.open(os.path.join(self.target_folder, chapter['path']), 'w+', 'utf-8') as target:
+        with codecs.open(os.path.join(self.target_folder, md_filename(chapter[SLUG])), 'w+', 'utf-8') as target:
             target.write(mdp.FRONT_MATTER_SEPARATOR)
-            target.write(mdp.FRONT_MATTER_TITLE % chapter['name'])
+            target.write(mdp.FRONT_MATTER_TITLE % chapter[TITLE])
             target.write(mdp.FRONT_MATTER_SEPARATOR)
             target.write('\n')
 
             # copy in chapter index
-            chapter_index_file = os.path.join(self.source_folder, chapter['path'][:-3], 'index.md')
+            chapter_index_file = os.path.join(self.source_folder, chapter[SLUG], 'index.md')
             if os.path.exists(chapter_index_file):
                 with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
                     cif.next()  # skip headline
@@ -107,9 +105,9 @@ class JekyllWriter(object):
                 target.write('\n')
 
             # build section index
-            for section in self.index['patterns-by-group'][chapter['path']]:
-                target.write(mdp.INDEX_ELEMENT % dict(name=section['name'],
-                                                      path=section['path'][:-3]))
+            for section in chapter[SECTIONS]:
+                target.write(mdp.INDEX_ELEMENT % dict(name=section[TITLE],
+                                                      path=section[SLUG]))
             self.chapter_navigation(target, chapter)
 
     def _compile_front_matter(self):
@@ -118,8 +116,8 @@ class JekyllWriter(object):
                 for line in template:
                     target.write(line)
 
-            for item in self.config[FRONT_MATTER]:
-                source_path = os.path.join(self.source_folder, FRONT_MATTER, md_filename(item))
+            for item in self.config[CONTENT][FRONT_MATTER][SECTIONS]:
+                source_path = os.path.join(self.source_folder, FRONT_MATTER, md_filename(item[SLUG]))
                 with codecs.open(source_path, 'r', 'utf-8') as source:
                     processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
                     processor.add_filter(partial(mdp.write, target))
@@ -133,9 +131,9 @@ class JekyllWriter(object):
 
     def _copy_appendix(self):
         """Copy all files in the appendix to individual files (skip glossary)."""
-        for item in self.config[APPENDIX]:
-            if item not in ['glossary', 'authors']:
-                self._copy_appendix_section(md_filename(item))
+        for item in self.config[CONTENT][APPENDIX][SECTIONS]:
+            if item[SLUG] not in ['glossary', 'authors']:  # TODO: this should be a setting (maybe not glossary, but 'authors')
+                self._copy_appendix_section(md_filename(item[SLUG]))
 
     def _copy_appendix_section(self, section_path):
         """Copy each section to a separate file."""
@@ -150,13 +148,13 @@ class JekyllWriter(object):
 
     def _copy_section(self, chapter, section, headline_prefix):
         """Copy each section to a separate file."""
-        source_path = os.path.join(self.source_folder, chapter['path'][:-3], section['path'])
-        target_path = os.path.join(self.target_folder, section['path'])
+        source_path = os.path.join(self.source_folder, chapter[SLUG], md_filename(section[SLUG]))
+        target_path = os.path.join(self.target_folder, md_filename(section[SLUG]))
         with codecs.open(source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
                 processor.add_filter(mdp.jekyll_front_matter)
-                #processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
+                # processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
                 self.section_navigation(target, chapter, section)
@@ -164,29 +162,27 @@ class JekyllWriter(object):
     def section_navigation(self, target, chapter, section):
         """Insert prev/up/next."""
         target.write("\n\n")
-        patterns = self.index['patterns-by-group'][chapter['path']]
 
         # next link: next pattern, next group, or first group
-        if section['pid'] < len(patterns):
+        if section[INDEX] < len(chapter[SECTIONS]):
             # next section in pattern (if any)
-            next_item = patterns[(section['pid'])]
+            next_item = chapter[SECTIONS][section[INDEX]]
         else:
-            if section['gid'] < len(self.index['groups']):
+            if section[CHAPTER_INDEX] < len(self.config[CONTENT][CHAPTERS]):
                 # next chapter
-                next_item = self.index['groups-by-gid'][section['gid'] + 1]
+                next_item = self.config[CONTENT][CHAPTERS][section[CHAPTER_INDEX]]
             else:
                 # last chapter: wrap around to first chapter index
-                next_item = self.index['groups-by-gid'][1]
+                next_item = self.config[CONTENT][CHAPTERS][0]
         nav_el(target, NEXT_ELEMENT, next_item)
         target.write("<br/>")
         # prev link = prev pattern TODO: or prev group index (wrap around to last group)
-        if section['pid'] > 1:
-            p_next = patterns[(section['pid'] - 2)]
+        if section[INDEX] > 1:
+            p_next = chapter[SECTIONS][section[INDEX] - 2]
             nav_el(target, PREV_ELEMENT, p_next)
             target.write("<br/>")
         # up: group index
-        group = self.index['groups-by-gid'][section['gid']]
-        nav_el(target, UP_ELEMENT, group)
+        nav_el(target, UP_ELEMENT, chapter)
         target.write("\n\n")
 
     def chapter_navigation(self, target, chapter):
@@ -194,28 +190,28 @@ class JekyllWriter(object):
         target.write("\n\n")
 
         # next link: always first pattern in group
-        item = self.index['patterns-by-group'][chapter['path']][0]
+        item = chapter[SECTIONS][0]
         nav_el(target, NEXT_ELEMENT, item)
         target.write("<br/>")
         # back:
-        if chapter['gid'] > 1:
+        if chapter[INDEX] > 1:
             # last pattern of previous group
-            target_group = self.index['groups'][(chapter['gid'] - 2)]
+            target_chapter = self.config[CONTENT][CHAPTERS][chapter[INDEX] - 2]
         else:
             # last pattern of last group
-            target_group = self.index['groups'][-1]
-        item = self.index['patterns-by-group'][target_group['path']][-1]
+            target_chapter = self.config[CONTENT][CHAPTERS][-1]
+        item = target_chapter[SECTIONS][-1]
         nav_el(target, PREV_ELEMENT, item)
         target.write("\n\n")
 
     def intro_navigation(self, target):
         """Link to first group"""
         target.write("\n\n")
-        item = self.index['groups-by-gid'][1]
+        item = self.config[CONTENT][CHAPTERS][0]
         nav_el(target, NEXT_ELEMENT, item)
 
         target.write("\n\n")
 
 
 def nav_el(target, template, item):
-    target.write(template % dict(name=item['name'], path=item['path'][:-3]))
+    target.write(template % dict(name=item[TITLE], path=item[SLUG]))

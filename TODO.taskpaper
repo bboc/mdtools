@@ -34,7 +34,7 @@ new config format:
 			- implement in index builder for deckset export
 			✔ implement in ebook builder @done (18-08-14 21:23)
 			- implement in reveal.js builder
-			- implement in jekyll export
+			✔ implement in jekyll export @done (18-08-14 22:28)
 			- implement in wordpress builder
 			- eliminate index builder completely
 			- use sectionprefix from config file 
