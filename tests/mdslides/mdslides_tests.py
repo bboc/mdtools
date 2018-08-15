@@ -118,8 +118,8 @@ class CompileSlidesTests(FileBasedTestCase):
                                        '--glossary', make_path('glossary.yaml'),
                                        '--glossary-items', '2',
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
-                                       '--section-index-template', make_path('templates', 'index-template.md'),
                                        '--template', make_path('templates', 'site-home.md'),
+                                       '--section-index-template', make_path('templates', 'index-template.md'),
                                        '--introduction-template', make_path('templates', 'index-template.md'),
                                        ])
         j = JekyllWriter(args)
@@ -136,8 +136,6 @@ class CompileSlidesTests(FileBasedTestCase):
                              make_path('jekyll', 'images.md'))
         self.compare_results(self.tmp_path('index-template.md'),
                              make_path('jekyll', 'index-template.md'))
-        self.compare_results(self.tmp_path('index.md'),
-                             make_path('jekyll', 'index.md'))
         self.compare_results(self.tmp_path('introduction.md'),
                              make_path('jekyll', 'introduction.md'))
         self.compare_results(self.tmp_path('right-aligned-images.md'),

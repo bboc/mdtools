@@ -31,9 +31,9 @@ new config format:
 			✔ ??? otherwise, process legacy config file @done (18-08-14 18:46)
 			✔ implement in compiler @done (18-08-14 19:47)
 			✔ implement in deckset export @done (18-08-14 19:47)
-			- implement in index builder for deckset export
+			✔ implement in index builder for deckset export @done (18-08-15 08:28)
 			✔ implement in ebook builder @done (18-08-14 21:23)
-			- implement in reveal.js builder
+			✔ implement in reveal.js builder @done (18-08-15 08:28)
 			✔ implement in jekyll export @done (18-08-14 22:28)
 			✔ implement in wordpress builder @done (18-08-15 00:03)
 			✔ eliminate index builder completely @done (18-08-15 00:43)

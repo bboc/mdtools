@@ -7,8 +7,8 @@ Build the All Patterns Explained slide deck in reveal.js format.
 import codecs
 import os
 
-from common import make_pathname, read_config
-from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, APPENDIX, END, SKIP
+from common import make_pathname, get_config
+from common import TITLE, FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP, CONTENT, SLUG
 
 from glossary import HtmlGlossaryRenderer
 from revealjs_converter import RevealJsHtmlConverter
@@ -48,24 +48,24 @@ class RevealJSBuilder(object):
     """Convert title, front-matter, chapters, appendix and end to HTML and write to target."""
 
     def __init__(self, config, source, glossary_path, glossary_items):
-        self.config = read_config(config)
+        self.config = get_config(config)
         self.source_folder = source
         self.glossary_renderer = HtmlGlossaryRenderer(glossary_path, glossary_items)
 
     def write(self, target):
         """Called from RevealJsWriter."""
 
+        content = self.config[CONTENT]
         self.target = target
-        self._append_section(self.config.get(TITLE, TITLE))
-        if FRONT_MATTER in self.config:
-            self._append_section(FRONT_MATTER)
-        for chapter in self.config[CHAPTER_ORDER]:
-            self._append_section(chapter)
-        if APPENDIX in self.config:
-            self._append_section(APPENDIX)
-        end = self.config.get(END, END)
-        if end != SKIP:
-            self._append_section(end)
+        self._append_section(content[TITLE])
+        if FRONT_MATTER in content:
+            self._append_section(content[FRONT_MATTER][SLUG])
+        for chapter in content[CHAPTERS]:
+            self._append_section(chapter[SLUG])
+        if APPENDIX in content:
+            self._append_section(content[APPENDIX][SLUG])
+        if content[END] != SKIP:
+            self._append_section(content[END])
 
     def _start_section(self):
         self.target.write('<section>')
