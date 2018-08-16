@@ -13,7 +13,7 @@ import sys
 from shutil import copyfile
 
 from common import make_pathname, make_title, create_directory, read_config, get_config
-from common import TITLE, FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP, SLUG, ID, TITLE
+from common import FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP, SLUG, ID, TITLE
 
 from glossary import read_glossary
 import translate
@@ -155,7 +155,6 @@ class SectionCompiler():
             self.INSERT_CHAPTER_IMG_TITLE_SLIDE = True
             self.INSERT_CHAPTER_TEXT_TITLE_SLIDE = True
         self.config = get_config(self.args.config)
-
         self.glossary = read_glossary(self.args.glossary)
 
     def compile_content(self):
@@ -233,7 +232,6 @@ class SectionCompiler():
         Append a section to self.target, if headline prefix is given,
         add that to the first headline of the section.
         """
-
         def glossary_replace(match, key, pattern):
             """Get a definition of a term from the glossary."""
             name = match.group('name')
