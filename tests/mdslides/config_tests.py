@@ -66,10 +66,43 @@ class ContentTests(unittest.TestCase):
         c = Content.from_config(yaml.load(extended_format))
         self.failUnlessEqual(c.to_dict(), result['content'])
 
-    def test_no_introduction(self):
+    def test_no_introduction_and_appendix(self):
         """Content must build when there is no introduction."""
-        self.fail()
+        self.maxDiff = None
 
-    def test_no_appendix(self):
-        """Content must build when there is no introduction."""
-        self.fail()
+        c = Content.from_config(yaml.load("""
+            content:
+                chapters:
+                    - formats:
+                        - deckset
+                        - jekyll
+            """))
+        self.failUnlessEqual(c.to_dict(), {
+            'chapters': [{'id': 1,
+                          'sections': [{'chapter_id': 1,
+                                        'id': 1,
+                                        'slug': 'deckset',
+                                        'title': 'Deckset'},
+                                       {'chapter_id': 1,
+                                        'id': 2,
+                                        'slug': 'jekyll',
+                                        'title': 'Jekyll'}],
+                          'slug': 'formats',
+                          'title': 'Formats'}],
+            'index': [
+                {'chapter_id': 1,
+                 'id': 1,
+                 'slug': 'deckset',
+                 'title': 'Deckset'},
+
+                {'chapter_id': 1,
+                 'id': 2,
+                 'slug': 'jekyll',
+                 'title': 'Jekyll'},
+            ],
+            'appendix': None,
+            'introduction': None,
+            'end': None,
+            'title': None,
+
+        })

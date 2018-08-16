@@ -1,6 +1,7 @@
 
 mdslides:
 		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
+		- jekyll renderer expects intro and appendix, is that a problem?
 	set up basic test for all important formats (gold master): @1h
 		- use s3 practical guide as a template and strip it down to a minimal example @done(2018-08-12)
 		- make sure all relevant features are covered:
@@ -44,6 +45,8 @@ new config format:
 				✔ move index into Content object @done (18-08-16 21:32)
 			  - convert all places where that code is actually used
 				- remove old code
+				- move config code to its own module
+				- rename Content() and 'content' to structure
 
 	section compiler:
 		- refactor SectionCompiler._append_section() to use mardown processor

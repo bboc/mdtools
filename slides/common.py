@@ -69,18 +69,22 @@ class Content(object):
         c = cls()
         if CONTENT in data:
             # parse new config format
-            c.introduction = Part.from_config(data[CONTENT][FRONT_MATTER], FRONT_MATTER)
+            if FRONT_MATTER in data[CONTENT]:
+                c.introduction = Part.from_config(data[CONTENT][FRONT_MATTER], FRONT_MATTER)
             c.chapters = [Chapter.from_config(chapter, id=idx) for idx, chapter in enumerate(data[CONTENT][CHAPTERS], 1)]
-            c.appendix = Part.from_config(data[CONTENT][APPENDIX], APPENDIX)
+            if APPENDIX in data[CONTENT]:
+                c.appendix = Part.from_config(data[CONTENT][APPENDIX], APPENDIX)
 
             c.title = data[CONTENT].get(TITLE)
             c.end = data[CONTENT].get(END)
 
         elif CHAPTER_ORDER in data:
             # parse old config format
-            c.introduction = Part.from_config(data[FRONT_MATTER], FRONT_MATTER)
+            if FRONT_MATTER in data:
+                c.introduction = Part.from_config(data[FRONT_MATTER], FRONT_MATTER)
             c.chapters = [Chapter.from_config(data[CHAPTERS][chapter_name], id=idx, name=chapter_name) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
-            c.appendix = Part.from_config(data[APPENDIX], APPENDIX)
+            if APPENDIX in data:
+                c.appendix = Part.from_config(data[APPENDIX], APPENDIX)
 
             c.title = data.get(TITLE)
             c.end = data.get(END)
@@ -108,11 +112,19 @@ class Content(object):
         return c
 
     def to_dict(self):
+        if self.introduction:
+            introduction = self.introduction.to_dict()
+        else:
+            introduction = None
+        if self.appendix:
+            appendix = self.appendix.to_dict()
+        else:
+            appendix = None
         return {
             TITLE: self.title,
-            FRONT_MATTER: self.introduction.to_dict(),
+            FRONT_MATTER: introduction,
             CHAPTERS: [c.to_dict() for c in self.chapters],
-            APPENDIX: self.appendix.to_dict(),
+            APPENDIX: appendix,
             END: self.end,
             INDEX: [i.to_dict() for i in self.index],
         }
