@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import codecs
 import markdown
+from operator import itemgetter, attrgetter
 import os
-from operator import itemgetter
+import sys
 import yaml
 
 
@@ -73,7 +76,7 @@ class Content(object):
             c.title = data[CONTENT].get(TITLE)
             c.end = data[CONTENT].get(END)
 
-        else:
+        elif CHAPTER_ORDER in data:
             # parse old config format
             c.introduction = Part.from_config(data[FRONT_MATTER], FRONT_MATTER)
             c.chapters = [Chapter.from_config(data[CHAPTERS][chapter_name], id=idx, name=chapter_name) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
@@ -81,6 +84,22 @@ class Content(object):
 
             c.title = data.get(TITLE)
             c.end = data.get(END)
+
+            # remove info containing structure infromation from config data
+
+            for key in [TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END]:
+                if END in data:
+                    del data[key]
+        else:
+            print("unknown config file format")
+            sys.exit(1)
+
+        c.index = []
+
+        for chapter in c.chapters:
+            for section in chapter.sections:
+                c.index.append(section)
+            c.index.sort(key=attrgetter(TITLE))
         return c
 
     def to_dict(self):
@@ -90,7 +109,7 @@ class Content(object):
             CHAPTERS: [c.to_dict() for c in self.chapters],
             APPENDIX: self.appendix.to_dict(),
             END: self.end,
-            INDEX: self.index,
+            INDEX: [i.to_dict() for i in self.index],
         }
 
 
@@ -111,7 +130,7 @@ class ContentItem(object):
 
 
 class Part(ContentItem):
-    """INtroduction or Appendix."""
+    """Introduction or Appendix."""
     def __init__(self, title, slug, sections=None):
         super(Part, self).__init__(title, slug)
         if sections:
@@ -136,15 +155,30 @@ class Part(ContentItem):
     @classmethod
     def _make_basic_item_from_config(cls, data, name=None):
         if name:
+            # set defaults
             title = make_title(name)
             slug = make_pathname(name)
         if type(data) == dict:
-            if TITLE in data:
-                title = data[TITLE]
-            if SLUG in data:
-                slug = data[SLUG]
-            section_source = data[SECTIONS]
+            # extended style (2 variants)
+            if SECTIONS in data:
+                """{
+                [slug: … ]
+                [title: …]
+                sections […]
+                }"""
+                if TITLE in data:
+                    title = data[TITLE]
+                if SLUG in data:
+                    slug = data[SLUG]
+                section_source = data[SECTIONS]
+            else:
+                """{chapter-name: [section1, section2, …]}"""
+                name = data.keys()[0]
+                title = make_title(name)
+                slug = make_pathname(name)
+                section_source = data[name]
         elif type(data) == list:
+            # simple style (data contains sections, slug and title derived from name)
             section_source = data
         return cls(title, slug), section_source
 
@@ -205,37 +239,10 @@ def parse_config_new(data):
     """
     Parse raw config data structure into efficient in-memory structure.
 
-    Parse raw config data structure into efficient in-memory structure.
-
-    returns a dictionary with the config as a dictionary, that contains a Content object at index 'content'
+    Return a dictionary with the config as a dictionary, that contains a Content object at index 'content'
     """
 
-    def parse_chapter(item, idx):
-        new_item = {ID: idx}
-        if SECTIONS in item:
-            new_item[TITLE] = item[TITLE]
-            new_item[SLUG] = item[SLUG]
-            if SLUG not in item:
-                new_item[SLUG] = make_pathname(item[TITLE])
-            elif TITLE not in item:
-                new_item[TITLE] = make_title(item[SLUG])
-            sections = item[SECTIONS]
-        else:
-            name = item.keys()[0]
-            new_item[TITLE] = make_title(name)
-            new_item[SLUG] = make_pathname(name)
-            sections = item[name]
-        new_item[SECTIONS] = [Section.from_config_item(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
-        return new_item
-
-
-    data['CONTENT'] = Content.from_config(data)
-    # TODO: delete legacy structures for intro, appendix, chapter order etc. 
-    # data[INDEX] = []
-    # for chapter in data[CONTENT][CHAPTERS]:
-    #     for section in chapter[SECTIONS]:
-    #         data[INDEX].append(section)
-    # data[INDEX].sort(key=itemgetter(TITLE))
+    data[CONTENT] = Content.from_config(data)
     return data
 
 

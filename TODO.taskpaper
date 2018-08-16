@@ -40,8 +40,8 @@ new config format:
 			✔ use sectionprefix from config file @done (18-08-16 20:19)
 			- implement in cmd_create_source_files_for_slides
 			refactoring for better readability:
-				- convert to OO code
-				- move index into Content object
+				✔ convert to OO code @done (18-08-16 21:31)
+				✔ move index into Content object @done (18-08-16 21:32)
 			  - convert all places where that code is actually used
 				- remove old code
 
