@@ -7,8 +7,8 @@ Build the All Patterns Explained slide deck in reveal.js format.
 import codecs
 import os
 
-from common import make_pathname, get_config
-from common import TITLE, FRONT_MATTER, CHAPTERS, APPENDIX, END, SKIP, CONTENT, SLUG
+from config import get_config, CONTENT
+from common import md_filename
 
 from glossary import HtmlGlossaryRenderer
 from revealjs_converter import RevealJsHtmlConverter
@@ -57,15 +57,15 @@ class RevealJSBuilder(object):
 
         content = self.config[CONTENT]
         self.target = target
-        self._append_section(content[TITLE])
-        if FRONT_MATTER in content:
-            self._append_section(content[FRONT_MATTER][SLUG])
-        for chapter in content[CHAPTERS]:
-            self._append_section(chapter[SLUG])
-        if APPENDIX in content:
-            self._append_section(content[APPENDIX][SLUG])
-        if content[END] != SKIP:
-            self._append_section(content[END])
+        self._append_section(md_filename(content.title))
+        if content.introduction:
+            self._append_section(content.introduction.md_filename())
+        for chapter in content.chapters:
+            self._append_section(chapter.md_filename())
+        if content.appendix:
+            self._append_section(content.appendix.md_filename())
+        if content.end:
+            self._append_section(md_filename(content.end))
 
     def _start_section(self):
         self.target.write('<section>')
@@ -74,7 +74,6 @@ class RevealJSBuilder(object):
         self.target.write('</section>')
 
     def _append_section(self, filename):
-        filename = '%s.md' % make_pathname(filename)
         self._start_section()
         c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename), self.glossary_renderer)
         c.write(self.target)

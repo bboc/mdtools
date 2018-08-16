@@ -8,8 +8,8 @@ import codecs
 from functools import partial
 import os
 
-from common import get_config, md_filename, make_headline_prefix
-from common import FRONT_MATTER, APPENDIX, CONTENT, SLUG, CHAPTERS, TITLE, SECTIONS, ID
+from common import make_headline_prefix
+from config import get_config, CONTENT
 import markdown_processor as mdp
 from glossary import EbookGlossaryRenderer, read_glossary
 
@@ -33,25 +33,25 @@ class EbookWriter(object):
         def build_intro_and_appendix(filename, part):
             target_path = os.path.join(self.target_folder, filename)
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                for item in part[SECTIONS]:
+                for item in part.sections:
                     self._append_section(target, part, item)
 
-        build_intro_and_appendix('tmp-introduction.md', content[FRONT_MATTER])
+        build_intro_and_appendix('tmp-introduction.md', content.introduction)
 
         # build all the chapters/sections
         target_path = os.path.join(self.target_folder, 'tmp-chapters.md')
         with codecs.open(target_path, 'w+', 'utf-8') as target:
-            for chapter in content[CHAPTERS]:
+            for chapter in content.chapters:
                 self._build_chapter_index(target, chapter)
-                for section in chapter[SECTIONS]:
+                for section in chapter.sections:
                     self._append_section(target,
                                          chapter,
                                          section,
                                          headline_level_increase=1,
-                                         headline_prefix=make_headline_prefix(self.args, self.config, chapter[ID], section[ID]))
+                                         headline_prefix=make_headline_prefix(self.args, self.config, chapter.id, section.id))
 
         # finally build appendix
-        build_intro_and_appendix('tmp-appendix.md', content[APPENDIX])
+        build_intro_and_appendix('tmp-appendix.md', content.appendix)
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
@@ -65,7 +65,7 @@ class EbookWriter(object):
 
     def _append_section(self, target, chapter, section, headline_level_increase=0, headline_prefix=None):
         """Append each section to self.target."""
-        source_path = os.path.join(self.source_folder, chapter[SLUG], '%s.md' % section[SLUG])
+        source_path = os.path.join(self.source_folder, chapter.slug, section.md_filename())
         with codecs.open(source_path, 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
             processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
@@ -79,11 +79,11 @@ class EbookWriter(object):
         """Add chapter headline, and index.md if present."""
 
         target.write('\n')
-        target.write('## %s \n' % chapter[TITLE])
+        target.write('## %s \n' % chapter.title)
         target.write('\n')
         # this image is not rendered directly under the headline, so it makes no sense to have this
-        # target.write('\n![](img/pattern-groups/group-%s.png)\n\n' % chapter[ID])
-        chapter_index_file = os.path.join(self.source_folder, chapter[SLUG], 'index.md')
+        # target.write('\n![](img/pattern-groups/group-%s.png)\n\n' % chapter.id)
+        chapter_index_file = os.path.join(self.source_folder, chapter.slug, 'index.md')
         if os.path.exists(chapter_index_file):
             with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
                 cif.next()  # skip headline
