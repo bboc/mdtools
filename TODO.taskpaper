@@ -39,7 +39,7 @@ new config format:
 			✔ implement in wordpress builder @done (18-08-15 00:03)
 			✔ eliminate index builder completely @done (18-08-15 00:43)
 			✔ use sectionprefix from config file @done (18-08-16 20:19)
-			- implement in cmd_create_source_files_for_slides
+			✔ implement in cmd_create_source_files_for_slides @done (18-08-16 22:49)
 			refactoring for better readability:
 				✔ convert to OO code @done (18-08-16 21:31)
 				✔ move index into Content object @done (18-08-16 21:32)
@@ -53,24 +53,16 @@ new config format:
 	general refactoring:
 		- remove the need for make-conf: all that should be in conig.yaml
 		- convert convert_file_for_web() to use MarkdownProcessor()
-		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
-			chapters:
-				- title: Foo and the Seven Bars
-				  slug	: foo-and-the-seven-bars
-				  sections:
-					  - title: Some Section Title
-					    slug: some-section-title
-					  - title: Some Other Section Title
-					    slug: some-other-section-title
+		✔ Structure.yaml and index-db.yaml should in fact be one file that resides in the translatable folder and contains chapters names and directories, and sections in chapters and filenames@estimate(2hrs) @done (18-08-16 22:48)
 		- make config, glossary, structure and translations available to the pipelines @30min
 		-  use constant (or config) in remove_breaks_and_conts() @15min
 		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml  @later @estimate(1h)
 		- class names and code layout can be improved @estimate(30min)
-		- refactor all places that use '%.md' to use common.md_filename()
+		✔ refactor all places that use '%.md' to use common.md_filename() @done (18-08-16 22:51)
 	aligning the methaphor:
 		- refactor everything to use chapter and section instead of group and pattern!
 		index keys are messed up: 
-			- gid, pid should be cid, sid
+			✔ gid, pid should be cid, sid @done (18-08-16 22:49)
 			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
 			- all keys sould use constants
 	deckset-renderer:

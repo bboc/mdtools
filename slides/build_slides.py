@@ -12,7 +12,7 @@ import re
 import sys
 from shutil import copyfile
 
-from common import make_pathname, make_title, create_directory, read_config, get_config, CONTENT, md_filename
+from common import make_title, create_directory, get_config, CONTENT, md_filename
 from glossary import read_glossary
 import translate
 
@@ -87,21 +87,21 @@ def cmd_create_source_files_for_slides(args):
     """Create dummy source files for slides. If file or folder exists, don't touch it."""
 
     create_directory(args.target)
-    config = read_config(args.config)
+    content = get_config(args.config)[CONTENT]
 
-    def make_group(group_name, source):
+    def make_group(group):
         # create group dir
-        group_root = os.path.join(args.target, make_pathname(group_name))
+        group_root = os.path.join(args.target, group.slug)
         create_directory(group_root)
         # create group index file
-        make_file(group_root, "index", group_name, '#')
+        make_file(group_root, "index", group.title, '#')
         # create individual sections (add section name as headline)
-        for section in source:
+        for section in group.sections:
             make_file(group_root, section, section, '##')
 
     def make_file(root, filename_root, title_root, markup='#'):
         """Create file if it does not exist."""
-        filename = os.path.join(root, '%s.md' % make_pathname(filename_root))
+        filename = os.path.join(root, md_filename(filename_root))
         if not os.path.exists(filename):
             with codecs.open(filename, 'w+', 'utf-8') as fp:
                 fp.write('%s %s\n\n' % (markup, make_title(title_root)))
@@ -109,16 +109,15 @@ def cmd_create_source_files_for_slides(args):
             if args.verbose:
                 print "skipped %s" % title_root
 
-    make_file(args.target, TITLE, TITLE)
-    if FRONT_MATTER in config:
-        make_group(FRONT_MATTER, config[FRONT_MATTER])
-    for chapter in config[CHAPTERS].keys():
-        make_group(chapter, config[CHAPTERS][chapter])
-    if APPENDIX in config:
-        make_group(APPENDIX, config[APPENDIX])
-    end = config.get(END, END)
-    if end != SKIP:
-        make_file(args.target, END, END)
+    make_file(args.target, content.title, content.title)
+    if content.introduction:
+        make_group(content.introduction)
+    for chapter in content.chapters:
+        make_group(chapter)
+    if content.appendix:
+        make_group(content.appendix)
+    if content.end:
+        make_file(args.target, content.end, content.end)
 
 
 class SectionCompiler():
