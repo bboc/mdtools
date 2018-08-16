@@ -8,7 +8,7 @@ import codecs
 from functools import partial
 import os
 
-from common import get_config, CONTENT
+from config import get_config, CONTENT
 from glossary import DecksetGlossaryRenderer
 import markdown_processor as mdp
 

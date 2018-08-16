@@ -5,7 +5,8 @@ from functools import partial
 from operator import attrgetter
 import re
 
-from common import SLIDE_MARKERS, TITLE, SLUG
+from common import SLIDE_MARKERS
+from config import TITLE
 from glossary import GLOSSARY_MARKER
 from translate import translate as _
 

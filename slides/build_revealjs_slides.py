@@ -7,7 +7,8 @@ Build the All Patterns Explained slide deck in reveal.js format.
 import codecs
 import os
 
-from common import md_filename, get_config, CONTENT
+from config import get_config, CONTENT
+from common import md_filename
 
 from glossary import HtmlGlossaryRenderer
 from revealjs_converter import RevealJsHtmlConverter

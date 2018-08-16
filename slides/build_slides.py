@@ -12,7 +12,8 @@ import re
 import sys
 from shutil import copyfile
 
-from common import make_title, create_directory, get_config, CONTENT, md_filename
+from common import create_directory, md_filename
+from config import get_config, CONTENT, make_title
 from glossary import read_glossary
 import translate
 

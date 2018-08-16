@@ -6,7 +6,7 @@ import codecs
 from string import Template
 from textwrap import dedent
 
-from common import get_config, INDEX, TITLE
+from config import get_config, INDEX, TITLE
 from translate import translate as _
 
 

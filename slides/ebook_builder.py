@@ -8,7 +8,8 @@ import codecs
 from functools import partial
 import os
 
-from common import get_config, make_headline_prefix, CONTENT
+from common import make_headline_prefix
+from config import get_config, CONTENT
 import markdown_processor as mdp
 from glossary import EbookGlossaryRenderer, read_glossary
 

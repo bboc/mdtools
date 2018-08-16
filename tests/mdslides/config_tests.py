@@ -6,7 +6,7 @@ Tests for reading the config and building in-memory objects
 import yaml
 import unittest
 
-from slides.common import parse_config, Section, Content
+from slides.config import parse_config, Section, Content
 from config_test_data import result, simple_format, extended_format
 
 

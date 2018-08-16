@@ -43,9 +43,9 @@ new config format:
 			refactoring for better readability:
 				✔ convert to OO code @done (18-08-16 21:31)
 				✔ move index into Content object @done (18-08-16 21:32)
-			  - convert all places where that code is actually used
-				- remove old code
-				- move config code to its own module
+			  ✔ convert all places where that code is actually used @done (18-08-16 22:59)
+				✔ remove old code @done (18-08-16 23:11)
+				✔ move config code to its own module @done (18-08-16 23:11)
 				- rename Content() and 'content' to structure
 
 	section compiler:

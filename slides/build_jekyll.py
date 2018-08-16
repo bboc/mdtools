@@ -9,8 +9,8 @@ from functools import partial
 import os
 from textwrap import dedent
 
-from common import get_config, make_headline_prefix, md_filename
-from common import CONTENT
+from common import make_headline_prefix, md_filename
+from config import CONTENT, get_config
 import markdown_processor as mdp
 from glossary import JekyllGlossaryRenderer, read_glossary
 
