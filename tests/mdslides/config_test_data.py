@@ -147,7 +147,7 @@ result = {
                                             'title': 'Translating Templates'}],
                               'slug': 'translation',
                               'title': 'Translation'}],
-                'end': 'SKIP',
+                'end': None,
                 'index': [{'chapter_id': 2,
                            'id': 3,
                            'slug': 'chapter-headers',

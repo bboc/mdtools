@@ -65,3 +65,11 @@ class ContentTests(unittest.TestCase):
 
         c = Content.from_config(yaml.load(extended_format))
         self.failUnlessEqual(c.to_dict(), result['content'])
+
+    def test_no_introduction(self):
+        """Content must build when there is no introduction."""
+        self.fail()
+
+    def test_no_appendix(self):
+        """Content must build when there is no introduction."""
+        self.fail()

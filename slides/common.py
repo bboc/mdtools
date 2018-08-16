@@ -94,6 +94,11 @@ class Content(object):
             print("unknown config file format")
             sys.exit(1)
 
+        # remove skip markers
+        if c.title == SKIP:
+            c.title = None
+        if c.end == SKIP:
+            c.end = None
         c.index = []
 
         for chapter in c.chapters:
