@@ -8,8 +8,7 @@ import codecs
 from functools import partial
 import os
 
-from common import make_pathname, get_config
-from common import TITLE, FRONT_MATTER, APPENDIX, END, SKIP, SLUG, CHAPTERS
+from common import get_config, CONTENT
 from glossary import DecksetGlossaryRenderer
 import markdown_processor as mdp
 
@@ -30,22 +29,22 @@ class DecksetWriter(object):
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
                 self._copy_template_header()
 
-                content = self.config['content']
-                if content[TITLE] != SKIP:
-                    self._append_section(content[TITLE])
+                content = self.config[CONTENT]
+                if content.title:
+                    self._append_section(content.title)
 
-                if FRONT_MATTER in content:
-                    self._append_section(content[FRONT_MATTER][SLUG])
+                if content.introduction:
+                    self._append_section(content.introduction.slug)
 
                 # add all the groups
-                for chapter in content[CHAPTERS]:
-                    self._append_section(chapter[SLUG])
+                for chapter in content.chapters:
+                    self._append_section(chapter.slug)
 
-                if APPENDIX in content:
-                    self._append_section(content[APPENDIX][SLUG])
+                if content.appendix:
+                    self._append_section(content.appendix.slug)
 
-                if content[END] != SKIP:
-                    self._append_section(content[END], skip_section_break=True)
+                if content.end:
+                    self._append_section(content.end, skip_section_break=True)
 
                 self._copy_template_footer()
 
