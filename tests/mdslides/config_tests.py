@@ -6,7 +6,7 @@ Tests for reading the config and building in-memory objects
 import yaml
 import unittest
 
-from slides.common import parse_config_new, Section, Content
+from slides.common import parse_config, Section, Content
 from config_test_data import result, simple_format, extended_format
 
 
@@ -15,14 +15,14 @@ class ConfigTests(unittest.TestCase):
     def test_new_format(self):
         """Config in new format is properly parsed into structure object, rest of config is preserved."""
         self.maxDiff = None
-        parsed = parse_config_new(yaml.load(extended_format))
+        parsed = parse_config(yaml.load(extended_format))
 
         parsed['content'] = parsed['content'].to_dict()
         self.failUnlessEqual(parsed, result)
 
     def test_old_format(self):
         self.maxDiff = None
-        parsed = parse_config_new(yaml.load(simple_format))
+        parsed = parse_config(yaml.load(simple_format))
         import pprint
         pprint.pprint(parsed)
         parsed['content'] = parsed['content'].to_dict()

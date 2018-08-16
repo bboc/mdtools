@@ -119,7 +119,7 @@ class ContentItem(object):
         self.title = title
         self.slug = slug
 
-    def md_filename(self, name):
+    def md_filename(self):
         return FILENAME_PATTERN % self.slug
 
     def to_dict(self):
@@ -235,18 +235,17 @@ class Section(ContentItem):
         return d
 
 
-def parse_config_new(data):
+def parse_config(data):
     """
     Parse raw config data structure into efficient in-memory structure.
 
     Return a dictionary with the config as a dictionary, that contains a Content object at index 'content'
     """
-
     data[CONTENT] = Content.from_config(data)
     return data
 
 
-def parse_config(data):
+def parse_config_legacy(data):
     """
     Parse raw config data structure into efficient in-memory structure.
 
