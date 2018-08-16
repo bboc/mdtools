@@ -6,12 +6,12 @@ Tests for reading the config and building in-memory objects
 
 import yaml
 from textwrap import dedent
-from unittest import TestCase
+import unittest
 
-from slides.common import parse_config
+from slides.common import parse_config, parse_config_new, Section, Content
 
 
-class ConfigTests(TestCase):
+class ConfigTests(unittest.TestCase):
 
     result = {
         'content': {'appendix': {'sections': [{'id': 1,
@@ -224,3 +224,139 @@ class ConfigTests(TestCase):
         pprint.pprint(parsed)
         pprint.pprint(self.result)
         self.failUnlessEqual(parsed, self.result)
+
+
+class SectionTests(unittest.TestCase):
+
+    def test_old_style_section(self):
+
+        s = Section.from_config('some section name')
+
+        self.failUnlessEqual(s.to_dict(), {
+            'title': 'Some Section Name',
+            'slug': 'some-section-name',
+            'id': None,
+            'chapter_id': None})
+
+    def test_new_style_section(self):
+
+        s = Section.from_config({
+            'title': 'Some Section Name',
+            'slug': 'some-section-name'})
+
+        self.failUnlessEqual(s.to_dict(), {
+            'title': 'Some Section Name',
+            'slug': 'some-section-name',
+            'id': None,
+            'chapter_id': None})
+
+class PartTests(unittest.TestCase):
+    pass
+
+
+
+
+class ChapterTests(unittest.TestCase):
+    def test_new_style_chapter(self):
+
+        data = parse_config_new(yaml.load("""
+            - formats:
+                - deckset
+                - jekyll
+            - features:
+                - title: Glossary Entries
+                  slug: glossary-entries
+                - section links
+                - chapter headers
+                - index files
+            - title: Data Structure
+              slug: data-structure
+              sections:
+                - title: Templates
+                  slug: templates
+            - commands:
+                - mdslides
+                - mdimg
+            - translation:
+                - translating templates
+            """))
+
+
+
+class InheritaceTests(unittest.TestCase):
+
+    def test_it(self):
+
+        class Base(object):
+
+            @classmethod
+            def foo(cls):
+                print 'base'
+                return cls()
+
+        class Child(Base):
+            @classmethod
+            def foo(cls):
+                print 'chi;ld'
+                return super(Child, cls).foo()
+        base = Base.foo()
+        child = Child.foo()
+
+        print 'basetype', type(base)
+        print 'childtype', type(child)
+        self.failUnless(isinstance(base, Base))
+        self.failUnless(isinstance(child, Base))
+
+        self.failUnless(isinstance(child, Child))
+
+class ContentTests(unittest.TestCase):
+
+    def test_old_format(self):
+        self.maxDiff = None
+        cfg = dedent("""
+            title: title
+            end: SKIP
+
+            section-prefix: "%(chapter)s.%(section)s:"
+
+            introduction:
+                - overview
+                - usecases
+
+            appendix:
+                - glossary
+                - changelog
+                - license
+
+            chapter-order:
+                - formats
+                - features
+                - data structure
+                - commands
+                - translation
+
+            chapters:
+                formats:
+                    - deckset
+                    - jekyll
+                features:
+                    - glossary entries
+                    - section links
+                    - chapter headers
+                    - index files
+                data structure:
+                    - templates
+                commands:
+                    - mdslides
+                    - mdimg
+                translation:
+                    - translating templates
+        """)
+        c = Content.from_config(yaml.load(cfg))
+        import pprint
+        pprint.pprint(c.to_dict())
+        pprint.pprint(self.result)
+        self.failUnlessEqual(c.to_dict(), self.result)
+
+
+

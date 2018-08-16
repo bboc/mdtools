@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import codecs
 import markdown
@@ -50,6 +50,187 @@ def get_config(filename):
 def read_config(filename):
     stream = open(filename, "r")
     return yaml.load(stream)
+
+
+class Content(object):
+    def __init__(self):
+        self.title = None
+        self.introduction = None
+        self.chapters = []
+        self.appendix = None
+        self.end = None
+        self.index = None
+
+    @classmethod
+    def from_config(cls, data):
+        c = cls()
+        if CONTENT in data:
+            # parse new config format
+            c.introduction = Part.from_config(data[CONTENT][FRONT_MATTER], FRONT_MATTER)
+            c.chapters = [Chapter.from_config(chapter, idx) for idx, chapter in enumerate(data[CONTENT][CHAPTERS], 1)]
+            c.appendix = Part.from_config(data[CONTENT][APPENDIX], APPENDIX)
+
+            c.title = data[CONTENT].get(TITLE)
+            c.end = data[CONTENT].get(END)
+
+        else:
+            # parse old config format
+            c.introduction = Part.from_config(data[FRONT_MATTER], FRONT_MATTER)
+            c.chapters = [Chapter.from_config(data[CHAPTERS][chapter_name], idx, chapter_name) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
+            c.appendix = Part.from_config(data[APPENDIX], APPENDIX)
+
+            c.title = data.get(TITLE)
+            c.end = data.get(END)
+        return c
+
+    def to_dict(self):
+        return {
+            TITLE: self.title,
+            FRONT_MATTER: self.introduction.to_dict(),
+            CHAPTERS: [c.to_dict() for c in self.chapters],
+            APPENDIX: self.appendix.to_dict(),
+            END: self.end,
+            INDEX: self.index,
+        }
+
+
+class ContentItem(object):
+
+    def __init__(self, title=None, slug=None):
+        self.title = title
+        self.slug = slug
+
+    def md_filename(self, name):
+        return FILENAME_PATTERN % self.slug
+
+    def to_dict(self):
+        return {
+            TITLE: self.title,
+            SLUG: self.slug,
+        }
+
+
+class Part(ContentItem):
+    """INtroduction or Appendix."""
+    def __init__(self, title, slug, sections=None):
+        super(Part, self).__init__(title, slug)
+        if sections:
+            self.sections = sections
+        else:
+            self.sections = []
+
+    @classmethod
+    def from_config(cls, data, name):
+        """
+        item is either {
+            [slug: … ]
+            [title: …]
+            sections […]
+        }
+        or [section1, section2, …]
+        """
+
+        return cls("Foo Bar", 'foo-bar', [])
+        import pprint
+        pprint.pprint(data)
+        # set defaults:
+        title = make_title(name)
+        slug = make_pathname(name)
+        if type(data) == dict:
+            if TITLE in data:
+                title = data[TITLE]
+            if SLUG in data:
+                slug = data[SLUG]
+            section_source = data[SECTIONS]
+        elif type(data) == list:
+            section_source = data
+        sections = [Section.from_config_data(s, idx, sidx) for sidx, s in enumerate(section_source, 1)]
+        return cls(title, slug, sections)
+   
+        if idx:
+            new_item[ID] = idx
+
+
+class Chapter(Part):
+    def __init__(self, title=None, slug=None, id=None):
+        super(Chapter, self).__init__(title, slug, [])
+        self.id = id
+
+    @classmethod
+    def from_config(cls, data, id, name):
+        return super(Chapter, cls).from_config(data, name)
+
+    def to_dict(self):
+        d = super(Chapter, self).to_dict()
+        d.update({
+            ID: self.id,
+        })
+        return d
+
+
+class Section(ContentItem):
+
+    def __init__(self, title=None, slug=None, id=None, chapter_id=None):
+        super(Section, self).__init__(title, slug)
+        self.id = id
+        self.chapter_id = chapter_id
+
+    @classmethod
+    def from_config(cls, item, chapter_id=None, id=None):
+        if type(item) == str:
+            title = make_title(item)
+            slug = make_pathname(item)
+        else:
+            title = item[TITLE]
+            slug = item[SLUG]
+        return cls(title, slug)
+
+    def to_dict(self):
+        d = super(Section, self).to_dict()
+        d.update({
+            ID: self.id,
+            CHAPTER_ID: self.chapter_id,
+        })
+        return d
+
+
+def parse_config_new(data):
+    """
+    Parse raw config data structure into efficient in-memory structure.
+
+    Parse raw config data structure into efficient in-memory structure.
+
+    returns a dictionary with the config as a dictionary, that contains a Content object at index 'content'
+
+    """
+
+    def parse_chapter(item, idx):
+        new_item = {ID: idx}
+        if SECTIONS in item:
+            new_item[TITLE] = item[TITLE]
+            new_item[SLUG] = item[SLUG]
+            if SLUG not in item:
+                new_item[SLUG] = make_pathname(item[TITLE])
+            elif TITLE not in item:
+                new_item[TITLE] = make_title(item[SLUG])
+            sections = item[SECTIONS]
+        else:
+            name = item.keys()[0]
+            new_item[TITLE] = make_title(name)
+            new_item[SLUG] = make_pathname(name)
+            sections = item[name]
+        new_item[SECTIONS] = [Section.from_config_item(s, idx, sidx) for sidx, s in enumerate(sections, 1)]
+        return new_item
+
+
+    data['CONTENT'] = Content.from_config(data)
+    # TODO: delete legacy structures for intro, appendix, chapter order etc. 
+    # data[INDEX] = []
+    # for chapter in data[CONTENT][CHAPTERS]:
+    #     for section in chapter[SECTIONS]:
+    #         data[INDEX].append(section)
+    # data[INDEX].sort(key=itemgetter(TITLE))
+    return data
 
 
 def parse_config(data):
