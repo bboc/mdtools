@@ -1,159 +1,108 @@
 # -*- coding: utf-8 -*-
 """
 Tests for reading the config and building in-memory objects
-
 """
 
-import os
-
-
 import yaml
-from textwrap import dedent
-from unittest import TestCase
+import unittest
 
-from slides.common import parse_config
+from slides.config import parse_config, Section, Content
+from config_test_data import result, simple_format, extended_format
 
 
-class ConfigTests(TestCase):
+class ConfigTests(unittest.TestCase):
 
-    result = {
-        'content': {'appendix': {'sections': [{'slug': 'glossary',
-                                               'title': 'Glossary'},
-                                              {'slug': 'changelog',
-                                               'title': 'Changelog'},
-                                              {'slug': 'license',
-                                               'title': 'License'}],
-                                 'slug': 'appendix',
-                                 'title': 'Appendix'},
-                    'chapters': [{'sections': [{'slug': 'deckset',
-                                                'title': 'Deckset'},
-                                               {'slug': 'jekyll',
-                                                'title': 'Jekyll'}],
-                                  'slug': 'formats',
-                                  'title': 'Formats'},
-                                 {'sections': [{'slug': 'glossary-entries',
-                                                'title': 'Glossary Entries'},
-                                               {'slug': 'section-links',
-                                                'title': 'Section Links'},
-                                               {'slug': 'chapter-headers',
-                                                'title': 'Chapter Headers'},
-                                               {'slug': 'index-files',
-                                                'title': 'Index Files'}],
-                                  'slug': 'features',
-                                  'title': 'Features'},
-                                 {'sections': [{'slug': 'templates',
-                                                'title': 'Templates'}],
-                                  'slug': 'data-structure',
-                                  'title': 'Data Structure'},
-                                 {'sections': [{'slug': 'mdslides',
-                                                'title': 'Mdslides'},
-                                               {'slug': 'mdimg',
-                                                'title': 'Mdimg'}],
-                                  'slug': 'commands',
-                                  'title': 'Commands'},
-                                 {'sections': [{'slug': 'translating-templates',
-                                                'title': 'Translating Templates'}],
-                                  'slug': 'translation',
-                                  'title': 'Translation'}],
-                    'end': 'SKIP',
-                    'introduction': {'sections': [{'slug': 'overview',
-                                                   'title': 'Overview'},
-                                                  {'slug': 'usecases',
-                                                   'title': 'Usecases'}],
-                                     'slug': 'introduction',
-                                     'title': 'Introduction'},
-                    'title': 'title'},
-        'section-prefix': '%(chapter)s.%(section)s:'}
+    def test_new_format(self):
+        """Config in new format is properly parsed into structure object, rest of config is preserved."""
+        self.maxDiff = None
+        parsed = parse_config(yaml.load(extended_format))
+
+        parsed['content'] = parsed['content'].to_dict()
+        self.failUnlessEqual(parsed, result)
+
+    def test_old_format(self):
+        self.maxDiff = None
+        parsed = parse_config(yaml.load(simple_format))
+        import pprint
+        pprint.pprint(parsed)
+        parsed['content'] = parsed['content'].to_dict()
+        self.failUnlessEqual(parsed, result)
+
+
+class SectionTests(unittest.TestCase):
+
+    def test_old_style_section(self):
+
+        s = Section.from_config('some section name')
+
+        self.failUnlessEqual(s.to_dict(), {
+            'title': 'Some Section Name',
+            'slug': 'some-section-name',
+            'id': None})
+
+    def test_new_style_section(self):
+
+        s = Section.from_config({
+            'title': 'Some Section Name',
+            'slug': 'some-section-name'})
+
+        self.failUnlessEqual(s.to_dict(), {
+            'title': 'Some Section Name',
+            'slug': 'some-section-name',
+            'id': None})
+
+
+class ContentTests(unittest.TestCase):
+
+    def test_old_format(self):
+        self.maxDiff = None
+        c = Content.from_config(yaml.load(simple_format))
+        self.failUnlessEqual(c.to_dict(), result['content'])
 
     def test_new_format(self):
         """Config in new format is properly parsed"""
         self.maxDiff = None
-        cfg = dedent("""
 
-          section-prefix: "%(chapter)s.%(section)s:"
-          content:
-            title: title
-            end: SKIP
-            introduction:
-              title: Introduction
-              slug: introduction
-              sections:
-                - overview
-                - usecases
-            chapters:
-              - formats:
-                - deckset
-                - jekyll
-              - features:
-                - title: Glossary Entries
-                  slug: glossary-entries
-                - section links
-                - chapter headers
-                - index files
-              - title: Data Structure
-                slug: data-structure
-                sections:
-                  - title: Templates
-                    slug: templates
-              - commands:
-                - mdslides
-                - mdimg
-              - translation:
-                - translating templates
-            appendix:
-              - glossary
-              - changelog
-              - license
-         """)
-        parsed = parse_config(yaml.load(cfg))
-        import pprint
-        pprint.pprint(parsed)
-        pprint.pprint(self.result)
-        self.failUnlessEqual(parsed, self.result)
+        c = Content.from_config(yaml.load(extended_format))
+        self.failUnlessEqual(c.to_dict(), result['content'])
 
-    def test_old_format(self):
+    def test_no_introduction_and_appendix(self):
+        """Content must build when there is no introduction."""
         self.maxDiff = None
-        cfg = dedent("""
-            title: title
-            end: SKIP
 
-            section-prefix: "%(chapter)s.%(section)s:"
+        c = Content.from_config(yaml.load("""
+            content:
+                chapters:
+                    - formats:
+                        - deckset
+                        - jekyll
+            """))
+        self.failUnlessEqual(c.to_dict(), {
+            'chapters': [{'id': 1,
+                          'sections': [{'chapter_id': 1,
+                                        'id': 1,
+                                        'slug': 'deckset',
+                                        'title': 'Deckset'},
+                                       {'chapter_id': 1,
+                                        'id': 2,
+                                        'slug': 'jekyll',
+                                        'title': 'Jekyll'}],
+                          'slug': 'formats',
+                          'title': 'Formats'}],
+            'index': [
+                {'chapter_id': 1,
+                 'id': 1,
+                 'slug': 'deckset',
+                 'title': 'Deckset'},
 
-            introduction:
-              - overview
-              - usecases
+                {'chapter_id': 1,
+                 'id': 2,
+                 'slug': 'jekyll',
+                 'title': 'Jekyll'},
+            ],
+            'appendix': None,
+            'introduction': None,
+            'end': None,
+            'title': None,
 
-            appendix:
-              - glossary
-              - changelog
-              - license
-
-            chapter-order:
-              - formats
-              - features
-              - data structure
-              - commands
-              - translation
-
-            chapters:
-              formats:
-                - deckset
-                - jekyll
-              features:
-                - glossary entries
-                - section links
-                - chapter headers
-                - index files
-              data structure:
-                - templates
-              commands:
-                - mdslides
-                - mdimg
-              translation:
-                - translating templates
-        """)
-        parsed = parse_config(yaml.load(cfg))
-        import pprint
-        pprint.pprint(parsed)
-        pprint.pprint(self.result)
-        self.failUnlessEqual(parsed, self.result)
+        })

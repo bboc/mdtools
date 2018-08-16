@@ -5,7 +5,7 @@
 import codecs
 from functools import partial
 
-from common import read_config
+from config import read_config
 import markdown_processor as mdp
 import translate
 
