@@ -6,14 +6,14 @@ import codecs
 from string import Template
 from textwrap import dedent
 
-from config import get_config, INDEX, TITLE
+from config import get_config, CONTENT, TITLE
 from translate import translate as _
 
 
 def cmd_build_deckset_index(args):
     cfg = get_config(args.config)
     with codecs.open(args.target, 'a', 'utf-8') as target:
-        deckset_alphabetical_index(cfg[INDEX], target)
+        deckset_alphabetical_index(cfg[CONTENT].index, target)
 
 
 def make_cell(items):
@@ -31,8 +31,12 @@ def deckset_alphabetical_index(section_index, target, per_page=20):
         """) % dict(sections=_("Patterns"), cont=_(u'(…)')))
 
     # sorting raw pattern data by name makes order independent of display format!
-    section_index = sorted(section_index, key=lambda x: x[TITLE].lower())
-    sections = [INDEX_ENTRY.substitute(p) for p in section_index]
+    section_index = sorted(section_index, key=lambda x: x.title.lower())
+    sections = []
+    for s in section_index:
+        sections.append(INDEX_ENTRY.substitute(dict(title=s.title,
+                                                    chapter_id=s.chapter_id,
+                                                    id=s.id)))
 
     cont = ''
 
