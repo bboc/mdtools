@@ -199,6 +199,9 @@ class Part(ContentItem):
             section_source = data
         return cls(title, slug), section_source
 
+    def is_chapter(self):
+        return False
+
     def to_dict(self):
         d = super(Part, self).to_dict()
         d.update({
@@ -218,6 +221,9 @@ class Chapter(Part):
         chapter.id = id
         chapter.sections = [Section.from_config(s, sidx, chapter.id) for sidx, s in enumerate(section_source, 1)]
         return chapter
+
+    def is_chapter(self):
+        return True
 
     def to_dict(self):
         d = super(Chapter, self).to_dict()
