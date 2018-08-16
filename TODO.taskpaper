@@ -37,15 +37,20 @@ new config format:
 			✔ implement in jekyll export @done (18-08-14 22:28)
 			✔ implement in wordpress builder @done (18-08-15 00:03)
 			✔ eliminate index builder completely @done (18-08-15 00:43)
-			- use sectionprefix from config file 
+			✔ use sectionprefix from config file @done (18-08-16 20:19)
 			- implement in cmd_create_source_files_for_slides
+			refactoring for better readability:
+				- convert to OO code
+				- move index into Content object
+			  - convert all places where that code is actually used
+				- remove old code
 
 	section compiler:
 		- refactor SectionCompiler._append_section() to use mardown processor
 	general refactoring:
 		- remove the need for make-conf: all that should be in conig.yaml
 		- convert convert_file_for_web() to use MarkdownProcessor()
-		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatiable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
+		- Structure.yaml and index-db.yaml should in fact be one file that resides in the translatable folder and contains chapters names and directories, and sections in chapters and filenames, like so @estimate(2hrs)
 			chapters:
 				- title: Foo and the Seven Bars
 				  slug	: foo-and-the-seven-bars
