@@ -1,5 +1,5 @@
 ROOT=docs-src
-CONFIG=$(ROOT)/structure.yaml
+CONFIG=$(ROOT)/en/structure-new.yaml
 GLOSSARY=$(ROOT)/en/glossary.yaml
 
 TMPFOLDER=$(ROOT)/tmp

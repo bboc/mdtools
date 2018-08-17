@@ -1,0 +1,34 @@
+section-prefix: "%(chapter)s.%(section)s:"
+content:
+  title: title
+  end: SKIP
+  introduction:
+    title: Introduction
+    slug: introduction
+    sections:
+      - overview
+      - usecases
+  chapters:
+    - formats:
+      - deckset
+      - jekyll
+    - features:
+      - title: Glossary Entries
+        slug: glossary-entries
+      - section links
+      - chapter headers
+      - index files
+    - title: Data Structure
+      slug: data-structure
+      sections:
+        - title: Templates
+          slug: templates
+    - commands:
+      - mdslides
+      - mdimg
+    - translation:
+      - translating templates
+  appendix:
+    - glossary
+    - changelog
+    - license
