@@ -8,7 +8,6 @@ import os
 
 from tests.common import FileBasedTestCase
 
-from slides.index import cmd_build_index_db
 from slides.build_jekyll import JekyllWriter
 from slides.build_slides import (
     build_deckset_slides,
@@ -55,19 +54,6 @@ class CompileSlidesTests(FileBasedTestCase):
                              make_path('compiled', 'text.md'))
         self.compare_results(self.tmp_path('appendix.md'),
                              make_path('compiled', 'appendix.md'))
-
-    def test_build_index_db(self):
-        """The index-db is build correctly from structure.yaml."""
-
-        index_db = self.tmp_path('index-db.yaml')
-        args = self.parser.parse_args(['build-index-db',
-                                      make_path('structure.yaml'),
-                                      index_db])
-
-        cmd_build_index_db(args)
-
-        self.assertTrue(os.path.exists(index_db))
-        self.compare_results(index_db, make_path('index-db.yaml'))
 
     def test_build_reveal_js(self):
         """Build reveal.js slide deck from output of compile step."""
@@ -130,11 +116,10 @@ class CompileSlidesTests(FileBasedTestCase):
                                        make_path('content', 'src'),
                                        self.document_root,
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('index-db.yaml'),
                                        '--glossary-items', '2',
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
-                                       '--section-index-template', make_path('templates', 'index-template.md'),
                                        '--template', make_path('templates', 'site-home.md'),
+                                       '--section-index-template', make_path('templates', 'index-template.md'),
                                        '--introduction-template', make_path('templates', 'index-template.md'),
                                        ])
         j = JekyllWriter(args)
@@ -151,8 +136,6 @@ class CompileSlidesTests(FileBasedTestCase):
                              make_path('jekyll', 'images.md'))
         self.compare_results(self.tmp_path('index-template.md'),
                              make_path('jekyll', 'index-template.md'))
-        self.compare_results(self.tmp_path('index.md'),
-                             make_path('jekyll', 'index.md'))
         self.compare_results(self.tmp_path('introduction.md'),
                              make_path('jekyll', 'introduction.md'))
         self.compare_results(self.tmp_path('right-aligned-images.md'),
@@ -171,7 +154,6 @@ class CompileSlidesTests(FileBasedTestCase):
                                        make_path('content', 'src'),
                                        self.document_root,
                                        '--glossary', make_path('glossary.yaml'),
-                                       '--index', make_path('index-db.yaml'),
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
                                        ])
 

@@ -1,22 +1,14 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
 
 import codecs
-import os
-import yaml
 import markdown
+import os
 
 
 SLIDE_MARKERS = ['---', '***', '* * *']
 FILENAME_PATTERN = '%s.md'
-
-# section names
-CHAPTER_ORDER = 'chapter-order'
-TITLE = 'title'
-FRONT_MATTER = 'introduction'
-CHAPTERS = 'chapters'
-APPENDIX = 'appendix'
-END = 'end'
-SKIP = 'SKIP'
 
 
 def make_pathname(name):
@@ -27,18 +19,9 @@ def md_filename(name):
     return FILENAME_PATTERN % make_pathname(name)
 
 
-def make_title(name):
-    return name.title().replace('s3', 'S3')
-
-
 def create_directory(directory):
     if not os.path.exists(directory):
         os.mkdir(directory)
-
-
-def read_config(filename):
-    stream = open(filename, "r")
-    return yaml.load(stream)
 
 
 def increase_headline_level(line):

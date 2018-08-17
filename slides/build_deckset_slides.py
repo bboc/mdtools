@@ -8,8 +8,7 @@ import codecs
 from functools import partial
 import os
 
-from common import make_pathname, read_config
-from common import TITLE, FRONT_MATTER, CHAPTER_ORDER, APPENDIX, END, SKIP
+from config import get_config, CONTENT
 from glossary import DecksetGlossaryRenderer
 import markdown_processor as mdp
 
@@ -22,7 +21,7 @@ class DecksetWriter(object):
         self.args = args
         self.template_path = self.args.template
         self.source_folder = args.source
-        self.config = read_config(self.args.config)
+        self.config = get_config(self.args.config)
         self.glossary_renderer = DecksetGlossaryRenderer(self.args.glossary, self.args.glossary_items)
 
     def build(self):
@@ -30,21 +29,22 @@ class DecksetWriter(object):
             with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
                 self._copy_template_header()
 
-                self._append_section(self.config.get(TITLE, TITLE))
+                content = self.config[CONTENT]
+                if content.title:
+                    self._append_section(content.title)
 
-                if FRONT_MATTER in self.config:
-                    self._append_section(FRONT_MATTER)
+                if content.introduction:
+                    self._append_section(content.introduction.slug)
 
                 # add all the groups
-                for i, chapter in enumerate(self.config[CHAPTER_ORDER]):
-                    self._append_section(chapter)
+                for chapter in content.chapters:
+                    self._append_section(chapter.slug)
 
-                if APPENDIX in self.config:
-                    self._append_section(APPENDIX)
+                if content.appendix:
+                    self._append_section(content.appendix.slug)
 
-                end = self.config.get(END, END)
-                if end != SKIP:
-                    self._append_section(end, skip_section_break=True)
+                if content.end:
+                    self._append_section(content.end, skip_section_break=True)
 
                 self._copy_template_footer()
 
@@ -60,7 +60,7 @@ class DecksetWriter(object):
             self.target.write(line)
 
     def _append_section(self, name, skip_section_break=False):
-        name = '%s.md' % make_pathname(name)
+        name = '%s.md' % name
         with codecs.open(os.path.join(self.source_folder, name), 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=[
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
