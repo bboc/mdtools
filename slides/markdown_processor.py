@@ -85,18 +85,43 @@ def increase_all_headline_levels(level_increase, lines):
             yield line
 
 
-IMG_PATTERN = re.compile("^\!\[(?P<format>.*)\]\((?P<url>.*)\)")
+IMG_PATTERN = re.compile("^\!\[(?P<caption>.*)\]\((?P<url>.*)\)")
+DECKSET_IMAGE_COMMANDS = ['fit', 'left', 'right', 'original', 'filtered'] # 'inline', 
+IMG_TEMPLATE = '![%s](%s)'
 
 
 def clean_images(lines):
+    """Remove deckset formatters like "inline,fit" from images, skip background images ([fit])."""
+
+    def clean_img(match):
+        """Get a definition of a term from the glossary."""
+        caption = match.group('caption').lower()
+        url = match.group('url')
+        if caption.lower() == 'fit':
+            # remove background image
+            return ''
+        else:
+            for cmd in DECKSET_IMAGE_COMMANDS:
+                if caption.lower().startswith(cmd):
+                    # strip caption
+                    return IMG_TEMPLATE % ('', url)
+            else:
+                # leave unchanged 
+                return IMG_TEMPLATE % (caption, url)
+
+    for line in lines:
+        yield IMG_PATTERN.sub(clean_img, line)
+
+
+def clean_images_old(lines):
     """Remove deckset formatters like "inline,fit" from images, skip background images ([fit])."""
     for line in lines:
         if line.lstrip().startswith("!["):
             # fix image
             m = IMG_PATTERN.match(line)
-            img_format = m.group(2).lower()
+            caption = m.group(2).lower()
             img_url = m.group(2)
-            if img_format == 'fit':
+            if caption.lower() == 'fit':
                 yield '\n'
             else:
                 yield '![](%s)\n' % img_url

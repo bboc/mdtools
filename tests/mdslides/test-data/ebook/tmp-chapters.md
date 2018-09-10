@@ -38,13 +38,13 @@ This is some text on the second slide. The text is below a headline with a conti
 
 ### Section 2.1: Background Images
 
-![](img/full.png)
+
 
 This slide contains a background image, and this text should be rendered on top of that image.
 
 
 
-![](img/full.png)
+
 
 This second slide should also contain a background image.
 

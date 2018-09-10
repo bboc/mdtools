@@ -148,7 +148,8 @@ class CompileSlidesTests(FileBasedTestCase):
                              make_path('jekyll', 'text.md'))
 
     def test_build_ebook(self):
-        """Ebook master is build from source."""
+        """Ebook master is built from source."""
+        self.maxDiff = None
         args = self.parser.parse_args(['build', "ebook",
                                        make_path('structure.yaml'),
                                        make_path('content', 'src'),
