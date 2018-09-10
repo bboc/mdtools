@@ -95,7 +95,7 @@ def clean_images(lines):
 
     def clean_img(match):
         """Get a definition of a term from the glossary."""
-        caption = match.group('caption').lower()
+        caption = match.group('caption')
         url = match.group('url')
         if caption.lower() == 'fit':
             # remove background image
@@ -106,7 +106,7 @@ def clean_images(lines):
                     # strip caption
                     return IMG_TEMPLATE % ('', url)
             else:
-                # leave unchanged 
+                # leave unchanged
                 return IMG_TEMPLATE % (caption, url)
 
     for line in lines:
