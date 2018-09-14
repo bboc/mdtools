@@ -86,7 +86,7 @@ def increase_all_headline_levels(level_increase, lines):
 
 
 IMG_PATTERN = re.compile("^\!\[(?P<caption>.*)\]\((?P<url>.*)\)")
-DECKSET_IMAGE_COMMANDS = ['fit', 'left', 'right', 'original', 'filtered'] # 'inline', 
+DECKSET_IMAGE_COMMANDS = ['inline', 'fit', 'left', 'right', 'original', 'filtered']
 IMG_TEMPLATE = '![%s](%s)'
 
 
