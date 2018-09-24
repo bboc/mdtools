@@ -67,8 +67,8 @@ class WordpressGlossaryRenderer(GlossaryRenderer):
 
 
 class HtmlGlossaryRenderer(GlossaryRenderer):
-
-    TEMPLATE = "**%(name)s**: %(glossary)s "
+    # TODO: this produces weird markup in reveal.js, see tests
+    TEMPLATE = "**%(name)s**: %(glossary)s"
     HEADER_TEMPLATE = '\n# %s %s\n\n\n'
     PAGE_BREAK = '\n\n</section><section>\n'
 
