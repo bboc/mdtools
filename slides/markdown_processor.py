@@ -5,7 +5,7 @@ from functools import partial
 from operator import attrgetter
 import re
 
-from common import SLIDE_MARKERS
+from common import SLIDE_MARKERS, escape_html_delimiters
 from config import TITLE
 from glossary import GLOSSARY_MARKER
 from translate import translate as _
@@ -180,7 +180,7 @@ def inject_glossary(glossary, lines):
         yield line
 
 
-GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>.*?)\]\(glossary:(?P<glossary_term>.*?)\)")
+GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
 GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
 GLOSSARY_TERM_PLAIN_TEMPLATE = """%(title)s"""
@@ -191,11 +191,15 @@ def glossary_tooltip(glossary, template, lines):
     def glossary_replace(match):
         """Replace term with glossary tooltip or other template."""
         term = match.group('glossary_term')
+        description = glossary['terms'][term]['glossary']
+        if template.startswith('<'):
+            # TODO: this should be  propery of the template to do this kind of preprocessing
+            description = escape_html_delimiters(description)
         data = {
             'title': match.group('title'),
             'glossary_term': term,
             'name': glossary['terms'][term]['name'],
-            'description': glossary['terms'][term]['glossary'],
+            'description': description,
         }
         return template % data
 
@@ -204,7 +208,7 @@ def glossary_tooltip(glossary, template, lines):
         yield line
 
 
-SECTION_LINK_PATTERN = re.compile("\[(?P<title>.*?)\]\(section:(?P<section>.*?)\)")
+SECTION_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(section:(?P<section>[^)]*)\)")
 SECTION_LINK_TITLE_ONLY = "_%(title)s_"
 SECTION_LINK_TO_HMTL = "[%(title)s](%(section)s.html)"
 SECTION_LINK_TO_SLIDE = "_%(title)s_"
@@ -212,7 +216,7 @@ SECTION_LINK_TO_SLIDE = "_%(title)s_"
 
 def convert_section_links(template, lines):
     """Convert section links for various output formats."""
-    def link_replace(template, match):
+    def link_replace(match):
         """Replace link with template."""
         data = {
             'title': match.group('title'),
@@ -221,7 +225,7 @@ def convert_section_links(template, lines):
         return template % data
 
     for line in lines:
-        line = SECTION_LINK_PATTERN.sub(partial(link_replace, template), line)
+        line = SECTION_LINK_PATTERN.sub(link_replace, line)
         yield line
 
 

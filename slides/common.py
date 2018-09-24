@@ -66,3 +66,17 @@ class LineWriter(object):
 
     def mark_empty_line(self):
         self.prev_line_empty = True
+
+
+HTML_DELIMITERS = {
+    "&": "&amp;",
+    "'": "&apos;",
+    ">": "&gt;",
+    "<": "&lt;",
+    '"': "&quot;",
+}
+
+
+def escape_html_delimiters(text):
+    """Replace html delimiters in text."""
+    return "".join(HTML_DELIMITERS.get(c, c) for c in text)
