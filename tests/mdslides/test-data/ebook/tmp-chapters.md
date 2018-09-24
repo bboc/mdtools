@@ -23,6 +23,7 @@ Here is a section link: _Glossary Entries_
 
 It should be possible to link to several sections in the same line, e.g. to _Background Images_ and _Glossary Entries_
 
+Also we should be able to have a glossary and a section link to _Glossary Entries_ and another overlay for term.
 
 ### Section 1.3: Slide Breaks
 

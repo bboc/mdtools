@@ -36,6 +36,7 @@ class CompileSlidesTests(FileBasedTestCase):
 
     def test_compile_slides(self):
         """Slides are correctly compiled into chapters."""
+        self.maxDiff = None
         args = self.parser.parse_args(['compile',
                                        make_path('structure.yaml'),
                                        make_path('content', 'src'),
@@ -57,6 +58,9 @@ class CompileSlidesTests(FileBasedTestCase):
 
     def test_build_reveal_js(self):
         """Build reveal.js slide deck from output of compile step."""
+        self.maxDiff = None
+        import logging
+        logging.getLogger().setLevel(logging.WARNING)
         args = self.parser.parse_args(['build', 'revealjs',
                                        make_path('structure.yaml'),
                                        make_path('compiled'),
@@ -73,6 +77,7 @@ class CompileSlidesTests(FileBasedTestCase):
 
     def test_build_deckset(self):
         """Build markdown for deckset from output of compile step."""
+        self.maxDiff = None
         args = self.parser.parse_args(['build', 'deckset',
                                        make_path('structure.yaml'),
                                        make_path('compiled'),
@@ -111,6 +116,7 @@ class CompileSlidesTests(FileBasedTestCase):
 
     def test_build_jekyll_site(self):
         """Jekyll site is built from source files."""
+        self.maxDiff = None
         args = self.parser.parse_args(['build', 'jekyll',
                                        make_path('structure.yaml'),
                                        make_path('content', 'src'),
