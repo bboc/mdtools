@@ -36,6 +36,8 @@ def markdown2html(text):
 
 
 def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
+    if commandline_args.no_section_prefix:
+        return None
     if commandline_args.section_prefix:
         template = codecs.decode(commandline_args.section_prefix, 'utf-8')
     else:
