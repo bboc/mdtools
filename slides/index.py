@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import codecs
-
 from string import Template
 from textwrap import dedent
 
 from config import get_config, CONTENT
 from translate import translate as _
+
+import regex as re
 
 
 def cmd_build_index(args):
@@ -65,18 +66,23 @@ def deckset_alphabetical_index(section_index, target, per_page=20):
         cont = _(u'(…)')
 
 
+WORD_CHARACTERS = re.compile(r'(?V1)[\W_--[-]]+', re.UNICODE)
+
+
 def latex_alphabetical_index(section_index, target):
     """
     Create an alphabetical index of sections for LaTeX output.
     "[Rounds - 8.1](#pattern8.1:patternamewithoutspaces) \
     """
-    INDEX_ENTRY = Template("[${title}](#pattern${chapter_id}.${id}:${slug}) \\\n")
+    # INDEX_ENTRY = Template("[${title}](#pattern${chapter_id}.${id}:${slug}) \\\n")
+    INDEX_ENTRY = Template("[${title}](#${slug}) \\\n")
 
     # sorting raw pattern data by name makes order independent of display format!
     section_index = sorted(section_index, key=lambda x: x.title.lower())
     for s in section_index:
+
         item = INDEX_ENTRY.substitute(dict(title=s.title,
                                            chapter_id=s.chapter_id,
                                            id=s.id,
-                                           slug=s.title.lower().replace(' ', '')))
+                                           slug=WORD_CHARACTERS.sub('', s.title.lower())))
         target.write(item)
