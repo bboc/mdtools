@@ -32,7 +32,7 @@ def increase_headline_level(line):
 
 
 def markdown2html(text):
-    return markdown.markdown(text, ['markdown.extensions.extra', 'markdown.extensions.meta'])
+    return markdown.markdown(text, extensions=['markdown.extensions.extra', 'markdown.extensions.meta'])
 
 
 def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
