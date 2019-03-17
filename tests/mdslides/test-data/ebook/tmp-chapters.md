@@ -15,7 +15,7 @@ And now a glossary entry:
 
 A collection of explanations for words the reader might not be familiar with.
 
-And an overlay for the term glossary in this sentence.
+And an overlay for the term glossary[^1] in this sentence.
 
 
 ### Section 1.2: Section Links
@@ -24,7 +24,7 @@ Here is a section link: _Glossary Entries_
 
 It should be possible to link to several sections in the same line, e.g. to _Background Images_ and _Glossary Entries_
 
-Also we should be able to have a glossary and a section link to _Glossary Entries_ and another overlay for term.
+Also we should be able to have a glossary[^2] and a section link to _Glossary Entries_ and another overlay for term[^3].
 
 ### Section 1.3: Slide Breaks
 

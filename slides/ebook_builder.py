@@ -36,6 +36,8 @@ class EbookWriter(object):
                 for item in part.sections:
                     self._append_section(target, part, item)
 
+
+        mdp.reset_glossary_footnote_counter()
         build_intro_and_appendix('tmp-introduction.md', content.introduction)
 
         # build all the chapters/sections
@@ -53,13 +55,17 @@ class EbookWriter(object):
         # finally build appendix
         build_intro_and_appendix('tmp-appendix.md', content.appendix)
 
+        # TODO: add all footnotes to tmp-appendix.md
+        with codecs.open(os.path.join(self.target_folder, 'tmp-appendix.md'), 'a', 'utf-8') as target:
+            mdp.write_footnote_texts(target)
+
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
         return [
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
             partial(mdp.inject_glossary, self.glossary),
-            partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
+            partial(mdp.add_glossary_term_footnotes, self.glossary),
             mdp.clean_images,
         ]
 
