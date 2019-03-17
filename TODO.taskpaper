@@ -5,7 +5,8 @@ mdslides:
 	✔ ebooks: strip deckset image commands, but preserve other captions @done (18-09-25 08:20)
 	glossary and section links:
 		Make handling glossary and section links more flexible to enable output in PDF
-		- refactor from templates to objects 
+		- add glossary tooltips inside glossary terms
+		- refactor from templates to objects
 		- add markdown rendering for emphasis and strong
 		- render glossary terms as footnotes for LaTeX
 		- render section links as clickable links in LaTeX (like in the index)
