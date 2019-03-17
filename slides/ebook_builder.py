@@ -90,4 +90,4 @@ class EbookWriter(object):
                 processor = mdp.MarkdownProcessor(cif, filters=self.common_filters())
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
-            target.write('\n')
+            target.write('\n\n')

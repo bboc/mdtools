@@ -4,6 +4,7 @@
 
 This is the content of the index file for the chapter "Text".
 
+
 ### Section 1.1: Glossary
 
 What follows is a definition from the glossary:
