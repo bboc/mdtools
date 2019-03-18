@@ -48,7 +48,7 @@ site:
 ifneq ("$(wildcard docs/img)","")
 	rm -r docs/img
 endif
-	cp -r $(ROOT)/img docs/img
+	# cp -r $(ROOT)/img docs/img
 
 	mdslides build jekyll $(CONFIG) $(ROOT)/en/src docs/ --glossary=$(GLOSSARY) --template=$(ROOT)/en/website/_templates/index.md --section-index-template=$(ROOT)/en/website/_templates/pattern-index.md --introduction-template=$(ROOT)/en/website/_templates/introduction.md
 	cd docs;jekyll build
