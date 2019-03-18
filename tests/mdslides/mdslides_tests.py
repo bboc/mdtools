@@ -153,8 +153,8 @@ class CompileSlidesTests(FileBasedTestCase):
         self.compare_results(self.tmp_path('text.md'),
                              make_path('jekyll', 'text.md'))
 
-    def test_build_ebook(self):
-        """Ebook master is built from source."""
+    def test_build_ebook_latex(self):
+        """Ebook master for LaTeX is built from source."""
         self.maxDiff = None
         args = self.parser.parse_args(['build', "ebook",
                                        make_path('structure.yaml'),
@@ -162,14 +162,36 @@ class CompileSlidesTests(FileBasedTestCase):
                                        self.document_root,
                                        '--glossary', make_path('glossary.yaml'),
                                        '--section-prefix', "Section %(chapter)s.%(section)s:",
+                                       '--glossary-style', '%(title)s',
                                        ])
 
         e = EbookWriter(args)
         e.build()
         self.compare_results(self.tmp_path('tmp-introduction.md'),
-                             make_path('ebook', 'tmp-introduction.md'))
+                             make_path('ebook-latex', 'tmp-introduction.md'))
         self.compare_results(self.tmp_path('tmp-chapters.md'),
-                             make_path('ebook', 'tmp-chapters.md'))
+                             make_path('ebook-latex', 'tmp-chapters.md'))
         self.compare_results(self.tmp_path('tmp-appendix.md'),
-                             make_path('ebook', 'tmp-appendix.md'))
+                             make_path('ebook-latex', 'tmp-appendix.md'))
+
+    def test_build_ebook_epub(self):
+        """Ebook master for EPUB is built from source."""
+        self.maxDiff = None
+        args = self.parser.parse_args(['build', "ebook",
+                                       make_path('structure.yaml'),
+                                       make_path('content', 'src'),
+                                       self.document_root,
+                                       '--glossary', make_path('glossary.yaml'),
+                                       '--section-prefix', "Section %(chapter)s.%(section)s:",
+                                       '--glossary-style', 'footnotes',
+                                       ])
+
+        e = EbookWriter(args)
+        e.build()
+        self.compare_results(self.tmp_path('tmp-introduction.md'),
+                             make_path('ebook-epub', 'tmp-introduction.md'))
+        self.compare_results(self.tmp_path('tmp-chapters.md'),
+                             make_path('ebook-epub', 'tmp-chapters.md'))
+        self.compare_results(self.tmp_path('tmp-appendix.md'),
+                             make_path('ebook-epub', 'tmp-appendix.md'))
 

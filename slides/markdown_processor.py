@@ -183,7 +183,6 @@ def inject_glossary(glossary, lines):
 GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
 GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
-GLOSSARY_TERM_PLAIN_TEMPLATE = """%(title)s"""
 
 
 def add_glossary_term_tooltips(glossary, template, lines):
@@ -195,7 +194,6 @@ def add_glossary_term_tooltips(glossary, template, lines):
         description = escape_html_delimiters(description)
         data = {
             'title': match.group('title'),
-            'glossary_term': term, # TODO: is this necessary?
             'name': glossary['terms'][term]['name'],
             'description': description,
         }
@@ -205,48 +203,6 @@ def add_glossary_term_tooltips(glossary, template, lines):
         line = GLOSSARY_TERM_PATTERN.sub(glossary_replace, line)
         yield line
 
-
-glossary_footnote_counter = 0
-glossary_footnote_buffer = []
-
-
-def reset_glossary_footnote_counter():
-    globals()['glossary_footnote_counter'] = 0
-    globals()['glossary_footnote_buffer'] = []
-
-
-GLOSSARY_TERM_FOOTNOTE_REFERENCE_TEMPLATE = """%(title)s[^%(idx)i]"""
-GLOSSARY_TERM_FOOTNOTE_TEMPLATE = """[^%(idx)i]: %(name)s: %(description)s"""
-
-
-def add_glossary_term_footnotes(glossary, lines):
-    """Add tooltip for marked glossary entries."""
-    def glossary_replace(match):
-        """Add footnote to glossary terms."""
-        term = match.group('glossary_term')
-        description = glossary['terms'][term]['glossary']
-        globals()['glossary_footnote_counter'] += 1
-        idx = globals()['glossary_footnote_counter']
-        data = {
-            'title': match.group('title'),
-            'glossary_term': term,  # TODO: is this necessary?
-            'name': glossary['terms'][term]['name'],
-            'description': description,
-            'idx': idx,
-        }
-        globals()['glossary_footnote_buffer'].append(GLOSSARY_TERM_FOOTNOTE_TEMPLATE % data)
-        return GLOSSARY_TERM_FOOTNOTE_REFERENCE_TEMPLATE % data
-
-    for line in lines:
-        line = GLOSSARY_TERM_PATTERN.sub(glossary_replace, line)
-        yield line
-
-
-def write_footnote_texts(target):
-    for item in globals()['glossary_footnote_buffer']:
-        target.write(item)
-        target.write('\n\n')
-  
 
 SECTION_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(section:(?P<section>[^)]*)\)")
 SECTION_LINK_TITLE_ONLY = "_%(title)s_"

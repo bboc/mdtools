@@ -14,6 +14,96 @@ import markdown_processor as mdp
 from glossary import EbookGlossaryRenderer, read_glossary
 
 
+def get_glossary_processor(style, glossary):
+    if style == 'footnotes':
+        return GlossaryFootnoteProcessor(glossary)
+    elif style == 'underline':
+        return GlossaryUnderlineProcessor(glossary)
+    elif style == 'plain':
+        return GlossaryPlainProcessor(glossary)
+    else:
+        return GlossaryMagicProcessor(glossary, style)
+
+
+class GlossaryProcessor(object):
+    def __init__(self, glossary):
+        self.glossary = glossary
+
+    def get_item_data(self, match):
+        """Return a dictionary with all data about the glossary item."""
+        term = match.group('glossary_term')
+        description = self.glossary['terms'][term]['glossary']
+        return {
+            'title': match.group('title'),  # the title of the reference
+            'term': term,  # the glossary term (identifier or key in the yaml glossary)
+            'name': self.glossary['terms'][term]['name'],  # the name of the glossary term
+            'description': description,  # the explanation of the term
+        }
+
+    def additional_item_processing(self, data):
+        """Override for additional processing for each glossary item."""
+        pass
+
+    def replace_callback(self, match):
+        """Replace each match of the regex."""
+        data = self.get_item_data(match)
+        # do some additional stuff beyond replacing the glossary link inline:
+        self.additional_item_processing(data)
+        return self.INLINE_TEMPLATE % data
+
+    def replace_glossary_references(self, lines):
+        """Replace all inline glossary reference."""
+        for line in lines:
+            line = mdp.GLOSSARY_TERM_PATTERN.sub(self.replace_callback, line)
+            yield line
+
+    def glossary_post_processing(self, target):
+        """Override to do something when after the complete ebook is processed, e.g. insert footnotes."""
+        pass
+
+
+class GlossaryMagicProcessor(GlossaryProcessor):
+    """
+    Use the argument --glossary-style as a template for replacing glossary links.
+    make sure to escape backticks etc. "\`\\underline{%(title)s}\`{=latex}"
+    """
+    def __init__(self, glossary, template):
+        super(GlossaryMagicProcessor, self).__init__(glossary)
+        print template
+        print "--------------------"
+        self.INLINE_TEMPLATE = template
+
+
+class GlossaryPlainProcessor(GlossaryProcessor):
+    """Remove all glossary links (replace with link title)."""
+    INLINE_TEMPLATE = """%(title)s"""
+
+
+class GlossaryUnderlineProcessor(GlossaryProcessor):
+    """Underline all glossary links."""
+    INLINE_TEMPLATE = """`\underline{%(title)s}`{=latex}"""
+
+
+class GlossaryFootnoteProcessor(GlossaryProcessor):
+
+    INLINE_TEMPLATE = """%(title)s[^%(term)s]"""
+    FOOTNOTE_TEXT_TEMPLATE = """[^%(term)s]: %(name)s: %(description)s"""
+
+    def __init__(self, glossary):
+        super(GlossaryFootnoteProcessor, self).__init__(glossary)
+        self.buffer = {}
+
+    def additional_item_processing(self, item_data):
+        # buffer the explanation
+        self.buffer[item_data['term']] = self.FOOTNOTE_TEXT_TEMPLATE % item_data
+
+    def glossary_post_processing(self, target):
+        """Emit all the buffered glossary items for footnotes."""
+        for key in sorted(self.buffer.keys()):
+            target.write(self.buffer[key])
+            target.write('\n\n')
+
+
 class EbookWriter(object):
     GROUP_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
 
@@ -24,6 +114,7 @@ class EbookWriter(object):
         self.config = get_config(self.args.config)
         self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary, 9999)
         self.glossary = read_glossary(self.args.glossary)
+        self.gp = get_glossary_processor(args.glossary_style, self.glossary)
 
     def build(self):
         """Build three files: intro/patterns/appendix."""
@@ -36,8 +127,6 @@ class EbookWriter(object):
                 for item in part.sections:
                     self._append_section(target, part, item)
 
-
-        mdp.reset_glossary_footnote_counter()
         build_intro_and_appendix('tmp-introduction.md', content.introduction)
 
         # build all the chapters/sections
@@ -55,17 +144,18 @@ class EbookWriter(object):
         # finally build appendix
         build_intro_and_appendix('tmp-appendix.md', content.appendix)
 
-        # TODO: add all footnotes to tmp-appendix.md
+        # emit glossary stuff into tmp-appendix.md if necessary
         with codecs.open(os.path.join(self.target_folder, 'tmp-appendix.md'), 'a', 'utf-8') as target:
-            mdp.write_footnote_texts(target)
+            self.gp.glossary_post_processing(target)
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
+
         return [
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
             partial(mdp.inject_glossary, self.glossary),
-            partial(mdp.add_glossary_term_footnotes, self.glossary),
+            self.gp.replace_glossary_references,
             mdp.clean_images,
         ]
 
