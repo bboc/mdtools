@@ -2,7 +2,7 @@ ROOT=docs-src
 CONFIG=$(ROOT)/en/structure-new.yaml
 GLOSSARY=$(ROOT)/en/glossary.yaml
 
-TMPFOLDER=$(ROOT)/tmp
+TMPFOLDER=tmp
 
 LOC=$(ROOT)/en/localization.po
 PRJ=$(ROOT)/config/project.yaml
