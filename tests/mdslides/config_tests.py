@@ -5,7 +5,7 @@ Tests for reading the config and building in-memory objects
 
 import yaml
 import unittest
-
+from textwrap import dedent
 from slides.config import parse_config, Section, Content
 from config_test_data import result, simple_format, extended_format
 
@@ -27,6 +27,50 @@ class ConfigTests(unittest.TestCase):
         pprint.pprint(parsed)
         parsed['content'] = parsed['content'].to_dict()
         self.failUnlessEqual(parsed, result)
+
+    def test_simple_slide_deck_format(self):
+
+        simple_format = dedent("""
+            title: title
+
+            chapter-order:
+                - formats
+                - features
+                - data structure
+                - commands
+                - translation
+            """)
+
+        parsed = parse_config(yaml.load(simple_format))
+        parsed['content'] = parsed['content'].to_dict()
+
+        expected_content = {'appendix': None,
+                            'chapters': [{'id': 1,
+                                          'sections': [],
+                                          'slug': 'formats',
+                                          'title': 'Formats'},
+                                         {'id': 2,
+                                          'sections': [],
+                                          'slug': 'features',
+                                          'title': 'Features'},
+                                         {'id': 3,
+                                          'sections': [],
+                                          'slug': 'data-structure',
+                                          'title': 'Data Structure'},
+                                         {'id': 4,
+                                          'sections': [],
+                                          'slug': 'commands',
+                                          'title': 'Commands'},
+                                         {'id': 5,
+                                          'sections': [],
+                                          'slug': 'translation',
+                                          'title': 'Translation'}],
+                            'end': None,
+                            'index': [],
+                            'introduction': None,
+                            'title': 'title'}
+
+        self.failUnlessEqual(parsed['content'], expected_content)
 
 
 class SectionTests(unittest.TestCase):
