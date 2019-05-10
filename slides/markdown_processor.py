@@ -164,7 +164,11 @@ def inject_glossary(glossary, lines):
     def glossary_replace(match, key, pattern):
         """Get a definition of a term from the glossary."""
         name = match.group('name')
-        return pattern % glossary['terms'][name][key]
+        try:
+            return pattern % glossary['terms'][name][key]
+        except KeyError:
+            print('cant find ', key, " for glossary entry ", name)
+            raise
 
     def insert_definition(match):
         return glossary_replace(match, 'definition', "_%s_")
