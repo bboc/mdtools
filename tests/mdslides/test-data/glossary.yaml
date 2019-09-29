@@ -12,5 +12,9 @@ continued: (…)
 terms:
   glossary:
     name: Glossary
-    definition: A **glossary** is collection of explanations for words the reader might not be familiar with. 
+    definition: A **glossary** is collection of explanations for words the reader might not be familiar with.
     glossary: A collection of explanations for words the reader might not be familiar with.
+  term:
+    name: Term
+    definition: A *term* is an entry in the glossary.
+    glossary: An entry in the glossary.

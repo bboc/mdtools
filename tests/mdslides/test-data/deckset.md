@@ -60,6 +60,7 @@ Here is a section link: _Glossary Entries_
 
 It should be possible to link to several sections in the same line, e.g. to _Background Images_ and _Glossary Entries_
 
+Also we should be able to have a [glossary](glossary:glossary) and a section link to _Glossary Entries_ and another overlay for [term](glossary:term).
 
 ---
 
@@ -107,6 +108,15 @@ This image should be aligned to the right.
 
 
 **Glossary**: A collection of explanations for words the reader might not be familiar with.
+
+
+---
+
+
+# Glossary (…)
+
+
+**Term**: An entry in the glossary.
 
 
 

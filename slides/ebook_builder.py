@@ -58,8 +58,8 @@ class EbookWriter(object):
         return [
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
-            partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
             partial(mdp.inject_glossary, self.glossary),
+            partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
             mdp.clean_images,
         ]
 
@@ -90,4 +90,4 @@ class EbookWriter(object):
                 processor = mdp.MarkdownProcessor(cif, filters=self.common_filters())
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
-            target.write('\n')
+            target.write('\n\n')

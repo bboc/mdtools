@@ -32,10 +32,12 @@ def increase_headline_level(line):
 
 
 def markdown2html(text):
-    return markdown.markdown(text, ['markdown.extensions.extra', 'markdown.extensions.meta'])
+    return markdown.markdown(text, extensions=['markdown.extensions.extra', 'markdown.extensions.meta'])
 
 
 def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
+    if commandline_args.no_section_prefix:
+        return None
     if commandline_args.section_prefix:
         template = codecs.decode(commandline_args.section_prefix, 'utf-8')
     else:
@@ -66,3 +68,17 @@ class LineWriter(object):
 
     def mark_empty_line(self):
         self.prev_line_empty = True
+
+
+HTML_DELIMITERS = {
+    "&": "&amp;",
+    "'": "&apos;",
+    ">": "&gt;",
+    "<": "&lt;",
+    '"': "&quot;",
+}
+
+
+def escape_html_delimiters(text):
+    """Replace html delimiters in text."""
+    return "".join(HTML_DELIMITERS.get(c, c) for c in text)

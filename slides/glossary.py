@@ -49,14 +49,14 @@ class GlossaryRenderer(object):
 
 class DecksetGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s**: %(glossary)s"
+    TEMPLATE = "**%(name)s:** %(glossary)s"
     HEADER_TEMPLATE = '# %s %s\n\n'
     PAGE_BREAK = '\n\n---\n\n'
 
 
 class WordpressGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s**: %(glossary)s\n"
+    TEMPLATE = "**%(name)s:** %(glossary)s\n"
     HEADER_TEMPLATE = '\n# %s %s\n\n\n'
     PAGE_BREAK = '\n\n---\n\n'
 
@@ -67,21 +67,21 @@ class WordpressGlossaryRenderer(GlossaryRenderer):
 
 
 class HtmlGlossaryRenderer(GlossaryRenderer):
-
-    TEMPLATE = "**%(name)s**: %(glossary)s "
+    # TODO: this produces weird markup in reveal.js, see tests
+    TEMPLATE = "**%(name)s:** %(glossary)s"
     HEADER_TEMPLATE = '\n# %s %s\n\n\n'
     PAGE_BREAK = '\n\n</section><section>\n'
 
 
 class JekyllGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s**: %(glossary)s\n\n"
+    TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
     HEADER_TEMPLATE = '---\ntitle: %s %s\n---\n\n'
     PAGE_BREAK = ''
 
 
 class EbookGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s**: %(glossary)s\n\n"
+    TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
     HEADER_TEMPLATE = '\n## %s %s\n\n'
     PAGE_BREAK = ''

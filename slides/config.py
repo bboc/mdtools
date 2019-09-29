@@ -75,7 +75,12 @@ class Content(object):
             # parse old config format
             if FRONT_MATTER in data:
                 c.introduction = Part.from_config(data[FRONT_MATTER], FRONT_MATTER)
-            c.chapters = [Chapter.from_config(data[CHAPTERS][chapter_name], id=idx, name=chapter_name) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
+            if CHAPTERS in data:
+                c.chapters = [Chapter.from_config(data[CHAPTERS][chapter_name], id=idx, name=chapter_name) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
+            else:
+                # parse slide deck format (chapters are inferred from key chapter_order)
+                c.chapters = [Chapter(title=make_title(chapter_name), slug=make_pathname(chapter_name), id=idx) for idx, chapter_name in enumerate(data[CHAPTER_ORDER], 1)]
+
             if APPENDIX in data:
                 c.appendix = Part.from_config(data[APPENDIX], APPENDIX)
 
@@ -85,7 +90,7 @@ class Content(object):
             # remove info containing structure infromation from config data
 
             for key in [TITLE, FRONT_MATTER, CHAPTER_ORDER, CHAPTERS, APPENDIX, END]:
-                if END in data:
+                if key in data:
                     del data[key]
         else:
             print("unknown config file format")

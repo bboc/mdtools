@@ -3,7 +3,7 @@
 import argparse
 
 from build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
-from index import cmd_build_deckset_index
+from index import cmd_build_index
 from template import cmd_template
 
 
@@ -19,6 +19,7 @@ def add_parser_compile(subparsers):
                     help='add chapter overview')
     sp.add_argument('--glossary', help='yaml file with glossary terms')
     sp.add_argument('--section-prefix', type=str, default='', help='string to prefix before each chapter headline, e.g. --section-prefix="Pattern %(chapter)s.%(section)s:" ')
+    sp.add_argument('--no-section-prefix', action="store_true", default=False, help='Do not render any section prefixes')
     sp.set_defaults(func=cmd_compile_slides)
 
 
@@ -35,6 +36,7 @@ def add_parser_build(subparsers):
     sp.add_argument('--glossary', help='yaml file with glossary terms')
     sp.add_argument('--glossary-items', type=int, default=20, help='number of glossary items per page (used for deckset and revealjs)')
     sp.add_argument('--section-prefix', type=str, default='', help='string to prefix before each chapter headline, e.g. --section-prefix="Pattern %(chapter)s.%(section)s:" ')
+    sp.add_argument('--no-section-prefix', action="store_true", default=False, help='Do not render any section prefixes')
     sp.add_argument('--section-index-template', help='[jekyll] Template for the alphabetical section index page.')
     sp.add_argument('--introduction-template', help='[jekyll] Template for the introduction page.')
 
@@ -58,12 +60,16 @@ def add_parser_skeleton(subparsers):
     sp.set_defaults(func=cmd_create_source_files_for_slides)
 
 
-def add_parser_build_deckset_index(subparsers):
-    sp = subparsers.add_parser('deckset-index',
-                               help="Append an alphabetical index to a deckset slide deck.")
+def add_parser_build_index(subparsers):
+    sp = subparsers.add_parser('index',
+                               help="Create an alphabetical index.")
+    # \label{pattern1.10:proposalforming}
+
+    sp.add_argument('type', help='Type of index (deckset|latex')
     sp.add_argument('config', help='yaml file with the document structure')
+    sp.add_argument('-a', '--append', action="store_true", default=False)
     sp.add_argument('target')
-    sp.set_defaults(func=cmd_build_deckset_index)
+    sp.set_defaults(func=cmd_build_index)
 
 
 def add_parser_template(subparsers):
@@ -87,7 +93,7 @@ def get_parser():
     add_parser_compile(subparsers)
     add_parser_convert(subparsers)
     add_parser_skeleton(subparsers)
-    add_parser_build_deckset_index(subparsers)
+    add_parser_build_index(subparsers)
     add_parser_template(subparsers)
 
     return parser

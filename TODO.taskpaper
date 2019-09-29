@@ -1,86 +1,56 @@
 
 mdslides:
-		- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
-		- jekyll renderer expects intro and appendix, is that a problem?
+	- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
+	- jekyll renderer expects intro and appendix, is that a problem?
+	✔ ebooks: strip deckset image commands, but preserve other captions @done (18-09-25 08:20)
+	glossary and section links:
+		Make handling glossary and section links more flexible to enable output in PDF
+		- refactor from templates to objects 
+		- add markdown rendering for emphasis and strong
+		- render glossary terms as footnotes for LaTeX
+		- render section links as clickable links in LaTeX (like in the index)
+		- rename link title in pdf from "section" to "pattern"
+		- render section links as clickable links in ePub
+		- fix all other output formats for glossary and section links
 	set up basic test for all important formats (gold master): @1h
-		- use s3 practical guide as a template and strip it down to a minimal example @done(2018-08-12)
-		- make sure all relevant features are covered:
-			- glossary overlays @done(2018-08-12)
-			- chapter links @done(2018-08-12)
-			- speaker notes
-			- glossary renderer and page breaks (at least 3 glossary entries)
-			- background images @done(2018-08-12)
-			- floating images @done(2018-08-12)
-			- inline images
-			- section numbering
-		✔ set up a unit test each for the following formats @done (18-08-13 12:47)
-			✔ deckset @done (18-08-13 12:33)
-			✔ jekyll @done (18-08-13 12:33)
-			✔ reveal.js @done (18-08-13 12:33)
-			✔ ebook @done (18-08-13 12:33)
-	section links:
-		parse section links [Governance Facilitator](section:governance-facilitator) 
-		- revealjs: replace with emphasis on title
-	glossary overlays:
-		parse glossary markers [Driver](glossary:driver)
-		- revealjs: add html overlay
-new config format:
-		Introduce a new config format that is simpler to tranlsate and contains more parameters, eliminating the need for the index-db. The old structure format must still be understood, so that my slide decks can still be built.
-		Implementation:
-			✔ read config file @done (18-08-14 18:45)
-			✔ if it contains a key 'content', build in-memory object and process accordingly @done (18-08-14 18:45)
-			✔ ??? otherwise, process legacy config file @done (18-08-14 18:46)
-			✔ implement in compiler @done (18-08-14 19:47)
-			✔ implement in deckset export @done (18-08-14 19:47)
-			✔ implement in index builder for deckset export @done (18-08-15 08:28)
-			✔ implement in ebook builder @done (18-08-14 21:23)
-			✔ implement in reveal.js builder @done (18-08-15 08:28)
-			✔ implement in jekyll export @done (18-08-14 22:28)
-			✔ implement in wordpress builder @done (18-08-15 00:03)
-			✔ eliminate index builder completely @done (18-08-15 00:43)
-			✔ use sectionprefix from config file @done (18-08-16 20:19)
-			✔ implement in cmd_create_source_files_for_slides @done (18-08-16 22:49)
-			refactoring for better readability:
-				✔ convert to OO code @done (18-08-16 21:31)
-				✔ move index into Content object @done (18-08-16 21:32)
-			  ✔ convert all places where that code is actually used @done (18-08-16 22:59)
-				✔ remove old code @done (18-08-16 23:11)
-				✔ move config code to its own module @done (18-08-16 23:11)
-				- rename Content() and 'content' to structure
-
+		make sure all relevant features are covered
+		- speaker notes
+		- glossary renderer and page breaks (at least 3 glossary entries)
+		- inline images
+		- section numbering
+		- image captions
 	section compiler:
 		- refactor SectionCompiler._append_section() to use mardown processor
 	general refactoring:
-		- remove the need for make-conf: all that should be in conig.yaml
+		- remove the need for make-conf: all that should be in config.yaml
+		- rename Content() and 'content' to structure
 		- convert convert_file_for_web() to use MarkdownProcessor()
-		✔ Structure.yaml and index-db.yaml should in fact be one file that resides in the translatable folder and contains chapters names and directories, and sections in chapters and filenames@estimate(2hrs) @done (18-08-16 22:48)
 		- make config, glossary, structure and translations available to the pipelines @30min
 		-  use constant (or config) in remove_breaks_and_conts() @15min
 		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml  @later @estimate(1h)
 		- class names and code layout can be improved @estimate(30min)
-		✔ refactor all places that use '%.md' to use common.md_filename() @done (18-08-16 22:51)
-	aligning the methaphor:
+	aligning the metaphor:
 		- refactor everything to use chapter and section instead of group and pattern!
 		index keys are messed up: 
-			✔ gid, pid should be cid, sid @done (18-08-16 22:49)
 			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
-			- all keys sould use constants
+			- all keys should use constants
 	deckset-renderer:
 		empty
 	reveal.js renderer:
+		- section links [Governance Facilitator](section:governance-facilitator) : replace with emphasis on title
 		- refactor revealjs.writer to use markdown processor (after basic tests are in place) @1h
+		- glossary overlays  [Driver](glossary:driver): add html overlay
 		- add support for right aligned images
 		- have chapter links link to slide https://github.com/hakimel/reveal.js/#internal-links
 		- revealjs: add html overlay for glossary terms
-	epub renderer:
-		- add section links so they link to the section headers
-	
-	jekyll builder MVP:
-		- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
 		Style/Theming:
 			see https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md
 			- paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
 			- some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
+	epub renderer:
+		- add section links so they link to the section headers
+	jekyll builder MVP:
+		- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
 mdimg:
 	- (optional) parse non-language assets?
 	- as of now, using one language only no longer works, this needs to be remedied @priority(high)
@@ -96,7 +66,6 @@ mdimg:
 				/slides/
 					/de/…
 					/en/…
-
 documentation/showcase:
 	Showcase features and document usage of mdtools in a documentation that is created with mdtools
 	✔ set up basic page structure @done (18-08-13 13:42)
@@ -104,8 +73,8 @@ documentation/showcase:
 		✔ integrate reveal.js templates @done (18-08-13 15:15)
 	✔ link to slides.html in documentation @done (18-08-13 22:53)
 	✔ set up jekyll site @done (18-08-13 18:16)
-	  ✔ set up skeleton dir @done (18-08-13 15:15)
-	  ✔ set up templates and styles @done (18-08-13 15:15)
+	✔ set up skeleton dir @done (18-08-13 15:15)
+	✔ set up templates and styles @done (18-08-13 15:15)
 	✔ set up github page (decide on CNAME!!!) @done (18-08-14 13:14)
 	✔ find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing) @done (18-08-13 18:16)
 		✔ test if backticks work: `[[`deinfe:thing``]]`` @done (18-08-13 18:16)
