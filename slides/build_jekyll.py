@@ -46,7 +46,7 @@ class JekyllWriter(object):
 
     def build(self):
         self._get_metadata()
-        self._build_site_index()
+        self._build_chapters_overview()
         self._build_section_index()
         self._compile_front_matter()
         self._build_glossary()
@@ -80,8 +80,8 @@ class JekyllWriter(object):
                     processor.add_filter(partial(mdp.extract_summary, self.summary_db, section.slug))
                     processor.process()
 
-    def _build_site_index(self):
-        """Build site index from template. Already translation-aware."""
+    def _build_chapters_overview(self):
+        """Build list of the chapters on the website from template. Already translation-aware."""
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
@@ -119,8 +119,7 @@ class JekyllWriter(object):
 
             # build section index
             for section in chapter.sections:
-                target.write(mdp.INDEX_ELEMENT % dict(name=section.title,
-                                                      path=section.slug))
+                target.write(mdp.html_index_element(section.title, section.slug, self.summary_db))
             self.chapter_navigation(target, chapter)
 
     def _compile_front_matter(self):
@@ -168,6 +167,7 @@ class JekyllWriter(object):
                 processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
                 processor.add_filter(mdp.jekyll_front_matter)
                 # processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
+                processor.add_filter(partial(mdp.process_summary, mode=mdp.STRIP_MODE))
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
                 self.section_navigation(target, chapter, section)

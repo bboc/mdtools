@@ -183,15 +183,19 @@ def inject_glossary(glossary, lines):
         yield line
 
 
+BEGIN_SUMMARY = "<summary>"
+END_SUMMARY = "</summary>"
+
+
 def extract_summary(summary_db, name, lines):
     """Extracty summaries and add to summary_db, strip ** summary tags.
 
     Must come after inject_glossary so that the text is already expanded.
     """
     for line in lines:
-        if line.strip() == "<summary>":
+        if line.strip() == BEGIN_SUMMARY:
             line = lines.next()
-            while line.strip() != "</summary>":
+            while line.strip() != END_SUMMARY:
                 # remove bold around summary if present
                 if line.startswith("**"):
                     sline = line.strip()[2:-2]
@@ -200,6 +204,24 @@ def extract_summary(summary_db, name, lines):
                 summary_db[name].append(sline)
                 yield line
                 line = lines.next()
+        else:
+            yield line
+
+
+STRIP_MODE = 'strip summary tags'
+
+
+def process_summary(lines, mode=STRIP_MODE):
+    """Process summary tags:
+    mode= None or mode == strip
+    Strip summary tags from output."""
+    for line in lines:
+        if line.strip() == BEGIN_SUMMARY:
+            if mode == STRIP_MODE:
+                pass
+        elif line.strip() == END_SUMMARY:
+            if mode == STRIP_MODE:
+                pass
         else:
             yield line
 
@@ -289,6 +311,12 @@ INDEX_ELEMENT_HTML = """
   <dd>%(summary)s</dd>
 """
 
+
+def html_index_element(name, path, summary_db):
+    summary = markdown2html("".join(summary_db[path]))
+    return INDEX_ELEMENT_HTML % locals()
+
+
 def insert_index(marker, items, lines, sort=False, summary_db=None, format=None):
     """
     Insert an index as markdown-links, can be used for groups and sections.
@@ -301,9 +329,7 @@ def insert_index(marker, items, lines, sort=False, summary_db=None, format=None)
             if format == 'html':
                 yield "<dl>"
                 for item in items:
-                    summary = summary_db[item.slug]
-                    print(item.slug)
-                    yield INDEX_ELEMENT_HTML % dict(name=item.title, path=item.slug, summary=markdown2html("".join(summary)))
+                    yield html_index_element(item.title, item.slug, summary_db)
                 yield "</dl>"
             else:  # plain list
                 for item in items:

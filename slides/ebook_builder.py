@@ -60,6 +60,7 @@ class EbookWriter(object):
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
             partial(mdp.inject_glossary, self.glossary),
             partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
+            partial(mdp.process_summary, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
 
