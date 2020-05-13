@@ -1,4 +1,3 @@
-
 mdslides:
 	- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
 	- jekyll renderer expects intro and appendix, is that a problem?
@@ -36,7 +35,7 @@ mdslides:
 			- all keys should use constants
 	deckset-renderer:
 		empty
-	reveal.js renderer:
+	reveal.js renderer: @later
 		- section links [Governance Facilitator](section:governance-facilitator) : replace with emphasis on title
 		- refactor revealjs.writer to use markdown processor (after basic tests are in place) @1h
 		- glossary overlays  [Driver](glossary:driver): add html overlay
