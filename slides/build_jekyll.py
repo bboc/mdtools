@@ -5,6 +5,7 @@ Compile and preprocess all files so that jekyll can build a static (github) page
 """
 
 import codecs
+from collections import defaultdict
 from functools import partial
 import os
 from textwrap import dedent
@@ -41,9 +42,10 @@ class JekyllWriter(object):
         self.config = get_config(self.args.config)
         self.glossary_renderer = JekyllGlossaryRenderer(self.args.glossary, 9999)
         self.glossary = read_glossary(self.args.glossary)
+        self.summary_db = defaultdict(list)
 
     def build(self):
-
+        self._get_metadata()
         self._build_site_index()
         self._build_section_index()
         self._compile_front_matter()
@@ -67,6 +69,17 @@ class JekyllWriter(object):
             partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
         ]
 
+    def _get_metadata(self):
+        """Extract summaries (and later tags etc.) from sections."""
+        for chapter in self.config[CONTENT].chapters:
+            for section in chapter.sections:
+                source_path = os.path.join(self.source_folder, chapter.slug, section.md_filename())
+                with codecs.open(source_path, 'r', 'utf-8') as source:
+                    processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
+                    processor.add_filter(mdp.jekyll_front_matter)
+                    processor.add_filter(partial(mdp.extract_summary, self.summary_db, section.slug))
+                    processor.process()
+
     def _build_site_index(self):
         """Build site index from template. Already translation-aware."""
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
@@ -82,7 +95,7 @@ class JekyllWriter(object):
         with codecs.open(self.args.section_index_template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, os.path.basename(self.args.section_index_template)), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[CONTENT].index, sort=True),
+                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[CONTENT].index, summary_db=self.summary_db, format='html', sort=True),
                     partial(mdp.write, target),
                 ])
                 processor.process()

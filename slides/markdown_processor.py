@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from functools import partial
 from operator import attrgetter
 import re
 
-from common import SLIDE_MARKERS, escape_html_delimiters
+from common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
 from config import TITLE
 from glossary import GLOSSARY_MARKER
 from translate import translate as _
@@ -184,6 +183,27 @@ def inject_glossary(glossary, lines):
         yield line
 
 
+def extract_summary(summary_db, name, lines):
+    """Extracty summaries and add to summary_db, strip ** summary tags.
+
+    Must come after inject_glossary so that the text is already expanded.
+    """
+    for line in lines:
+        if line.strip() == "<summary>":
+            line = lines.next()
+            while line.strip() != "</summary>":
+                # remove bold around summary if present
+                if line.startswith("**"):
+                    sline = line.strip()[2:-2]
+                else:
+                    sline = line
+                summary_db[name].append(sline)
+                yield line
+                line = lines.next()
+        else:
+            yield line
+
+
 GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
 GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
@@ -264,9 +284,12 @@ def remove_breaks_and_conts(lines):
 
 
 INDEX_ELEMENT = "- [%(name)s](%(path)s.html)\n"
+INDEX_ELEMENT_HTML = """
+  <dt><a href="%(path)s.html">%(name)s</a></dt>
+  <dd>%(summary)s</dd>
+"""
 
-
-def insert_index(marker, items, lines, sort=False):
+def insert_index(marker, items, lines, sort=False, summary_db=None, format=None):
     """
     Insert an index as markdown-links, can be used for groups and sections.
     Items is a list of dictionaries with keys path and name.
@@ -275,8 +298,17 @@ def insert_index(marker, items, lines, sort=False):
         items.sort(key=attrgetter(TITLE))
     for line in lines:
         if line.strip() == marker:
-            for item in items:
-                yield INDEX_ELEMENT % dict(name=item.title, path=item.slug)
+            if format == 'html':
+                yield "<dl>"
+                for item in items:
+                    summary = summary_db[item.slug]
+                    print(item.slug)
+                    yield INDEX_ELEMENT_HTML % dict(name=item.title, path=item.slug, summary=markdown2html("".join(summary)))
+                yield "</dl>"
+            else:  # plain list
+                for item in items:
+                    yield INDEX_ELEMENT % dict(name=item.title, path=item.slug)
+
         else:
             yield line
 
