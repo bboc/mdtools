@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from functools import partial
 from operator import attrgetter
 import re
 
-from common import SLIDE_MARKERS, escape_html_delimiters
+from common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
 from config import TITLE
 from glossary import GLOSSARY_MARKER
 from translate import translate as _
@@ -184,6 +183,49 @@ def inject_glossary(glossary, lines):
         yield line
 
 
+BEGIN_SUMMARY = "<summary>"
+END_SUMMARY = "</summary>"
+
+
+def extract_summary(summary_db, name, lines):
+    """Extracty summaries and add to summary_db, strip ** summary tags.
+
+    Must come after inject_glossary so that the text is already expanded.
+    """
+    for line in lines:
+        if line.strip() == BEGIN_SUMMARY:
+            line = lines.next()
+            while line.strip() != END_SUMMARY:
+                # remove bold around summary if present
+                if line.startswith("**"):
+                    sline = line.strip()[2:-2]
+                else:
+                    sline = line
+                summary_db[name].append(sline)
+                yield line
+                line = lines.next()
+        else:
+            yield line
+
+
+STRIP_MODE = 'strip summary tags'
+
+
+def process_summary(lines, mode=STRIP_MODE):
+    """Process summary tags:
+    mode= None or mode == strip
+    Strip summary tags from output."""
+    for line in lines:
+        if line.strip() == BEGIN_SUMMARY:
+            if mode == STRIP_MODE:
+                pass
+        elif line.strip() == END_SUMMARY:
+            if mode == STRIP_MODE:
+                pass
+        else:
+            yield line
+
+
 GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
 GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
@@ -260,9 +302,18 @@ def remove_breaks_and_conts(lines):
 
 
 INDEX_ELEMENT = "- [%(name)s](%(path)s.html)\n"
+INDEX_ELEMENT_HTML = """
+  <dt><a href="%(path)s.html">%(name)s</a></dt>
+  <dd>%(summary)s</dd>
+"""
 
 
-def insert_index(marker, items, lines, sort=False):
+def html_index_element(name, path, summary_db):
+    summary = markdown2html("".join(summary_db[path]))
+    return INDEX_ELEMENT_HTML % locals()
+
+
+def insert_index(marker, items, lines, sort=False, summary_db=None, format=None):
     """
     Insert an index as markdown-links, can be used for groups and sections.
     Items is a list of dictionaries with keys path and name.
@@ -271,8 +322,15 @@ def insert_index(marker, items, lines, sort=False):
         items.sort(key=attrgetter(TITLE))
     for line in lines:
         if line.strip() == marker:
-            for item in items:
-                yield INDEX_ELEMENT % dict(name=item.title, path=item.slug)
+            if format == 'html':
+                yield "<dl>"
+                for item in items:
+                    yield html_index_element(item.title, item.slug, summary_db)
+                yield "</dl>"
+            else:  # plain list
+                for item in items:
+                    yield INDEX_ELEMENT % dict(name=item.title, path=item.slug)
+
         else:
             yield line
 

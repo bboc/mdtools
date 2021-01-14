@@ -155,7 +155,11 @@ class EbookWriter(object):
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
             partial(mdp.inject_glossary, self.glossary),
+
             self.gp.replace_glossary_references,
+            # TODO: check if the line above properly replaces the two below before merging back the branch
+            # partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
+            # partial(mdp.process_summary, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
 
