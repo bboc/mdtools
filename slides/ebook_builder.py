@@ -157,9 +157,7 @@ class EbookWriter(object):
             partial(mdp.inject_glossary, self.glossary),
 
             self.gp.replace_glossary_references,
-            # TODO: check if the line above properly replaces the two below before merging back the branch
-            # partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_PLAIN_TEMPLATE),
-            # partial(mdp.process_summary, mode=mdp.STRIP_MODE),
+            partial(mdp.process_summary, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
 
@@ -170,7 +168,6 @@ class EbookWriter(object):
             processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
             processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
             processor.add_filter(partial(mdp.increase_all_headline_levels, headline_level_increase))
-            processor.add_filter(partial(mdp.process_summary, mode=mdp.STRIP_MODE))
             processor.add_filter(partial(mdp.insert_glossary, self.glossary_renderer))
             processor.add_filter(partial(mdp.write, target))
             processor.process()
