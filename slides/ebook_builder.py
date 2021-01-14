@@ -170,6 +170,7 @@ class EbookWriter(object):
             processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
             processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
             processor.add_filter(partial(mdp.increase_all_headline_levels, headline_level_increase))
+            processor.add_filter(partial(mdp.process_summary, mode=mdp.STRIP_MODE))
             processor.add_filter(partial(mdp.insert_glossary, self.glossary_renderer))
             processor.add_filter(partial(mdp.write, target))
             processor.process()
