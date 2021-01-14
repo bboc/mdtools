@@ -16,9 +16,9 @@ mdtools expects the glossary in a YAML-file, and can do a few tricks with it:
 
     terms:
       my-term:
-    	name: My Term
-	definition: what you want to display in the definition of the term
-    glossary: what you want to put into the glossary
+        name: My Term
+        definition: what you want to display in the definition of the term
+        glossary: what you want to put into the glossary
 
 
 ## Glossary Item Style (ebook only)
