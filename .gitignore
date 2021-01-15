@@ -62,4 +62,4 @@ mdtools.sublime-workspace
 
 # github page and tmp folder
 docs/_site/*
-docs-src/tmp/*
+tmp/*

@@ -1,9 +1,13 @@
-    ## Changelog
+## Changelog
+
+### March 2019
+
+* added commandline parameter --glossary-style for rendering glossary links in various formats, see documentation for details
 
 ### August 2018
 
 * fixed a bug in the section navigation on the jekyll site
-* added added a github page as a showcase that is built thorugh mdtools
+* added a github page as a showcase that is built thorugh mdtools
 * added section links and overlays for glossary terms
 * added basic tests for all output formats of mdslides
 

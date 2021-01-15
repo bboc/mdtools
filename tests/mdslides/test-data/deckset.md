@@ -107,7 +107,7 @@ This image should be aligned to the right.
 # Glossary 
 
 
-**Glossary**: A collection of explanations for words the reader might not be familiar with.
+**Glossary:** A collection of explanations for words the reader might not be familiar with.
 
 
 ---
@@ -116,7 +116,7 @@ This image should be aligned to the right.
 # Glossary (…)
 
 
-**Term**: An entry in the glossary.
+**Term:** An entry in the glossary.
 
 
 

@@ -66,7 +66,7 @@ class JekyllWriter(object):
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
             partial(mdp.inject_glossary, self.glossary),
-            partial(mdp.glossary_tooltip, self.glossary, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+            partial(mdp.add_glossary_term_tooltips, self.glossary, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
         ]
 
     def _get_metadata(self):

@@ -15,7 +15,7 @@ def read_glossary(filename):
 
 
 class GlossaryRenderer(object):
-    """Base class for rendering a glossary. Subclasses mostly define class variables."""
+    """Base class for rendering a full glossary. Subclasses mostly define class variables."""
 
     def __init__(self, glossary_path, items_per_page):
         self.glossary = read_glossary(glossary_path)

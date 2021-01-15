@@ -229,21 +229,17 @@ def process_summary(lines, mode=STRIP_MODE):
 GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
 GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
-GLOSSARY_TERM_PLAIN_TEMPLATE = """%(title)s"""
 
 
-def glossary_tooltip(glossary, template, lines):
+def add_glossary_term_tooltips(glossary, template, lines):
     """Add tooltip for marked glossary entries."""
     def glossary_replace(match):
         """Replace term with glossary tooltip or other template."""
         term = match.group('glossary_term')
         description = glossary['terms'][term]['glossary']
-        if template.startswith('<'):
-            # TODO: this should be  propery of the template to do this kind of preprocessing
-            description = escape_html_delimiters(description)
+        description = escape_html_delimiters(description)
         data = {
             'title': match.group('title'),
-            'glossary_term': term,
             'name': glossary['terms'][term]['name'],
             'description': description,
         }

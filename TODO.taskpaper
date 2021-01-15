@@ -11,6 +11,22 @@ mdslides:
 		- rename link title in pdf from "section" to "pattern"
 		- render section links as clickable links in ePub
 		- fix all other output formats for glossary and section links
+		Basic Footnoote Renderer for Ebooks:
+			replace glossary link with a footnote marker for that glossary term
+		Glossary for Epub: 
+			glossary can be footnotes, or an epub glossary, but epub glossaries don't seem to be universally supported:
+				http://www.idpf.org/epub/dict/#sec-1
+				https://ebooks.stackexchange.com/questions/2344/epub-kindle-file-glossary-and-dictionary-selection
+				https://support.apple.com/kb/PH2753?locale=en_US&viewlocale=en_US
+				https://pressbooks.com/blog/our-gifts-to-you-this-holiday-a-new-glossary-feature-customizable-section-labels-and-more/
+				https://www.wikihow.com/Write-a-Glossary
+		Glossary for PDF:
+		Try footnotes, one footnote per glossary entry, or underlining all glossary entries with LaTeX markup (or both)
+				dotted underline https://tex.stackexchange.com/questions/27258/how-do-i-write-underline-text-but-with-a-dotted-line
+				underlines with ulem: http://texdoc.net/texmf-dist/doc/generic/ulem/ulem.pdf
+			  undeline in Latex: https://alexwlchan.net/2017/10/latex-underlines/
+		- try https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#glossaries
+
 	set up basic test for all important formats (gold master): @1h
 		make sure all relevant features are covered
 		- speaker notes
@@ -46,7 +62,9 @@ mdslides:
 			see https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md
 			- paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
 			- some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
-	epub renderer:
+	ebook (pdf) renderer:
+	
+	epub renderer:			
 		- add section links so they link to the section headers
 	jekyll builder MVP:
 		- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
