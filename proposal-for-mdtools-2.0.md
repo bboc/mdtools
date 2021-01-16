@@ -38,20 +38,22 @@ Implementing those features must adhere to the constraints:
 
 ## Proposal A: New Architecture and Design
 
-1. **Generic Corre**: The application will have a core that handles rendering of generic documents, modelled on the document structure
+1. **Generic Core**: The application will have a core that handles rendering of generic documents, modelled on the document structure
 2. **Plugin Support**: The application will support plugins so that it is simple to add specific behavior for specific applications (such as everything that relates to S# patterns in the Practical Guide)
 - **Configuration as code**: the build process is configured via presets that are defined in a configuration file, so that the makefile is simple and identical for all languages
+- **Macros**: code for expanding macros no longer resides in separate markdown processors, but in plugins that expand the macro, and optional plugins for the preprocessor that prepare and populate any required database structures 
 
 ### Plugins
 
 Plugins are required for:
 
 - processing content when (in the mark-down processor)
+- rendering macros
 - creating specific documents that are required for specific output formats (e.g. an index document)
 
 For now, plugins would reside in a plugins folder in the mdtools repository, eventually mdtools should also support plugins in separate repositories.
 
-Plugins are configured in a configuration file (see below).
+Plugins are configured in a configuration file (see below). Parameters for plugins can be set in config files.
 
 ### Configuration as code
 
@@ -251,37 +253,59 @@ Each pattern will have a unique name, and it needs to be on section level. A pat
 
 Since the new  structure is folder-based, all current URLs will be invalid, so they would need to be redirected. On GitHub pages, redirections can only happen in the frontend, i.e. a page at the old url has to handle redirection via header and javascript. See [this article](https://opensource.com/article/19/7/permanently-redirect-github-pages) for details.
 
-Redirections will be defined in `redirections.yam` file that simply lists the old and the new URL:
+Redirections will be defined in `redirections.yam` file that simply lists the old and the new URL. Since redirections.yaml relies on content structure, it should be inside the content-folder.
 
-redirections:
-  - from: section-1
-    to: /part-1/chapter-1/section1
-- from: …
-    to: …
 
+	redirections:
+	  - from: section-1
+	    to: /part-1/chapter-1/section1
+	- from: …
+	    to: …
+	
 Since currently all sections have a unique filename, the first version of the redirections can be derived from the new structure file with a simple script.
 
 For each entry in the file one html page is created that handles that specific redirect. In the future, when section names change, they are simply added to the redirections file.
 
 ### Migration Steps
 
-Changing the structure is the biggest change, which will be required for adding the CSF to the practical guide. This requires also a new menu for the website. A clickable pattern map can be implemented after that.
+A good plan involves delivering value incrementally:
 
-1. write code that handles the new structure
-2. re-arrange new content and update structure.yaml
-3. implement redirections
-4. create redirection file
-5. build new formats and test thoroughly
-6. implement new menu system
-7. backup crowdin files, disable crowdin upload
-7. generate new content
-8. deploy
-9. move files in crowdin so that no translations are lost!
-10. re-activate crowdin upload
-11. dry run to see if everything works
-12. create clickable pattern map
+1. adding the CSF to the practical guide
+2. responsive menu on the website
+3. clickable responsive pattern map
+4. redirections
 
+Changing the structure is the biggest change, which will be required for adding the CSF to the practical guide. This requires also a new menu for the website.  This is also a good way for diving into the code again. A clickable pattern map can be implemented after that, implementation benefits from config as code and plugins. After that, redirections can be implemented.
+
+This is the rough plan, details are tracked in `TODO.taskpaper`:
+
+1. Milestone: New Structure and Menu
+	1. ❗️deactivate crowdin upload
+	1. write code that handles the new structure
+	2. re-arrange new content and update structure.yaml
+	3. responsive menu
+	4. ❗️manual move all files in crowdin
+	4. release practical guide (CSF can now be integrated)
+2. Milestone: Responsive Pattern Map
+	1. Configuration as code 
+	2. Plugin and Macro support
+	3. Clickable Pattern Map
+	4. Release Practical Guide
+3. Milestone:  Redirections
+	1. Redirections
+	2. Release 
+4. Milestone: even better document structure 
+	1. backup crowdin files, disable crowdin upload
+	2. implement feature
+	3. manually move crowdin files
+5. Cleanup
+	1. update tests and documentation 
 
 ## Proposal D: Responsive Menu and Clickable Pattern Map
 
-Inclue a responsible menu that is rendered from the `structure.yaml` (which might include tags like 'not-in-menu'). Use similar code for creating the clickable pattern overlay.
+Include a responsible menu that is rendered from the `structure.yaml` (which might include tags like 'not-in-menu'). Use similar code for creating the clickable pattern overlay.
+
+The code is probably best built on the new plugin system, or at least with the new system in mind.
+
+
+

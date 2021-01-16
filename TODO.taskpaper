@@ -1,8 +1,113 @@
 mdtools 2.0:
 	User Stories and acceptace criteria for mdtools 2.0. 
 	see ./proposal-for-mdtools-2.0.md for details
-
-
+	Order of user stories is relevant for handling dependencies!
+	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
+	
+	Milestone 1: New Structure and Menu:
+		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
+		New Project Structure: @estimate(3d)
+			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
+			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
+			Can't be released without a new menu for the website, because new content will not be visible @priority
+			- disable revealjs and deckset renderers
+			- create new structure.yaml (which remains in the content folder because it is dependent on the content structure)
+			- errors in structure.yaml and in the content structure are reported properly
+			- patterns and pattern group are identified via tags in structure.yaml
+			- document titles are read from file
+			- jekyll builder uses new format
+			- epub builder uses new format
+			- ebook builder  uses new format
+			- part, chapter and section is consistently used in throughout the entire codebase
+			- section links are still working
+			-  all pattern related features (pattern numbers, links to pattern groups, pattern index) are still working
+		This release affects crowdin! @priority
+		Preparation:
+			- backup all files from crowdin
+			- deactivate revealja and decset formats
+			- deactivate crowdin upload
+	
+		Responsive Website Menu: @estimate(1d)
+			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
+			
+			- add html template for menu (and if necessary add js to body)
+			- test menu with static content
+			- add css for menu responsive menu
+			- create menu structure from structure yaml
+			- add tags for excluding items from menu
+	
+		Release of the Practical Guide: @estimate(4h)
+			This release is transparent for the translations, but removes dependency of translation to structure.yaml.
+			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
+			
+			- publish the English version of the practical guide with this version of mdtools
+			- integrate the Common Sense Framework
+			- update French version
+			- update German version
+			- update Hebrew version??
+			- update Dutch version
+			
+	Milestone 2: Responsive Pattern Map:
+		Configuration as Code: @estimate(16h)
+			As author I want a simple way to configure the output for various formats so that I it is easy to set up new output formats and I don't have to learn about makefiles or shell scripts.
+			- read document presets from project.yaml instead of the commandline
+			- commandline input takes preset as parameter
+			- global variables in project.yaml can be overridden in individual presets
+			- plugins used for a specific document can be configured globally or in the preset 
+			
+		Plugin and Macro Support: @estimate(8h)
+			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
+			- configure plugins globally and per document type
+			- override and extend plugin list in document type
+			- define parameters per plugin
+			- add preprocessor plugins
+			- refactor S3-specific macros to use plugin architecture
+		Plugin for Clickable Pattern Map: @estimate(4h)
+			As reader of the practical guide, I want a responsive patter map so that I can navigate effortlessly between patterns.
+			- add plugin to create html for pattern map structure
+			- add remplate and JS for pattern map
+			- add css for pattern map
+			- add texts to localization.pot if required 
+		Release the practical guide: @estimate(2h)
+			this release requires moving many files in Crowdin by hand!!! @priority
+			Other languages can be updated as soon as the new templates (and updates to localization.pot) is translated
+			- ❗️backup all files in crowdin!
+			- manually move files in crowdin
+			- reactivate and dry-run crowdin-upload
+			- publish the English version of the practical guide with this version of mdtools
+			- update French version
+			- update German version
+			- update Hebrew version??
+			- update Dutch version
+	Milestone 3:
+		Redirections: @estimate(6h)
+			As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
+			- create first version of redirections.yaml file from structure.yaml
+			- add template for redirection files (including requred JS)
+			- add configurable build step for generating redirection files from redirections.yaml
+		Release:
+			- simply release it
+	Milestone 4:
+		Better Document Structure: @estimate(6h)
+			… 
+			- part and chapter index are read from index document inside folder or from document outside the folder
+			- error is raised if both exist at the same time
+			- website is published in folders now
+			- all indexes and menus are still working
+			- update redirections as necessary
+			
+		Release: @estimate(2h)
+			this release might require moving some files in Crowdin!!! @priority
+			- backup all files in crowdin!
+			- manually move files in crowdin!!!
+			- release
+		
+	Milestone 5:
+		- fix deckset renderer
+		- fix reveal.js renderer
+		- update tests
+		- update documentation
+		- go through old TODOs and see what is still relevant 
 Old ToDo list:
 	- check if anything below here is relevant for mdtools 2.0
 	
