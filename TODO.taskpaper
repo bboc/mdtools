@@ -1,3 +1,11 @@
+mdtools 2.0:
+	User Stories and acceptace criteria for mdtools 2.0. 
+	see ./proposal-for-mdtools-2.0.md for details
+
+
+Old ToDo list:
+	- check if anything below here is relevant for mdtools 2.0
+	
 mdslides:
 	- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
 	- jekyll renderer expects intro and appendix, is that a problem?
@@ -24,9 +32,9 @@ mdslides:
 		Try footnotes, one footnote per glossary entry, or underlining all glossary entries with LaTeX markup (or both)
 				dotted underline https://tex.stackexchange.com/questions/27258/how-do-i-write-underline-text-but-with-a-dotted-line
 				underlines with ulem: http://texdoc.net/texmf-dist/doc/generic/ulem/ulem.pdf
-			  undeline in Latex: https://alexwlchan.net/2017/10/latex-underlines/
+			undeline in Latex: https://alexwlchan.net/2017/10/latex-underlines/
 		- try https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#glossaries
-
+	
 	set up basic test for all important formats (gold master): @1h
 		make sure all relevant features are covered
 		- speaker notes
