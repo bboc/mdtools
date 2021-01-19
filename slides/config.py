@@ -10,20 +10,21 @@ import yaml
 from common import make_pathname, FILENAME_PATTERN
 
 # section names
-CHAPTER_ORDER = 'chapter-order'
-TITLE = 'title'
-FRONT_MATTER = 'introduction'
+PARTS = 'parts'
 CHAPTERS = 'chapters'
-APPENDIX = 'appendix'
-END = 'end'
-SKIP = 'SKIP'
-SLUG = 'slug'
-CONTENT = 'content'
 SECTIONS = 'sections'
-CHAPTER_ID = 'chapter_id'
-ID = 'id'
-INDEX = 'index'
 
+
+"""
+
+TODO:
+
+set root path
+extract titles and summaries from files
+
+make_path …
+
+"""
 
 def get_config(filename):
     return parse_config(read_config(filename))
@@ -50,6 +51,48 @@ def make_title(name):
     return name.title().replace('s3', 'S3')
 
 
+class ConfigObject(object):
+
+    def __init__(self, basic_config, output_format=None):
+        if basic_config:
+            self._build_structure(basic_config)
+        if output_format:
+            self._update(output_format)
+
+    def _build_structure(self, data):
+        for key, value in data.items():
+            if value.__class__ == dict:
+                self.__dict__[key] = ConfigObject(value)
+            elif value.__class__ == list:
+                self.__dict__[key] = self.build_list(value)
+            else:
+                self.__dict__[key] = value
+
+    @classmethod
+    def build_list(cls, list_data):
+        """Build nested list that contains content objects for all dictionaries"""
+        result = []
+        for item in list_data:
+            if item.__class__ == list:
+                result.append(ConfigObject.build_list(item))
+            elif item.__class__ == dict:
+                result.append(ConfigObject(item))
+            else:
+                result.append(item)
+        return result
+
+    def _update(self, data):
+        """Update from data structure"""
+        print(repr(data))
+        for key, value in data.items():
+            if value.__class__ == dict:
+                pass # self.__dict__[key] = ConfigObject(value)
+            elif value.__class__ == list:
+                pass
+            else:
+                self.__dict__[key] = value
+
+
 class Content(object):
     """
     A representation of entire content.
@@ -67,7 +110,7 @@ class Content(object):
         c = cls()
         c.path = path
         c.config = structure['config']
-        c.parts = [Part.from_config(part, c, c) for part in structure['parts']]
+        c.parts = [Part.from_config(part, c, c) for part in structure[PARTS]]
         # TODO: raise exception for wrong config format and sys.exit(1)
         return c
 
@@ -128,11 +171,11 @@ class ContentNode(object):
             item.tags = data['tags']
         if 'config' in data:
             item.config = data['config']
-        if item.__class__ == Part and 'chapters' in data:
-            item.children = [Chapter.from_config(d, item, parent) for d in data['chapters']]
+        if item.__class__ == Part and CHAPTERS in data:
+            item.children = [Chapter.from_config(d, item, parent) for d in data[CHAPTERS]]
 
-        elif item.__class__ == Chapter and 'sections' in data:
-            item.children = [Section.from_config(d, item, parent) for d in data['sections']]
+        elif item.__class__ == Chapter and SECTIONS in data:
+            item.children = [Section.from_config(d, item, parent) for d in data[SECTIONS]]
 
         return item
 
@@ -140,8 +183,10 @@ class ContentNode(object):
 class Part(ContentNode):
     pass
 
+
 class Chapter(ContentNode):
     pass
+
 
 class Section(ContentNode):
     pass
