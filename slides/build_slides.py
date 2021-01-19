@@ -13,7 +13,7 @@ import sys
 from shutil import copyfile
 
 from common import create_directory, md_filename
-from config import get_config, CONTENT, make_title
+from config import get_config, make_title
 from glossary import read_glossary
 import translate
 

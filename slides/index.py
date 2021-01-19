@@ -5,7 +5,7 @@ import codecs
 from string import Template
 from textwrap import dedent
 
-from config import get_config, CONTENT
+from config import get_config
 from translate import translate as _
 
 import regex as re

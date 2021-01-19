@@ -11,7 +11,7 @@ import os
 from textwrap import dedent
 
 from common import make_headline_prefix, md_filename
-from config import CONTENT, get_config
+from config import get_config
 import markdown_processor as mdp
 from glossary import JekyllGlossaryRenderer, read_glossary
 
