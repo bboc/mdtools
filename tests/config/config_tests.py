@@ -60,6 +60,7 @@ class TestConfig(unittest.TestCase):
             },
         }
 
+
 class TestBuildConfig(TestConfig):
     """Test building of the initial config object structure."""
 
@@ -84,7 +85,6 @@ class TestBuildConfig(TestConfig):
             self.fail('AttributeError not raised on unknown attribute')
 
     def test_nested_lists(self):
-        
         self.failUnlessEqual(self.c.plugins.preprocessor[0], 'plugin A')
         self.failUnlessEqual(self.c.plugins.preprocessor[1][1], 'value A')
         self.failUnlessEqual(self.c.plugins.preprocessor[2].id, 'plugin C')
