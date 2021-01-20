@@ -13,7 +13,8 @@ from common import make_pathname, FILENAME_PATTERN
 PARTS = 'parts'
 CHAPTERS = 'chapters'
 SECTIONS = 'sections'
-
+# attribute for title
+TITLE = 'title'
 
 """
 
@@ -44,6 +45,7 @@ def parse_config(data):
     # data[CONTENT] = Content.from_config(data)
     print(repr(data))
     print(repr(Content.from_config(data)))
+    sys.exit(1)
     # return data
 
 
@@ -106,10 +108,11 @@ class Content(object):
         self.id = ''
 
     @classmethod
-    def from_config(cls, structure, path):
+    def from_config(cls, structure, path = None):
         c = cls()
         c.path = path
         c.config = structure['config']
+        print(repr(structure))
         c.parts = [Part.from_config(part, c, c) for part in structure[PARTS]]
         # TODO: raise exception for wrong config format and sys.exit(1)
         return c
@@ -140,7 +143,7 @@ class ContentNode(object):
         self.root = root
         self.slug = slug
         self.children = []
-        self.title = None
+        self.title = 'to title set'
         self.config = {}
         self.tags = []
 
