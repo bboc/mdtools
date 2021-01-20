@@ -1,6 +1,6 @@
 # mdtools
 
-commandline scripts for processing (multi-)markdown files
+mdtools is a set of commandline scripts for creating various output formats from a single source of (multi-)markdown files
 
 You can find an introduction and documentation to mdtools in the example project, which is also the source of the Github page for this repository. 
 
