@@ -112,7 +112,6 @@ class Content(object):
         c = cls()
         c.path = path
         c.config = structure['config']
-        print(repr(structure))
         c.parts = [Part.from_config(part, c, c) for part in structure[PARTS]]
         # TODO: raise exception for wrong config format and sys.exit(1)
         return c
@@ -169,14 +168,17 @@ class ContentNode(object):
 
     @classmethod
     def from_config(cls, data, parent, root):
-        item = cls(data['id'], parent, root)
+        if data.__class__ == dict:
+            item = cls(data['id'], parent, root)
+        else:
+            item = cls(data, parent, root)
+
         if 'tags' in data:
             item.tags = data['tags']
         if 'config' in data:
             item.config = data['config']
         if item.__class__ == Part and CHAPTERS in data:
             item.children = [Chapter.from_config(d, item, parent) for d in data[CHAPTERS]]
-
         elif item.__class__ == Chapter and SECTIONS in data:
             item.children = [Section.from_config(d, item, parent) for d in data[SECTIONS]]
 
