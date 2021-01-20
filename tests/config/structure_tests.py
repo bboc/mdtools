@@ -51,4 +51,4 @@ class TestStructure(unittest.TestCase):
                     ],
                 },
             ]}, '/')
-        self.fail(c.to_dict())
+        c.to_dict()
