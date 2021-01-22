@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 
-import codecs
 import markdown
 import os
 
@@ -40,18 +39,6 @@ def increase_headline_level(line):
 
 def markdown2html(text):
     return markdown.markdown(text, extensions=['markdown.extensions.extra', 'markdown.extensions.meta'])
-
-
-def make_headline_prefix(config, chapter_idx, section_idx):
-    """Add a prefix to specific page headers."""
-    if config.no_section_prefix:
-        return None
-    if config.section_prefix:
-        # template = codecs.decode(commandline_args.section_prefix, 'utf-8')
-        template = config.section_prefix
-        return template % dict(chapter=chapter_idx, section=section_idx)
-    else:
-        return None
 
 
 class LineWriter(object):
