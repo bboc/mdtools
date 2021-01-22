@@ -9,7 +9,7 @@ class TestConfig(unittest.TestCase):
 
     def setUp(self):
         self.cfg = {
-            'config': {
+            'defaults': {
                 'content': 'content/src',
                 'structure': 'conten/structure.yaml',
                 'localization': 'content/localization.po',
@@ -25,7 +25,7 @@ class TestConfig(unittest.TestCase):
                     ],
                 },
             },
-            'output': {
+            'presets': {
                 'jekyll': {
                     'format': 'jekyll',
                     'strucure': 'content/structure-new.yaml',
@@ -66,7 +66,7 @@ class TestBuildConfig(TestConfig):
 
     def setUp(self):
         super(TestBuildConfig, self).setUp()
-        self.c = ConfigObject(self.cfg['config'])
+        self.c = ConfigObject(self.cfg['defaults'])
 
     def test_root_attributes(self):
         self.failUnlessEqual(self.c.content, 'content/src')
@@ -94,7 +94,7 @@ class TestUpdateConfig(TestConfig):
 
     def setUp(self):
         super(TestUpdateConfig, self).setUp()
-        self.c = ConfigObject(self.cfg['config'], self.cfg['output']['jekyll'])
+        self.c = ConfigObject(self.cfg['defaults'], self.cfg['presets']['jekyll'])
 
     def test_update_scalars(self):
         self.failUnlessEqual(self.c.strucure, 'content/structure-new.yaml')

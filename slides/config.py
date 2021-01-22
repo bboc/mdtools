@@ -8,7 +8,7 @@ import codecs
 
 import sys
 from functools import partial
-
+from pprint import pformat
 import markdown_processor as mdp
 from common import read_config_file, FILENAME_PATTERN
 
@@ -19,26 +19,28 @@ SECTIONS = 'sections'
 # attribute for title
 TITLE = 'title'
 
-"""
-
-TODO:
-
-set root path
-extract titles and summaries from files
-
-make_path …
-
-"""
-
 
 def get_config(filename):
     raise Exception("this no longer works as intended!!")
 
 
+def get_project_config(filename, preset):
+    """Get a config object for the selected preset."""
+    # TODO: when all is refactored, rename that to config again??
+    config_data = read_config_file(filename)
+    cfg = ConfigObject(config_data['defaults'], config_data['presets'][preset])
+    print("------- config ---------")
+    print(cfg)
+    return cfg
+
+
 def get_structure(filename, content_path):
+    print("------- structure---------")
+    print(read_config_file(filename))
+
     cs = ContentStructure.from_config(read_config_file(filename))
     cs.read_info(content_path)
-    cs.to_dict()
+    #print(pformat(cs.to_dict()))
     return cs
 
 
@@ -48,11 +50,11 @@ def make_title(name):
 
 class ConfigObject(object):
 
-    def __init__(self, basic_config, output_format=None):
-        if basic_config:
-            self._build_structure(basic_config)
-        if output_format:
-            self._update(output_format)
+    def __init__(self, default_config_data, preset_data=None):
+        if default_config_data:
+            self._build_structure(default_config_data)
+        if preset_data:
+            self._update(preset_data)
 
     def _build_structure(self, data):
         for key, value in data.items():
@@ -78,16 +80,21 @@ class ConfigObject(object):
 
     def _update(self, data):
         """Update from data structure"""
-        print(repr(data))
         for key, value in data.items():
+            print(key, value)
             if value.__class__ == dict:
                 raise Exception("can't update dictionary (yet)")
                 # self.__dict__[key] = ConfigObject(value)
             elif value.__class__ == list:
-                raise Exception("can't update list (yet)")
+                if hasattr(self, key):
+                    raise Exception("can't update list (yet)", key)
+                else:
+                    self.__dict__[key] = self.build_list(value)
             else:
                 self.__dict__[key] = value
 
+    def __repr__(self):
+        return repr(self.__dict__)
 
 class ContentStructure(object):
     """
@@ -121,6 +128,7 @@ class ContentStructure(object):
         self.path = content_path
         for part in self.parts:
             part.read_info()
+
 
 class ContentNode(object):
     """
@@ -195,12 +203,6 @@ class ContentNode(object):
 
     def read_info(self):
         """Read info from content file."""
-
-        # read info for this file
-        print(self.md_filename(self.path))
-        # TODO: attempt to read index file if "real" file is not present?
-
-        # TODO read all the file content
         self._read_info()
 
         for child in self.children:
@@ -218,8 +220,8 @@ class ContentNode(object):
                 mdp.MetadataPlugin.filter
             ])
             processor.process()
-            print(mdp.MetadataPlugin.title)
-            print(mdp.MetadataPlugin.summary)
+            #print(mdp.MetadataPlugin.title)
+            #print(mdp.MetadataPlugin.summary)
             self.title = mdp.MetadataPlugin.title
             self.summary = mdp.MetadataPlugin.summary
 
