@@ -27,8 +27,9 @@ make_path …
 
 """
 
+
 def get_config(filename):
-    return parse_config(read_config(filename))
+    raise Exception("this no longer works as intended!!")
 
 
 def read_config(filename):
@@ -36,17 +37,8 @@ def read_config(filename):
     return yaml.load(stream)
 
 
-def parse_config(data):
-    """
-    Parse raw config data structure into efficient in-memory structure.
-
-    Return a dictionary with the config as a dictionary, that contains a Content object at index 'content'
-    """
-    # data[CONTENT] = Content.from_config(data)
-    print(repr(data))
-    print(repr(Content.from_config(data)))
-    sys.exit(1)
-    # return data
+def get_structure(filename):
+    return ContentStructure.from_config(read_config(filename))
 
 
 def make_title(name):
@@ -88,14 +80,15 @@ class ConfigObject(object):
         print(repr(data))
         for key, value in data.items():
             if value.__class__ == dict:
-                pass # self.__dict__[key] = ConfigObject(value)
+                raise Exception("can't update dictionary (yet)")
+                # self.__dict__[key] = ConfigObject(value)
             elif value.__class__ == list:
-                pass
+                raise Exception("can't update list (yet)")
             else:
                 self.__dict__[key] = value
 
 
-class Content(object):
+class ContentStructure(object):
     """
     A representation of entire content.
 
@@ -108,7 +101,7 @@ class Content(object):
         self.id = ''
 
     @classmethod
-    def from_config(cls, structure, path = None):
+    def from_config(cls, structure, path=None):
         c = cls()
         c.path = path
         c.config = structure['config']
@@ -132,7 +125,7 @@ class ContentNode(object):
     - parent
     - slug (the bit that is listed in the structure.yaml
     - id (full path from root)
-    - title extracted from file 
+    - title extracted from file
     - parameters (extracted from structure yaml)
     - tags (part of parameters??)
     """
