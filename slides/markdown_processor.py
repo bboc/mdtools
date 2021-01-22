@@ -213,7 +213,7 @@ STRIP_MODE = 'strip summary tags'
 
 def process_summary(lines, mode=STRIP_MODE):
     """Process summary tags:
-    mode= None or mode == strip
+    mode=None or mode=strip
     Strip summary tags from output."""
     for line in lines:
         if line.strip() == BEGIN_SUMMARY:
