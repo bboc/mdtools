@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from config import read_config
+from common import read_config_file
 from operator import itemgetter
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
@@ -9,7 +9,7 @@ GLOSSARY_MARKER = '{{insert-full-glossary}}'
 def read_glossary(filename):
     """Read glossary from file if name is given, otherwise return None."""
     if filename:
-        return read_config(filename)
+        return read_config_file(filename)
     else:
         return None
 

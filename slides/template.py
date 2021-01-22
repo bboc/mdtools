@@ -5,7 +5,7 @@
 import codecs
 from functools import partial
 
-from config import read_config
+from common import read_config_file
 import markdown_processor as mdp
 import translate
 
@@ -15,7 +15,7 @@ def cmd_template(args):
     # read translations
     translate.read_translation_memory(args.translations)
     if args.config:
-        config = read_config(args.config)
+        config = read_config_file(args.config)
     else:
         config = {}
     with codecs.open(args.template, 'r', 'utf-8') as source:

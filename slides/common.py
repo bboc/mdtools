@@ -6,9 +6,16 @@ import codecs
 import markdown
 import os
 
+import yaml
+
 
 SLIDE_MARKERS = ['---', '***', '* * *']
 FILENAME_PATTERN = '%s.md'
+
+
+def read_config_file(filename):
+    stream = open(filename, "r")
+    return yaml.load(stream)
 
 
 def make_pathname(name):

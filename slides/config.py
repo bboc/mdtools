@@ -33,14 +33,11 @@ def get_config(filename):
     raise Exception("this no longer works as intended!!")
 
 
-def read_config(filename):
-    stream = open(filename, "r")
-    return yaml.load(stream)
-
-
 def get_structure(filename, content_path):
-    cs = ContentStructure.from_config(read_config(filename))
+    cs = ContentStructure.from_config(read_config_file(filename))
     cs.read_info(content_path)
+    cs.to_dict()
+    return cs
 
 
 def make_title(name):
