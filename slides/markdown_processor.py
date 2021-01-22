@@ -5,7 +5,7 @@ from operator import attrgetter
 import re
 
 from common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
-from glossary import GLOSSARY_MARKER
+from glossary import GLOSSARY_MARKER, glossary
 from translate import translate as _
 
 
@@ -156,7 +156,7 @@ DEFINE_PATTERN = re.compile("\{\{define\:(?P<name>.*)\}\}")
 GLOSSARY_PATTERN = re.compile("\{\{glossary\:(?P<name>.*)\}\}")
 
 
-def inject_glossary(glossary, lines):
+def inject_glossary(lines):
     """Expand glossary terms and definitions.
     """
     def glossary_replace(match, key, pattern):

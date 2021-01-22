@@ -11,9 +11,8 @@ import os
 from textwrap import dedent
 
 from common import make_headline_prefix, md_filename
-from config import get_config
 import markdown_processor as mdp
-from glossary import JekyllGlossaryRenderer, read_glossary
+from glossary import glossary, JekyllGlossaryRenderer
 
 CHAPTER_INDEX_TEMPLATE = dedent("""
 ---
@@ -35,13 +34,13 @@ NEXT_ELEMENT = "[&#9654; %(name)s](%(path)s.html)"
 class JekyllWriter(object):
     GROUP_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
 
-    def __init__(self, args):
-        self.args = args
-        self.source_folder = args.source
-        self.target_folder = args.target
-        self.config = get_config(self.args.config)
-        self.glossary_renderer = JekyllGlossaryRenderer(self.args.glossary, 9999)
-        self.glossary = read_glossary(self.args.glossary)
+    def __init__(self, config, structure):
+        self.cfg = config
+        self.source_folder = self.cfg.source
+        self.target_folder = self.cfg.target
+        # TODO: self.confing needs to be renamed
+        self.structure = structure
+        self.glossary_renderer = JekyllGlossaryRenderer(9999)
         self.summary_db = defaultdict(list)
 
     def build(self):

@@ -11,7 +11,7 @@ import os
 from common import make_headline_prefix
 from config import get_config
 import markdown_processor as mdp
-from glossary import EbookGlossaryRenderer, read_glossary
+from glossary import EbookGlossaryRenderer, glossary
 
 
 def get_glossary_processor(style, glossary):
@@ -113,7 +113,7 @@ class EbookWriter(object):
         self.target_folder = args.target
         self.config = get_config(self.args.config)
         self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary, 9999)
-        self.glossary = read_glossary(self.args.glossary)
+        self.glossary = glossary
         self.gp = get_glossary_processor(args.glossary_style, self.glossary)
 
     def build(self):

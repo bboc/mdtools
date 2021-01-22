@@ -14,7 +14,7 @@ from shutil import copyfile
 
 from common import create_directory, md_filename
 from config import get_project_config, get_structure, make_title
-from glossary import read_glossary
+from glossary import set_glossary
 import translate
 
 from build_deckset_slides import DecksetWriter
@@ -37,7 +37,8 @@ def build(args):
     # read config
     cfg = get_project_config(args.project, args.preset)
     # build glossary (if defined)
-    # TODO
+    if cfg.glossary:
+        set_glossary(cfg.glossary)
     # read structure
     structure = get_structure(cfg.structure, cfg.source)
 

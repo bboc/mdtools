@@ -5,20 +5,23 @@ from operator import itemgetter
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
+glossary = None
 
-def read_glossary(filename):
+
+def set_glossary(filename):
     """Read glossary from file if name is given, otherwise return None."""
     if filename:
-        return read_config_file(filename)
-    else:
-        return None
+        globals()['glossary'] = read_config_file(filename)
 
 
 class GlossaryRenderer(object):
     """Base class for rendering a full glossary. Subclasses mostly define class variables."""
 
-    def __init__(self, glossary_path, items_per_page):
-        self.glossary = read_glossary(glossary_path)
+    def __init__(self, items_per_page):
+        if not glossary:
+            raise Exception('glossary not defined')
+        self.glossary = glossary
+
         self.items_per_page = items_per_page
 
     def iterate_elements(self):
