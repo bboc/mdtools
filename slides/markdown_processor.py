@@ -134,7 +134,7 @@ FRONT_MATTER_SEPARATOR = "---\n"
 
 
 def jekyll_front_matter(lines, params=None):
-
+    # TODO: raise exception if no headline in first line of file!!!
     line = lines.next()
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
