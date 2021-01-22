@@ -235,7 +235,7 @@ class MetadataPlugin(object):
 
         Must come after inject_glossary so that the text is already expanded.
 
-        MMD Metadata Documentation: 
+        MMD Metadata Documentation:
         https://fletcher.github.io/peg-multimarkdown/mmd-manual.pdf
         """
         cls.title = None
@@ -266,8 +266,6 @@ class MetadataPlugin(object):
                 yield line
         if summary:
             cls.summary = '\n'.join(summary)
-
-
 
 
 GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
