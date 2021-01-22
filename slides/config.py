@@ -4,11 +4,13 @@ from __future__ import print_function
 
 import os
 from operator import attrgetter
+import codecs
+
 import sys
-import yaml
+from functools import partial
 
-
-from common import make_pathname, FILENAME_PATTERN
+import markdown_processor as mdp
+from common import read_config_file, FILENAME_PATTERN
 
 # section names
 PARTS = 'parts'
@@ -142,6 +144,7 @@ class ContentNode(object):
         self.title = 'to title set'
         self.config = {}
         self.tags = []
+        self.summary = None
 
     @property
     def id(self):
@@ -150,7 +153,6 @@ class ContentNode(object):
     @property
     def path(self):
         return os.path.join(self.parent.path, self.slug)
-
 
     def md_filename(self, fn):
         return FILENAME_PATTERN % fn
@@ -166,6 +168,11 @@ class ContentNode(object):
             d['tags'] = self.tags
         if self.config:
             d['config'] = repr(self.config)
+        if self.title:
+            d['title'] = self.title
+        if self.summary:
+            d['summary'] = self.summary
+
         return d
 
     @classmethod
@@ -194,9 +201,29 @@ class ContentNode(object):
         # TODO: attempt to read index file if "real" file is not present?
 
         # TODO read all the file content
-        
+        self._read_info()
+
         for child in self.children:
             child.read_info()
+
+    def _read_info(self):
+        """Extract titles and summaries (and maybe later tags and other metadata) from a node."""
+        source_path = self.md_filename(self.path)
+        if self.children and not os.path.exists(source_path):
+            source_path = self.md_filename(os.path.join(self.path, 'index'))
+        with codecs.open(source_path, 'r', 'utf-8') as source:
+            processor = mdp.MarkdownProcessor(source, filters=[
+                # TODO: get glossary
+                #partial(mdp.inject_glossary, self.glossary),
+                mdp.MetadataPlugin.filter
+            ])
+            processor.process()
+            print(mdp.MetadataPlugin.title)
+            print(mdp.MetadataPlugin.summary)
+            self.title = mdp.MetadataPlugin.title
+            self.summary = mdp.MetadataPlugin.summary
+
+
 
 class Part(ContentNode):
     pass

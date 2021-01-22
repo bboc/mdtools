@@ -5,7 +5,6 @@ from operator import attrgetter
 import re
 
 from common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
-from config import TITLE
 from glossary import GLOSSARY_MARKER
 from translate import translate as _
 
@@ -207,7 +206,6 @@ def extract_summary(summary_db, name, lines):
         else:
             yield line
 
-
 STRIP_MODE = 'strip summary tags'
 
 
@@ -224,6 +222,52 @@ def process_summary(lines, mode=STRIP_MODE):
                 pass
         else:
             yield line
+
+
+class MetadataPlugin(object):
+    # TODO: check if that is really a good plugin API
+    title = None
+    summary = None
+
+    @classmethod
+    def filter(cls, lines):
+        """Extract title, summary (and potentially other stuff.
+
+        Must come after inject_glossary so that the text is already expanded.
+
+        MMD Metadata Documentation: 
+        https://fletcher.github.io/peg-multimarkdown/mmd-manual.pdf
+        """
+        cls.title = None
+        cls.summary = None
+
+        summary = []
+
+        # TODO: process metadata if present
+
+        headline = lines.next()
+        match = HEADLINE_PATTERN.search(headline)
+        cls.title = match.group('title')
+        # TODO: error if title doesn't match
+
+        for line in lines:
+            if line.strip() == BEGIN_SUMMARY:
+                line = lines.next()
+                while line.strip() != END_SUMMARY:
+                    # remove bold around summary if present
+                    if line.startswith("**") or line.startswith("__"):
+                        sline = line.strip()[2:-2]
+                    else:
+                        sline = line
+                    summary.append(sline)
+                    yield line
+                    line = lines.next()
+            else:
+                yield line
+        if summary:
+            cls.summary = '\n'.join(summary)
+
+
 
 
 GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
@@ -319,7 +363,7 @@ def insert_index(marker, items, lines, sort=False, summary_db=None, format=None)
     Items is a list of dictionaries with keys path and name.
     """
     if sort:
-        items.sort(key=attrgetter(TITLE))
+        items.sort(key=attrgetter('title'))
     for line in lines:
         if line.strip() == marker:
             if format == 'html':
