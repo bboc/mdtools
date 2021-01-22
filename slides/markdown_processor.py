@@ -5,7 +5,7 @@ from operator import attrgetter
 import re
 
 from common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
-from glossary import GLOSSARY_MARKER, glossary
+import glossary
 from translate import translate as _
 
 
@@ -163,7 +163,7 @@ def inject_glossary(lines):
         """Get a definition of a term from the glossary."""
         name = match.group('name')
         try:
-            return pattern % glossary['terms'][name][key]
+            return pattern % glossary.glossary['terms'][name][key]
         except KeyError:
             print('cant find ', key, " for glossary entry ", name)
             raise
@@ -273,16 +273,16 @@ GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary
 GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
 
 
-def add_glossary_term_tooltips(glossary, template, lines):
+def add_glossary_term_tooltips(template, lines):
     """Add tooltip for marked glossary entries."""
     def glossary_replace(match):
         """Replace term with glossary tooltip or other template."""
         term = match.group('glossary_term')
-        description = glossary['terms'][term]['glossary']
+        description = glossary.glossary['terms'][term]['glossary']
         description = escape_html_delimiters(description)
         data = {
             'title': match.group('title'),
-            'name': glossary['terms'][term]['name'],
+            'name': glossary.glossary['terms'][term]['name'],
             'description': description,
         }
         return template % data
@@ -322,7 +322,7 @@ def insert_glossary(renderer, lines):
         glossary_contents.append(text)
 
     for line in lines:
-        if line.strip() == GLOSSARY_MARKER:
+        if line.strip() == glossary.GLOSSARY_MARKER:
             renderer.render(callback)
             callback('\n')
             yield '\n'.join(glossary_contents)

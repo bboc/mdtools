@@ -5,7 +5,7 @@ from operator import itemgetter
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
-glossary = None
+glossary = {}
 
 
 def set_glossary(filename):

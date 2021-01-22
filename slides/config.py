@@ -6,9 +6,6 @@ import os
 from operator import attrgetter
 import codecs
 
-import sys
-from functools import partial
-from pprint import pformat
 import markdown_processor as mdp
 from common import read_config_file, FILENAME_PATTERN
 
@@ -30,17 +27,17 @@ def get_project_config(filename, preset):
     config_data = read_config_file(filename)
     cfg = ConfigObject(config_data['defaults'], config_data['presets'][preset])
     print("------- config ---------")
-    print(cfg)
+    # print(cfg)
     return cfg
 
 
 def get_structure(filename, content_path):
     print("------- structure---------")
-    print(read_config_file(filename))
+    print(filename)
 
     cs = ContentStructure.from_config(read_config_file(filename))
     cs.read_info(content_path)
-    #print(pformat(cs.to_dict()))
+    # print(pformat(cs.to_dict()))
     return cs
 
 
@@ -107,6 +104,7 @@ class ContentStructure(object):
         self.path = ''
         self.config = {}
         self.id = ''
+        self.relpath = ''
 
     @classmethod
     def from_config(cls, structure, path=None):
@@ -162,6 +160,22 @@ class ContentNode(object):
     def path(self):
         return os.path.join(self.parent.path, self.slug)
 
+    @property
+    def path(self):
+        return os.path.join(self.parent.path, self.slug)
+
+    @property
+    def relpath(self):
+        return os.path.join(self.parent.relpath, self.slug)
+
+    @property
+    def source_path(self):
+        """Return the actual source path for the content file."""
+        source_path = self.md_filename(self.path)
+        if self.children and not os.path.exists(source_path):
+            source_path = self.md_filename(os.path.join(self.path, 'index'))
+        return source_path
+
     def md_filename(self, fn):
         return FILENAME_PATTERN % fn
 
@@ -210,10 +224,8 @@ class ContentNode(object):
 
     def _read_info(self):
         """Extract titles and summaries (and maybe later tags and other metadata) from a node."""
-        source_path = self.md_filename(self.path)
-        if self.children and not os.path.exists(source_path):
-            source_path = self.md_filename(os.path.join(self.path, 'index'))
-        with codecs.open(source_path, 'r', 'utf-8') as source:
+        
+        with codecs.open(self.source_path, 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=[
                 # TODO: get glossary
                 #partial(mdp.inject_glossary, self.glossary),

@@ -10,9 +10,9 @@ from functools import partial
 import os
 from textwrap import dedent
 
-from common import make_headline_prefix, md_filename
+from common import md_filename
 import markdown_processor as mdp
-from glossary import glossary, JekyllGlossaryRenderer
+import glossary
 
 CHAPTER_INDEX_TEMPLATE = dedent("""
 ---
@@ -38,49 +38,43 @@ class JekyllWriter(object):
         self.cfg = config
         self.source_folder = self.cfg.source
         self.target_folder = self.cfg.target
-        # TODO: self.confing needs to be renamed
         self.structure = structure
-        self.glossary_renderer = JekyllGlossaryRenderer(9999)
+        self.glossary_renderer = glossary.JekyllGlossaryRenderer(9999)
         self.summary_db = defaultdict(list)
 
     def build(self):
-        self._get_metadata()
         self._build_chapters_overview()
         self._build_section_index()
         self._compile_front_matter()
         self._build_glossary()
         self._copy_appendix()
 
-        # add all the chapters/sections
-        for chapter in self.config[CONTENT].chapters:
-            self._build_chapter_index(chapter)
-            for section in chapter.sections:
-                self._copy_section(chapter,
-                                   section,
-                                   make_headline_prefix(self.args, self.config, chapter.id, section.id))
+        for part in self.structure.parts:
+            # TODO: process index
+            self._build_chapter_index(part)
+            if part.children:
+                for chapter in part.children:
+                    # TODO: process index
+                    if chapter.children:
+                        for section in chapter.children:
+                            # TODO: process section
+                            self._make_content_page(section)
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
         return [
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
-            partial(mdp.inject_glossary, self.glossary),
-            partial(mdp.add_glossary_term_tooltips, self.glossary, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+            partial(mdp.inject_glossary),
+            partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
         ]
-
-    def _get_metadata(self):
-        """Extract summaries (and later tags etc.) from sections."""
-        for chapter in self.config[CONTENT].chapters:
-            for section in chapter.sections:
-                source_path = os.path.join(self.source_folder, chapter.slug, section.md_filename())
-                with codecs.open(source_path, 'r', 'utf-8') as source:
-                    processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
-                    processor.add_filter(mdp.jekyll_front_matter)
-                    processor.add_filter(partial(mdp.extract_summary, self.summary_db, section.slug))
-                    processor.process()
 
     def _build_chapters_overview(self):
         """Build list of the chapters on the website from template. Already translation-aware."""
+
+        print("_build_chapters_overview() not implemented")
+        return
+
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
@@ -91,6 +85,10 @@ class JekyllWriter(object):
 
     def _build_section_index(self):
         """Build index of all sections from template. Already translation-aware."""
+
+        print("_build_chapters_overview() not implemented")
+        return
+
         with codecs.open(self.args.section_index_template, 'r', 'utf-8') as source:
             with codecs.open(os.path.join(self.target_folder, os.path.basename(self.args.section_index_template)), 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=[
@@ -100,6 +98,10 @@ class JekyllWriter(object):
                 processor.process()
 
     def _build_chapter_index(self, chapter):
+
+        print("_build_chapter_index() not implemented")
+        return
+
         with codecs.open(os.path.join(self.target_folder, chapter.md_filename()), 'w+', 'utf-8') as target:
             target.write(mdp.FRONT_MATTER_SEPARATOR)
             target.write(mdp.FRONT_MATTER_TITLE % chapter.title)
@@ -122,6 +124,10 @@ class JekyllWriter(object):
             self.chapter_navigation(target, chapter)
 
     def _compile_front_matter(self):
+
+        print("_compile_front_matter() not implemented")
+        return
+
         with codecs.open(os.path.join(self.target_folder, self.config[CONTENT].introduction.md_filename()), 'w+', 'utf-8') as target:
             with codecs.open(self.args.introduction_template, 'r', 'utf-8') as template:
                 for line in template:
@@ -137,11 +143,19 @@ class JekyllWriter(object):
             self.intro_navigation(target)
 
     def _build_glossary(self):
+
+        print("_build_glossary() not implemented")
+        return
+
         with codecs.open(os.path.join(self.target_folder, md_filename("glossary")), 'w+', 'utf-8') as target:
             self.glossary_renderer.render(target.write)
 
     def _copy_appendix(self):
         """Copy all files in the appendix to individual files (skip glossary)."""
+
+        print("_copy_appendix() not implemented")
+        return
+
         for item in self.config[CONTENT].appendix.sections:
             if item.slug not in ['glossary', 'authors']:  # TODO: this should be a setting (maybe not glossary, but 'authors')
                 self._copy_appendix_section(item.md_filename())
@@ -157,11 +171,12 @@ class JekyllWriter(object):
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
 
-    def _copy_section(self, chapter, section, headline_prefix):
+    def _make_content_page(self, node):
         """Copy each section to a separate file."""
-        source_path = os.path.join(self.source_folder, chapter.slug, section.md_filename())
-        target_path = os.path.join(self.target_folder, section.md_filename())
-        with codecs.open(source_path, 'r', 'utf-8') as source:
+        # target_path = os.path.join(self.cfg.target, md_filename(node.relpath))
+        target_path = os.path.join(self.cfg.target, md_filename(node.slug))
+
+        with codecs.open(node.source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
                 processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
                 processor.add_filter(mdp.jekyll_front_matter)
@@ -169,7 +184,8 @@ class JekyllWriter(object):
                 processor.add_filter(partial(mdp.process_summary, mode=mdp.STRIP_MODE))
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
-                self.section_navigation(target, chapter, section)
+                # TODO: add navigation again
+                # self.section_navigation(target, chapter, section)
 
     def section_navigation(self, target, chapter, section):
         """Insert prev/up/next."""
