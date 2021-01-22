@@ -2,7 +2,8 @@
 
 import argparse
 
-from build_slides import build, cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
+from build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
+from build import build
 from index import cmd_build_index
 from template import cmd_template
 
