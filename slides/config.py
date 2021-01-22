@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import os
 from operator import attrgetter
 import sys
 import yaml
@@ -37,8 +38,9 @@ def read_config(filename):
     return yaml.load(stream)
 
 
-def get_structure(filename):
-    return ContentStructure.from_config(read_config(filename))
+def get_structure(filename, content_path):
+    cs = ContentStructure.from_config(read_config(filename))
+    cs.read_info(content_path)
 
 
 def make_title(name):
@@ -115,6 +117,11 @@ class ContentStructure(object):
             'parts': [p.to_dict() for p in self.parts],
         }
 
+    def read_info(self, content_path):
+        """Read titles and structure etc. from content files."""
+        self.path = content_path
+        for part in self.parts:
+            part.read_info()
 
 class ContentNode(object):
     """
@@ -143,8 +150,13 @@ class ContentNode(object):
     def id(self):
         return '.'.join((self.parent.id, self.slug))
 
-    def md_filename(self):
-        return FILENAME_PATTERN % self.slug
+    @property
+    def path(self):
+        return os.path.join(self.parent.path, self.slug)
+
+
+    def md_filename(self, fn):
+        return FILENAME_PATTERN % fn
 
     def to_dict(self):
         d = {
@@ -177,6 +189,17 @@ class ContentNode(object):
 
         return item
 
+    def read_info(self):
+        """Read info from content file."""
+
+        # read info for this file
+        print(self.md_filename(self.path))
+        # TODO: attempt to read index file if "real" file is not present?
+
+        # TODO read all the file content
+        
+        for child in self.children:
+            child.read_info()
 
 class Part(ContentNode):
     pass
