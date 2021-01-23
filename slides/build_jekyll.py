@@ -53,7 +53,9 @@ class JekyllWriter(object):
             # TODO: process index
             self._build_chapter_index(part)
             if part.children:
+                self._make_content_page(part)
                 for chapter in part.children:
+                    self._make_content_page(chapter)
                     # TODO: process index
                     if chapter.children:
                         for section in chapter.children:
