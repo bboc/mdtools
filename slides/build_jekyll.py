@@ -191,16 +191,22 @@ class JekyllWriter(object):
                 self._add_navigation(node, target)
 
     def _add_navigation(self, node, target):
-        """Insert prev/up/next."""
+        """Insert navigation for prev/up/next at the bottom of the page."""
         target.write("\n\n")
 
         next_item = node.successor
         if next_item:
             nav_el(target, NEXT_ELEMENT, next_item)
-        target.write("<br/>")
+            target.write("<br/>")
 
         previous_item = node.predecessor
-        if previous_item:
+        if node.parent.is_node():
+            parent_item = node.parent
+        else:
+            parent_item = None
+
+        # Skip previous if it is the parent item
+        if previous_item and previous_item is not parent_item:
             nav_el(target, PREV_ELEMENT, previous_item)
             target.write("<br/>")
 
