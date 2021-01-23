@@ -32,7 +32,7 @@ class ContentStructure(object):
     The content has parts, the parts have chapters, and the chapters have sections.
     """
     def __init__(self):
-        self.parts = []
+        self.children = []
         self.path = ''
         self.config = {}
         self.id = ''
