@@ -6,27 +6,51 @@ mdtools 2.0:
 	
 	Milestone 1: New Structure and Menu:
 		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
-		New Project Structure: @estimate(3d)
-			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
-			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
-			Can't be released without a new menu for the website, because new content will not be visible @priority
-			- disable revealjs and deckset renderers
-			- create new structure.yaml (which remains in the content folder because it is dependent on the content structure)
-			- errors in structure.yaml and in the content structure are reported properly
-			- patterns and pattern group are identified via tags in structure.yaml
-			- document titles are read from file
-			- jekyll builder uses new format
-			- epub builder uses new format
-			- ebook builder  uses new format
-			- part, chapter and section is consistently used in throughout the entire codebase
-			- section links are still working
-			-  all pattern related features (pattern numbers, links to pattern groups, pattern index) are still working
 		This release affects crowdin! @priority
 		Preparation:
 			- backup all files from crowdin
 			- deactivate revealja and decset formats
 			- deactivate crowdin upload
-	
+		New Project Structure: @estimate(3d)
+			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
+			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
+			Can't be released without a new menu for the website, because new content will not be visible @priority
+			- disable revealjs and deckset renderers @done
+			- create new structure.yaml (which remains in the content folder because it is dependent on the content structure) @done
+			- errors in structure.yaml and in the content structure are reported properly
+			- patterns and pattern group are identified via tags in structure.yaml @done
+			- document titles are read from file @done
+			jekyll builder uses new format:
+				- navigation in jekyll is still working (prev/next/up) @done
+				- indexes with summaries are written to all pattern group pages, to introduction and to appendix
+				- obsolete Templates are removed:
+				- glossary is created
+				- pattern-index.md with all patterns and summaries is written
+				- all-in-one page is written
+				- all content from concepts and principles is moved to content tree
+				- main index page is written
+			- epub builder uses new format
+			- ebook builder  uses new format
+			- part, chapter and section is consistently used in throughout the entire codebase
+			- section links are still working
+			- all pattern related features (links to pattern groups, pattern index) are still working
+
+		Macro Support:
+			- macros processing is consolidated into one markdown filter that takes plugins:
+				1. parse string for {{macro}} 
+				2. parse  macro for {{name:literal,$variable.something}}
+				3. select plugin from name
+				4. return substituted text (or full macro text if no macro is found
+				??macro can be output-aware, with different output per document type
+			- what about <!-- macros --> are these relevant? 
+			- variables:
+					green: #FF0000
+				{{name:$green}} or {{name:var(green)}}
+
+		Python 3:
+			As soon as everything is working again!
+			- port to Python 3 
+			- make sure install documentation is complete (see Github Issue for details)
 		Responsive Website Menu: @estimate(1d)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
 			
@@ -35,10 +59,18 @@ mdtools 2.0:
 			- add css for menu responsive menu
 			- create menu structure from structure yaml
 			- add tags for excluding items from menu
-	
+		
+		Configuration as Code: @estimate(16h)
+			As author I want a simple way to configure the output for various formats so that I it is easy to set up new output formats and I don't have to learn about makefiles or shell scripts.
+			- read document presets from project.yaml instead of the commandline
+			- commandline input takes preset as parameter
+			- global variables in project.yaml can be overridden in individual presets
+			- there is a default value for at least some (e.g. no_section_prefix)
+			
 		Release of the Practical Guide: @estimate(4h)
-			This release is transparent for the translations, but removes dependency of translation to structure.yaml.
+			This release removes dependency of translation to structure.yaml.
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
+			This release affects crowdin! @priority
 			
 			- publish the English version of the practical guide with this version of mdtools
 			- integrate the Common Sense Framework
@@ -48,16 +80,10 @@ mdtools 2.0:
 			- update Dutch version
 			
 	Milestone 2: Responsive Pattern Map:
-		Configuration as Code: @estimate(16h)
-			As author I want a simple way to configure the output for various formats so that I it is easy to set up new output formats and I don't have to learn about makefiles or shell scripts.
-			- read document presets from project.yaml instead of the commandline
-			- commandline input takes preset as parameter
-			- global variables in project.yaml can be overridden in individual presets
-			- plugins used for a specific document can be configured globally or in the preset 
-			
 		Plugin and Macro Support: @estimate(8h)
 			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
 			- configure plugins globally and per document type
+			- plugins used for a specific document can be configured globally or in the preset 
 			- override and extend plugin list in document type
 			- define parameters per plugin
 			- add preprocessor plugins
