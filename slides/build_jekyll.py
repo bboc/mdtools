@@ -71,8 +71,8 @@ class JekyllWriter(object):
 
     def _build_chapters_overview(self):
         """Build list of the chapters on the website from template. Already translation-aware."""
-
-        print("_build_chapters_overview() not implemented")
+        # TODO: port or remove this
+        print("TODO: _build_chapters_overview() not implemented")
         return
 
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
@@ -85,7 +85,7 @@ class JekyllWriter(object):
 
     def _build_section_index(self):
         """Build index of all sections from template. Already translation-aware."""
-
+        # TODO: port or remove this
         print("_build_chapters_overview() not implemented")
         return
 
@@ -99,6 +99,7 @@ class JekyllWriter(object):
 
     def _build_chapter_index(self, chapter):
 
+        # TODO: port or remove this
         print("_build_chapter_index() not implemented")
         return
 
@@ -124,7 +125,7 @@ class JekyllWriter(object):
             self.chapter_navigation(target, chapter)
 
     def _compile_front_matter(self):
-
+        # TODO: port or remove this
         print("_compile_front_matter() not implemented")
         return
 
@@ -143,7 +144,7 @@ class JekyllWriter(object):
             self.intro_navigation(target)
 
     def _build_glossary(self):
-
+        # TODO: port or remove this
         print("_build_glossary() not implemented")
         return
 
@@ -152,7 +153,7 @@ class JekyllWriter(object):
 
     def _copy_appendix(self):
         """Copy all files in the appendix to individual files (skip glossary)."""
-
+        # TODO: port or remove this
         print("_copy_appendix() not implemented")
         return
 
@@ -162,6 +163,7 @@ class JekyllWriter(object):
 
     def _copy_appendix_section(self, section_path):
         """Copy each section to a separate file."""
+        # TODO: port or remove this
         source_path = os.path.join(self.source_folder, self.config[CONTENT].appendix.slug, section_path)
         target_path = os.path.join(self.target_folder, section_path)
         with codecs.open(source_path, 'r', 'utf-8') as source:
@@ -189,6 +191,7 @@ class JekyllWriter(object):
 
     def section_navigation(self, target, chapter, section):
         """Insert prev/up/next."""
+        # TODO: port or remove this        
         target.write("\n\n")
 
         # next link: next pattern, next group, or first group
@@ -215,6 +218,7 @@ class JekyllWriter(object):
 
     def chapter_navigation(self, target, chapter):
         """Insert prev/next."""
+        # TODO: port or remove this        
         target.write("\n\n")
 
         # next link: always first pattern in group
@@ -242,4 +246,5 @@ class JekyllWriter(object):
 
 
 def nav_el(target, template, item):
+    # TODO: port or remove this
     target.write(template % dict(name=item.title, path=item.slug))
