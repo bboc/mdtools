@@ -49,7 +49,7 @@ class JekyllWriter(object):
         self._build_glossary()
         self._copy_appendix()
 
-        for part in self.structure.parts:
+        for part in self.structure.children:
             # TODO: process index
             self._build_chapter_index(part)
             if part.children:
@@ -188,34 +188,25 @@ class JekyllWriter(object):
                 processor.add_filter(partial(mdp.process_summary, mode=mdp.STRIP_MODE))
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
-                # TODO: add navigation again
-                # self.section_navigation(target, chapter, section)
+                self._add_navigation(node, target)
 
-    def section_navigation(self, target, chapter, section):
+    def _add_navigation(self, node, target):
         """Insert prev/up/next."""
-        # TODO: port or remove this        
         target.write("\n\n")
 
-        # next link: next pattern, next group, or first group
-        if section.id < len(chapter.sections):
-            # next section in pattern (if any)
-            next_item = chapter.sections[section.id]
-        else:
-            if section.chapter_id < len(self.config[CONTENT].chapters):
-                # next chapter
-                next_item = self.config[CONTENT].chapters[section.chapter_id]
-            else:
-                # last chapter: wrap around to first chapter index
-                next_item = self.config[CONTENT].chapters[0]
-        nav_el(target, NEXT_ELEMENT, next_item)
+        next_item = node.successor
+        if next_item:
+            nav_el(target, NEXT_ELEMENT, next_item)
         target.write("<br/>")
-        # prev link = prev pattern TODO: or prev group index (wrap around to last group)
-        if section.id > 1:
-            p_next = chapter.sections[section.id - 2]
-            nav_el(target, PREV_ELEMENT, p_next)
+
+        previous_item = node.predecessor
+        if previous_item:
+            nav_el(target, PREV_ELEMENT, previous_item)
             target.write("<br/>")
-        # up: group index
-        nav_el(target, UP_ELEMENT, chapter)
+
+        # up: parent
+        if node.parent.is_node():
+            nav_el(target, UP_ELEMENT, node.parent)
         target.write("\n\n")
 
     def chapter_navigation(self, target, chapter):

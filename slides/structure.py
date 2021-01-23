@@ -43,21 +43,24 @@ class ContentStructure(object):
         c = cls()
         c.path = path
         c.config = structure['config']
-        c.parts = [Part.from_config(part, c, c) for part in structure[PARTS]]
+        c.children = [Part.from_config(part, c, c) for part in structure[PARTS]]
         # TODO: raise exception for wrong config format and sys.exit(1)
         return c
 
     def to_dict(self):
         return {
             'config': self.config,
-            'parts': [p.to_dict() for p in self.parts],
+            'children': [p.to_dict() for p in self.children],
         }
 
     def read_info(self, content_path):
         """Read titles and structure etc. from content files."""
         self.path = content_path
-        for part in self.parts:
+        for part in self.children:
             part.read_info()
+
+    def is_node(self):
+        return False
 
 
 class ContentNode(object):
@@ -83,6 +86,9 @@ class ContentNode(object):
         self.config = {}
         self.tags = []
         self.summary = None
+
+    def is_node(self):
+        return True
 
     @property
     def id(self):
@@ -115,13 +121,9 @@ class ContentNode(object):
         If the current node has no children, it's its own last descendant
         """
         if self.children:
-            return self.children[-1].last_descendant()
+            return self.children[-1].last_descendant
         else:
             return self
-
-    @property
-    def next_sibling_of_the_closest_ancestor(self):
-        return None
 
     @property
     def predecessor(self):
@@ -131,10 +133,23 @@ class ContentNode(object):
         - the parent, or None.
         """
         idx = self.parent.children.index(self)
-        if idx:  # there is a previois sibling
-            return self.parent.children[idx - 1].last_descendant()
-        if self.parent.__class__ is ContentNode:
+        if idx:  # there is a previous sibling
+            return self.parent.children[idx - 1].last_descendant
+        elif self.parent.is_node():
             return self.parent
+        else:
+            return None
+
+    @property
+    def next_sibling_or_ancestor_sibling(self):
+        """If the node has next sibling:
+        """
+        idx = self.parent.children.index(self)
+        if idx + 1 < len(self.parent.children):
+            # there is a next sibling
+            return self.parent.children[idx + 1]
+        elif self.parent.is_node():
+            return self.parent.next_sibling_or_ancestor_sibling
         else:
             return None
 
@@ -143,17 +158,13 @@ class ContentNode(object):
         """
         Return the object that succedes this one when reading end-to-end:
         - the first child
-        - the next sibling,
-        - the next sibling of the closest ancestor that has one (recursive)
-        - None
+        - the next sibling, or the next sibling of the closest ancestor,
+          (which might be None)
         """
         if self.children:
             return self.children[0]
-        idx = self.parent.children.index(self)
-        if idx + 1 <= len(self.parent.children):
-            return self.parent.children[idx + 1]
-        # might be None
-        return self.next_sibling_of_the_closest_ancestor()
+        else:
+            return self.next_sibling_or_ancestor_sibling
 
     def md_filename(self, fn):
         return FILENAME_PATTERN % fn
