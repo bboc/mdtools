@@ -108,6 +108,53 @@ class ContentNode(object):
             source_path = self.md_filename(os.path.join(self.path, 'index'))
         return source_path
 
+    @property
+    def last_descendant(self):
+        """
+        Return the last descendant of the current node  (recursive).
+        If the current node has no children, it's its own last descendant
+        """
+        if self.children:
+            return self.children[-1].last_descendant()
+        else:
+            return self
+
+    @property
+    def next_sibling_of_the_closest_ancestor(self):
+        return None
+
+    @property
+    def predecessor(self):
+        """
+        Return the object that precedes this one when reading end-to-end:
+        - the last descendant of previous sibling (which might be the previous sibling itself)
+        - the parent, or None.
+        """
+        idx = self.parent.children.index(self)
+        if idx:  # there is a previois sibling
+            return self.parent.children[idx - 1].last_descendant()
+        if self.parent.__class__ is ContentNode:
+            return self.parent
+        else:
+            return None
+
+    @property
+    def successor(self):
+        """
+        Return the object that succedes this one when reading end-to-end:
+        - the first child
+        - the next sibling,
+        - the next sibling of the closest ancestor that has one (recursive)
+        - None
+        """
+        if self.children:
+            return self.children[0]
+        idx = self.parent.children.index(self)
+        if idx + 1 <= len(self.parent.children):
+            return self.parent.children[idx + 1]
+        # might be None
+        return self.next_sibling_of_the_closest_ancestor()
+
     def md_filename(self, fn):
         return FILENAME_PATTERN % fn
 
