@@ -30,6 +30,9 @@ PREV_ELEMENT = "[&#9664; %(name)s](%(path)s.html)"
 UP_ELEMENT = "[&#9650; %(name)s](%(path)s.html)"
 NEXT_ELEMENT = "[&#9654; %(name)s](%(path)s.html)"
 
+def nav_el(target, template, item):
+    target.write(template % dict(name=item.title, path=item.slug))
+
 
 class JekyllWriter(object):
     GROUP_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
@@ -43,6 +46,15 @@ class JekyllWriter(object):
         self.summary_db = defaultdict(list)
 
     def build(self):
+        """Render the jekyll output.
+        TODO: add index with summaries to each node that has children
+        TODO: add index with summaries to all pattern group pages, to introduction and to appendix
+        TODO: remove obsolete Templates
+        TODO: create and insert glossary
+        TODO: write pattern-index.md with all patterns and summaries
+        TODO: write root index.md
+        """
+
         self._build_chapters_overview()
         self._build_section_index()
         self._compile_front_matter()
@@ -56,7 +68,7 @@ class JekyllWriter(object):
                 self._make_content_page(part)
                 for chapter in part.children:
                     self._make_content_page(chapter)
-                    # TODO: process index
+                    # TODO: process index (maybe simply add one if the nod has children??)
                     if chapter.children:
                         for section in chapter.children:
                             # TODO: process section
@@ -242,8 +254,3 @@ class JekyllWriter(object):
         nav_el(target, NEXT_ELEMENT, item)
 
         target.write("\n\n")
-
-
-def nav_el(target, template, item):
-    # TODO: port or remove this
-    target.write(template % dict(name=item.title, path=item.slug))
