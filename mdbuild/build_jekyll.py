@@ -10,10 +10,10 @@ import codecs
 from collections import defaultdict
 from functools import partial
 import os
-from operator import attrgetter
+import sys
+import shutil
 from textwrap import dedent
 
-from .common import markdown2html
 from .common import md_filename
 from . import markdown_processor as mdp
 from . import glossary
@@ -40,8 +40,6 @@ def nav_el(target, template, item):
     target.write(template % dict(name=item.title, path=item.slug))
 
 
-
-
 class JekyllWriter(object):
     GROUP_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
 
@@ -59,16 +57,78 @@ class JekyllWriter(object):
 
     def build(self):
         """Render the jekyll output.
-        TODO: remove obsolete Templates
-        TODO: write root index.md
-        TODO: copy all defined templates (including "website/_templates/index.md)
-              through the markdown processor, interpolating macros and translations etc.
         """
-        # make all the content pages
+        self.copy_templates()         
+        self.make_content_pages()
+
+    def make_content_pages(self):
         current_node = self.structure.children[0]
         while current_node:
             self._make_content_page(current_node)
             current_node = current_node.successor
+
+    def copy_templates(self):
+        """
+        Copy templates to destination.
+
+        template processing has 3 modes:
+        - default: substitute variables and translations
+        - copy: simply copy, don't touch
+        - markdown: full markdown processing (inkl. jekyll front matter and macros)
+        """
+        for t in self.cfg.templates:
+            try:
+                mode = t.mode
+            except AttributeError:
+                mode = 'default'
+            try:
+                t.source
+            except AttributeError:
+                print('ERROR: template has no source')
+                sys.exit(1)
+            try:
+                t.destination
+            except AttributeError:
+                print('ERROR: no destination for template', t.source)
+                sys.exit(1)
+
+            if mode == 'copy':
+                shutil.copy(t.source, t.destination)
+            elif mode == 'markdown':
+                self._markdown_template(t)
+            elif mode == 'default':
+                self._default_template(t)
+            else:
+                print("ERROR: unknown mode ", mode, 'for template', t.source)
+                sys.exit(1)
+
+    def _markdown_template(self, template):
+        """Run the template through most of the markdown filters."""
+
+        with codecs.open(template.source, 'r', 'utf-8') as source:
+            with codecs.open(template.destination, 'w+', 'utf-8') as target:
+                processor = mdp.MarkdownProcessor(source, filters=[
+
+                    partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
+                    partial(mdp.inject_glossary),
+                    partial(macros.MacroFilter.filter),
+                    partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+                    mdp.jekyll_front_matter,
+                    partial(mdp.write, target),
+                ])
+                processor.process()
+
+    def _default_template(self, template):
+        """Substitute variables and translations."""
+        # TODO: initialize translation memory
+
+        with codecs.open(template.source, 'r', 'utf-8') as source:
+            with codecs.open(template.destination, 'w+', 'utf-8') as target:
+                processor = mdp.MarkdownProcessor(source, filters=[
+                    partial(mdp.template, self.cfg.variables),
+                    partial(mdp.write, target),
+                ])
+                processor.process()
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
