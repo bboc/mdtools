@@ -71,7 +71,6 @@ class IndexMacro(object):
         # select which nodes to show
         nodes_to_show = []
         if tag_filter:
-
             current_node = root
             while current_node:
                 if tag_filter in current_node.tags:
@@ -141,16 +140,11 @@ class JekyllWriter(object):
         TODO: copy all defined templates (including "website/_templates/index.md)
               through the markdown processor, interpolating macros and translations etc.
         """
-
-        # TODO: this can be implemented via successor!!
-        for part in self.structure.children:
-            if part.children:
-                self._make_content_page(part)
-                for chapter in part.children:
-                    self._make_content_page(chapter)
-                    if chapter.children:
-                        for section in chapter.children:
-                            self._make_content_page(section)
+        # make all the content pages
+        current_node = self.structure.children[0]
+        while current_node:
+            self._make_content_page(current_node)
+            current_node = current_node.successor
 
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
