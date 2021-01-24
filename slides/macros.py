@@ -40,17 +40,25 @@ def process_macro(match):
     """
     macro_string = match.group()[2:-2]
 
+    kwargs = {}
+    args = []
+    globals
+
     if ':' in macro_string:
         name, params = macro_string.split(':')
-        params = params.split(',')
+        for item in params.split(','):
+            if '=' in item:
+                key, value = item.split('=')
+                kwargs[key] = value
+            else:
+                args.append(item)
     else:
         name = macro_string
-        params = []
 
     if name not in macros:
         print('warning: unknown macro:', name)
     else:
-        return macros[name](*params)
+        return macros[name](*args, **kwargs)
 
 
 class MacroFilter(object):
