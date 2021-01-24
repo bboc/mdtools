@@ -39,15 +39,14 @@ def process_macro(match):
     TODO: handle vars and other substitutions
     """
     macro_string = match.group()[2:-2]
-    print(macro_string)
+
     if ':' in macro_string:
         name, params = macro_string.split(':')
         params = params.split(',')
-        print(macros)
-        return macros[name](*params)
     else:
         name = macro_string
-        return macros[name]()
+        params = []
+    return macros[name](*params)
 
 
 class MacroPlugin(object):
@@ -58,9 +57,5 @@ class MacroPlugin(object):
     def filter(cls, lines):
         print(lines)
         for line in lines:
-            print(process_macro)
-            print(line)
-            line =  cls.MACRO_PATTERN.sub(process_macro, line)
-            print line
+            line = cls.MACRO_PATTERN.sub(process_macro, line)
             yield line
-
