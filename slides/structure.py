@@ -19,48 +19,10 @@ def get_structure(filename, content_path):
     print("------- structure---------")
     print(filename)
 
-    cs = ContentStructure.from_config(read_config_file(filename))
+    cs = ContentRoot.from_config(read_config_file(filename))
     cs.read_info(content_path)
     # print(pformat(cs.to_dict()))
     return cs
-
-
-class ContentStructure(object):
-    """
-    A representation of entire content.
-
-    The content has parts, the parts have chapters, and the chapters have sections.
-    """
-    def __init__(self):
-        self.children = []
-        self.path = ''
-        self.config = {}
-        self.id = ''
-        self.relpath = ''
-
-    @classmethod
-    def from_config(cls, structure, path=None):
-        c = cls()
-        c.path = path
-        c.config = structure['config']
-        c.children = [Part.from_config(part, c, c) for part in structure[PARTS]]
-        # TODO: raise exception for wrong config format and sys.exit(1)
-        return c
-
-    def to_dict(self):
-        return {
-            'config': self.config,
-            'children': [p.to_dict() for p in self.children],
-        }
-
-    def read_info(self, content_path):
-        """Read titles and structure etc. from content files."""
-        self.path = content_path
-        for part in self.children:
-            part.read_info()
-
-    def is_node(self):
-        return False
 
 
 class ContentNode(object):
@@ -87,16 +49,12 @@ class ContentNode(object):
         self.tags = []
         self.summary = None
 
-    def is_node(self):
-        return True
+    def is_root(self):
+        return self is self.root
 
     @property
     def id(self):
         return '.'.join((self.parent.id, self.slug))
-
-    @property
-    def path(self):
-        return os.path.join(self.parent.path, self.slug)
 
     @property
     def path(self):
@@ -135,7 +93,7 @@ class ContentNode(object):
         idx = self.parent.children.index(self)
         if idx:  # there is a previous sibling
             return self.parent.children[idx - 1].last_descendant
-        elif self.parent.is_node():
+        elif not self.parent.is_root():
             return self.parent
         else:
             return None
@@ -148,7 +106,7 @@ class ContentNode(object):
         if idx + 1 < len(self.parent.children):
             # there is a next sibling
             return self.parent.children[idx + 1]
-        elif self.parent.is_node():
+        elif not self.parent.is_root():
             return self.parent.next_sibling_or_ancestor_sibling
         else:
             return None
@@ -227,6 +185,83 @@ class ContentNode(object):
             self.title = mdp.MetadataPlugin.title
             self.summary = mdp.MetadataPlugin.summary
 
+    def find(self, slug):
+        """Find slug in this subtree"""
+        if self.slug == slug:
+            return self
+        for child in self.children:
+            if child.slug == slug:
+                res = child.find(slug)
+                if res:
+                    return res
+        else:
+            return None
+
+
+class ContentRoot(ContentNode):
+    """
+    A representation of entire content.
+
+    The content has parts, the parts have chapters, and the chapters have sections.
+    TODO: make this a ContenNode object that holds the index document???
+    """
+    def __init__(self, root_path):
+        self.root_path = root_path
+        super(ContentRoot, self).__init__(None, None, self)
+
+    @classmethod
+    def from_config(cls, structure, path=None):
+        c = cls(path)
+        c.root_path = path
+        c.config = structure['config']
+        c.children = [Part.from_config(part, c, c) for part in structure[PARTS]]
+        # TODO: raise exception for wrong config format and sys.exit(1)
+        return c
+
+    def to_dict(self):
+        return {
+            'config': self.config,
+            'children': [p.to_dict() for p in self.children],
+        }
+
+    def read_info(self, content_path):
+        """Read titles and structure etc. from content files."""
+        self.root_path = content_path
+        for part in self.children:
+            part.read_info()
+
+    @property
+    def id(self):
+        return ''
+
+    @property
+    def path(self):
+        return self.root_path
+
+    @property
+    def relpath(self):
+        return ''
+
+    @property
+    def predecessor(self):
+        return None
+
+    @property
+    def next_sibling_or_ancestor_sibling(self):
+        return None
+
+    @property
+    def successor(self):
+        """
+        Return the object that succedes this one when reading end-to-end:
+        - the first child
+        - the next sibling, or the next sibling of the closest ancestor,
+          (which might be None)
+        """
+        if self.children:
+            return self.children[0]
+        else:
+            return self.next_sibling_or_ancestor_sibling
 
 class Part(ContentNode):
     pass

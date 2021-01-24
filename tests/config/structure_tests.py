@@ -2,13 +2,13 @@
 
 import unittest
 
-from slides.config import Content
+import slides.structure as structure
 
 
 class TestStructure(unittest.TestCase):
 
     def test_simple_structure(self):
-        c = Content.from_config({
+        c = structure.ContentRoot.from_config({
             'config': {},
             'parts': [
                 {
