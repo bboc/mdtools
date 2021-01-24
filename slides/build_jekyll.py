@@ -62,9 +62,11 @@ class IndexMacro(object):
         tag_filter = kwargs.get('tag')
         sort = kwargs.get('sort')
         root = structure
-
         if 'root' in kwargs:
-            root = kwargs['root']
+            root = structure.find(kwargs['root'])
+            if not root:
+                print('WARNING: could not resolve item: {{index:root=', kwargs['root'], '}}')
+                return "{{index:root=%s ERRROR UNKNOWN ROOT}}" % kwargs['root']
 
         # select which nodes to show
         nodes_to_show = []
@@ -76,7 +78,7 @@ class IndexMacro(object):
                     nodes_to_show.append(current_node)
                 current_node = current_node.successor
         else:
-            nodes_to_show = root.children.copy()
+            nodes_to_show = root.children[:]
 
         if sort:
             nodes_to_show.sort(key=attrgetter(sort))

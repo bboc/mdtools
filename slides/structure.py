@@ -190,10 +190,9 @@ class ContentNode(object):
         if self.slug == slug:
             return self
         for child in self.children:
-            if child.slug == slug:
-                res = child.find(slug)
-                if res:
-                    return res
+            res = child.find(slug)
+            if res:
+                return res
         else:
             return None
 
