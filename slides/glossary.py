@@ -5,6 +5,7 @@ from operator import itemgetter
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
+# The actual glossary
 glossary = {}
 
 
@@ -42,12 +43,13 @@ class GlossaryRenderer(object):
 
     def emit_header(self, continued=False):
 
-        if continued:
-            self.emitter(self.PAGE_BREAK)
-            cont = self.glossary['continued']
-        else:
-            cont = ''
-        self.emitter(self.HEADER_TEMPLATE % (self.glossary['title'], cont))
+        if self.HEADER_TEMPLATE:
+            if continued:
+                self.emitter(self.PAGE_BREAK)
+                cont = self.glossary['continued']
+            else:
+                cont = ''
+            self.emitter(self.HEADER_TEMPLATE % (self.glossary['title'], cont))
 
 
 class DecksetGlossaryRenderer(GlossaryRenderer):
@@ -79,7 +81,8 @@ class HtmlGlossaryRenderer(GlossaryRenderer):
 class JekyllGlossaryRenderer(GlossaryRenderer):
 
     TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
-    HEADER_TEMPLATE = '---\ntitle: %s %s\n---\n\n'
+    # HEADER_TEMPLATE = '---\ntitle: %s %s\n---\n\n'
+    HEADER_TEMPLATE = None
     PAGE_BREAK = ''
 
 

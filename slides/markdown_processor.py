@@ -314,7 +314,10 @@ def convert_section_links(template, lines):
 
 
 def insert_glossary(renderer, lines):
-    """Insert full glossary when GLOSSARY_MARKER is encountered."""
+    """
+    Insert full glossary when GLOSSARY_MARKER is encountered.
+    TODO: convert for macro renderer
+    """
 
     glossary_contents = []
 

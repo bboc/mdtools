@@ -13,6 +13,7 @@ from textwrap import dedent
 from common import md_filename
 import markdown_processor as mdp
 import glossary
+from macros import register_macro
 
 CHAPTER_INDEX_TEMPLATE = dedent("""
 ---
@@ -30,6 +31,7 @@ PREV_ELEMENT = "[&#9664; %(name)s](%(path)s.html)"
 UP_ELEMENT = "[&#9650; %(name)s](%(path)s.html)"
 NEXT_ELEMENT = "[&#9654; %(name)s](%(path)s.html)"
 
+
 def nav_el(target, template, item):
     target.write(template % dict(name=item.title, path=item.slug))
 
@@ -45,6 +47,11 @@ class JekyllWriter(object):
         self.glossary_renderer = glossary.JekyllGlossaryRenderer(9999)
         self.summary_db = defaultdict(list)
 
+
+        ## register all macros:
+        register_macro
+
+
     def build(self):
         """Render the jekyll output.
         TODO: add index with summaries to each node that has children
@@ -58,7 +65,6 @@ class JekyllWriter(object):
         self._build_chapters_overview()
         self._build_section_index()
         self._compile_front_matter()
-        self._build_glossary()
         self._copy_appendix()
 
         for part in self.structure.children:
@@ -81,6 +87,8 @@ class JekyllWriter(object):
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
             partial(mdp.inject_glossary),
             partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+            # TODO: move that to the macro processor
+            partial(mdp.insert_glossary, self.glossary_renderer),
         ]
 
     def _build_chapters_overview(self):
@@ -156,14 +164,6 @@ class JekyllWriter(object):
                     processor.process()
                 target.write('\n')
             self.intro_navigation(target)
-
-    def _build_glossary(self):
-        # TODO: port or remove this
-        print("_build_glossary() not implemented")
-        return
-
-        with codecs.open(os.path.join(self.target_folder, md_filename("glossary")), 'w+', 'utf-8') as target:
-            self.glossary_renderer.render(target.write)
 
     def _copy_appendix(self):
         """Copy all files in the appendix to individual files (skip glossary)."""
