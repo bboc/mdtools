@@ -375,8 +375,8 @@ def template(config, lines):
     def insert_parameter(match):
         name = match.group('name')
         try:
-            return config[name]
-        except KeyError:
+            return getattr(config, name)
+        except AttributeError:
             print("ERROR: Unknown Parameter", name)
             return "${%s}" % name
 
