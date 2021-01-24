@@ -11,67 +11,63 @@ mdtools 2.0:
 			- backup all files from crowdin
 			- deactivate revealjs and deckset formats @done
 			- deactivate crowdin upload
-		New Project Structure: @estimate(3d)
+		New Project Structure: @estimate(2d)
 			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
 			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
 			Can't be released without a new menu for the website, because new content will not be visible @priority
 			- disable revealjs and deckset renderers @done
 			- create new structure.yaml (which remains in the content folder because it is dependent on the content structure) @done
-			- errors in structure.yaml and in the content structure are reported properly
+			- errors in structure.yaml and in the content structure are reported properly @done
 			- patterns and pattern group are identified via tags in structure.yaml @done
 			- document titles are read from file @done
-			jekyll builder uses new format:
+			jekyll builder uses new format: @estimate(2h)
 				- navigation in jekyll is still working (prev/next/up) @done
 				- indexes with summaries are written to all pattern group pages, to introduction and to appendix @done
-				- obsolete Templates are removed:
+				- obsolete Templates are removed: @done
 				- glossary is created @done
 				- pattern-index.md with all patterns and summaries is written @done
 				- all-in-one page is written
 				- all content from concepts and principles is moved to content tree @done
-				- main index page is written
-			- epub builder uses new format
-			- ebook builder  uses new format
-			- cmd_template is working with new config format
+				- main index page is written @done
+				- main index page uses plain index format
+				- output is compared in detail once more 
+				- section links are still working
+			- epub builder uses new format @estimate(4h)
+			- ebook builder  uses new format @estimate(4h)
+			- cmd_template is working with new config format @estimate(30min)
 			- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
-			- section links are still working
-			- all pattern related features (links to pattern groups, pattern index) are still working
 			- all obsolete code is removed 
-		
-		Macro Support:
+		Macro Support: @estimate(30min)
 			- macros processing is consolidated into one markdown filter that takes plugins: @done
 				1. parse string for {{macro}} 
 				2. parse  macro for {{name:literal,$variable.something}}
 				3. select plugin from name
 				4. return substituted text (or full macro text if no macro is found
 				??macro can be output-aware, with different output per document type
-			- what about <!-- macros --> are these relevant? 
+			- what about <!-- macros --> are these relevant? @done
 			- variables:
 					green: #FF0000
 				{{name:$green}} or {{name:var(green)}}
-		
-		Python 3:
+		Python 3: @estimate(15min)
 			As soon as everything is working again, or sooner, because looking up stuff for python 2 is a mess.
 			Test who difficult this would get:
-				- install a venv
-				- install dependencies
-				- run and see what happens
-			- Port to Python 3
+				- install a venv @done
+				- install dependencies @done
+				- run and see what happens @done
+			- Port to Python 3 @done
 			- make sure install documentation is complete (see Github Issue for details)
-		Responsive Website Menu: @estimate(1d)
+		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
-			
 			- add html template for menu (and if necessary add js to body)
 			- test menu with static content
 			- add css for menu responsive menu
 			- create menu structure from structure yaml
 			- add tags for excluding items from menu
-		
-		Configuration as Code: @estimate(16h)
+		Configuration as Code: @done
 			As author I want a simple way to configure the output for various formats so that I it is easy to set up new output formats and I don't have to learn about makefiles or shell scripts.
 			- read document presets from project.yaml instead of the commandline @done
 			- commandline input takes preset as parameter @done
 			- global variables in project.yaml can be overridden in individual presets @done
-			- there is a default value for at least some (e.g. no_section_prefix)
 			
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
