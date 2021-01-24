@@ -2,7 +2,7 @@
 
 import unittest
 
-from slides.config import ConfigObject
+from mdbuild.config import ConfigObject
 
 
 class TestConfig(unittest.TestCase):
@@ -13,7 +13,9 @@ class TestConfig(unittest.TestCase):
                 'content': 'content/src',
                 'structure': 'conten/structure.yaml',
                 'localization': 'content/localization.po',
-                'version': 'content/version.txt',
+                'variables': {
+                    'version': 'content/version.txt',
+                },
                 'plugins': {
                     'preprocessor': [
                         'plugin A',
@@ -23,25 +25,33 @@ class TestConfig(unittest.TestCase):
                             'param1': 'value1'
                         },
                     ],
+                    'renderer': ['A', 'B', 'C'],
                 },
             },
             'presets': {
                 'jekyll': {
                     'format': 'jekyll',
+                    'variables': {
+                        'foo': 'bar',
+                    },
                     'strucure': 'content/structure-new.yaml',
                     'templates': [
                         {
-                            'from': 'templates/web/header.html',
-                            'to': 'docs/_includes/header.html'
+                            'src': 'templates/web/header.html',
+                            'dest': 'docs/_includes/header.html'
                         },
                         {
-                            'from': 'templates/web/footer.html',
-                            'to': 'docs/_includes/footer.html'
+                            'src': 'templates/web/footer.html',
+                            'dest': 'docs/_includes/footer.html'
                         },
                     ],
                     'plugins': {
                         'preprocessor': [
-                            'plugin D',
+                            '--append--',
+                            'plugin F'
+                        ],
+                        'renderer': [
+                            'rplugin A',
                         ],
                     },
                 },
@@ -49,11 +59,7 @@ class TestConfig(unittest.TestCase):
                     'format': 'latex',
                     'plugins': {
                         'preprocessor': [
-                            'append',
-                            'plugin B'
-                        ],
-                        'renderer': [
-                            ' rplugin A',
+                            'plugin D',
                         ],
                     },
                 },
@@ -69,12 +75,12 @@ class TestBuildConfig(TestConfig):
         self.c = ConfigObject(self.cfg['defaults'])
 
     def test_root_attributes(self):
-        self.failUnlessEqual(self.c.content, 'content/src')
-        self.failUnlessEqual(self.c.version, 'content/version.txt')
+        self.assertEqual(self.c.content, 'content/src')
+        self.assertEqual(self.c.variables.version, 'content/version.txt')
 
     def test_nested_objects(self):
-        self.failUnlessEqual(self.c.plugins.preprocessor[0], "plugin A")
-        self.failUnlessEqual(self.c.plugins.__class__, ConfigObject)
+        self.assertEqual(self.c.plugins.preprocessor[0], "plugin A")
+        self.assertEqual(self.c.plugins.__class__, ConfigObject)
 
     def test_unknown_attribute_raises_exception(self):
         try:
@@ -85,9 +91,9 @@ class TestBuildConfig(TestConfig):
             self.fail('AttributeError not raised on unknown attribute')
 
     def test_nested_lists(self):
-        self.failUnlessEqual(self.c.plugins.preprocessor[0], 'plugin A')
-        self.failUnlessEqual(self.c.plugins.preprocessor[1][1], 'value A')
-        self.failUnlessEqual(self.c.plugins.preprocessor[2].id, 'plugin C')
+        self.assertEqual(self.c.plugins.preprocessor[0], 'plugin A')
+        self.assertEqual(self.c.plugins.preprocessor[1][1], 'value A')
+        self.assertEqual(self.c.plugins.preprocessor[2].id, 'plugin C')
 
 
 class TestUpdateConfig(TestConfig):
@@ -97,13 +103,23 @@ class TestUpdateConfig(TestConfig):
         self.c = ConfigObject(self.cfg['defaults'], self.cfg['presets']['jekyll'])
 
     def test_update_scalars(self):
-        self.failUnlessEqual(self.c.strucure, 'content/structure-new.yaml')
+        self.assertEqual(self.c.strucure, 'content/structure-new.yaml')
 
     def test_update_child_dictionaries(self):
-        pass
+        self.assertEqual(self.c.variables.version, 'content/version.txt')
+        self.assertEqual(self.c.variables.foo, 'bar')
+
+    def test_add_new_list(self):
+        self.assertEqual(len(self.c.templates), 2)
+        self.assertEqual(self.c.templates[0].src, 'templates/web/header.html')
 
     def test_replace_list(self):
-        pass
+        self.assertEqual(len(self.c.plugins.renderer), 1, self.c.plugins.renderer)
+        self.assertEqual(self.c.plugins.renderer[0], 'rplugin A')
+        self.assertEqual(self.c.plugins.renderer[-1], 'rplugin A')
 
     def test_update_append_list(self):
-        pass
+        self.assertEqual(self.c.plugins.preprocessor[0], 'plugin A')
+        self.assertEqual(self.c.plugins.preprocessor[-1], 'plugin F')
+        self.assertTrue('--append--' not in self.c.plugins.preprocessor)
+        self.assertEqual(len(self.c.plugins.preprocessor), 4)

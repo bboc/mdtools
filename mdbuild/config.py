@@ -58,13 +58,20 @@ class ConfigObject(object):
     def _update(self, data):
         """Update from data structure"""
         for key, value in data.items():
-            print(key, value)
             if value.__class__ == dict:
-                raise Exception("can't update dictionary (yet)")
-                # self.__dict__[key] = ConfigObject(value)
+                # dictionary exists
+                if hasattr(self, key):
+                    self.__dict__[key]._update(value)
+                else:
+                    self.__dict__[key] = ConfigObject(value)
             elif value.__class__ == list:
                 if hasattr(self, key):
-                    raise Exception("can't update list (yet)", key)
+                    if value[0] == '--append--':
+                        # append to the current list
+                        self.__dict__[key].extend(value[1:])
+                    else:
+                        # replace list
+                        self.__dict__[key] = self.build_list(value)
                 else:
                     self.__dict__[key] = self.build_list(value)
             else:
