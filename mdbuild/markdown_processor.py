@@ -208,13 +208,15 @@ def extract_summary(summary_db, name, lines):
         else:
             yield line
 
+
 STRIP_MODE = 'strip summary tags'
 
 
-def process_summary(lines, mode=STRIP_MODE):
-    """Process summary tags:
-    mode=None or mode=strip
-    Strip summary tags from output."""
+def summary_tags(lines, mode=STRIP_MODE):
+    """
+        Strip or translate summary tags:
+        mode=None or mode=strip
+    """
     for line in lines:
         if line.strip() == BEGIN_SUMMARY:
             if mode == STRIP_MODE:

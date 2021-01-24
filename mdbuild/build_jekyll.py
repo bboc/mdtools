@@ -90,7 +90,7 @@ class JekyllWriter(object):
                 processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
                 processor.add_filter(mdp.jekyll_front_matter)
                 # processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
-                processor.add_filter(partial(mdp.process_summary, mode=mdp.STRIP_MODE))
+                processor.add_filter(partial(mdp.summary_tags, mode=mdp.STRIP_MODE))
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
                 self._add_navigation(node, target)

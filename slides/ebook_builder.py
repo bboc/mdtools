@@ -157,7 +157,7 @@ class EbookWriter(object):
             partial(mdp.inject_glossary, self.glossary),
 
             self.gp.replace_glossary_references,
-            partial(mdp.process_summary, mode=mdp.STRIP_MODE),
+            partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
 
