@@ -136,28 +136,20 @@ class JekyllWriter(object):
 
     def build(self):
         """Render the jekyll output.
-        TODO: add index with summaries to each node that has children
-        TODO: add index with summaries to all pattern group pages, to introduction and to appendix
         TODO: remove obsolete Templates
-        TODO: create and insert glossary
-        TODO: write pattern-index.md with all patterns and summaries
         TODO: write root index.md
+        TODO: copy all defined templates (including "website/_templates/index.md)
+              through the markdown processor, interpolating macros and translations etc.
         """
 
-        self._build_chapters_overview()
-        self._compile_front_matter()
-
+        # TODO: this can be implemented via successor!!
         for part in self.structure.children:
-            # TODO: process index
-            self._build_chapter_index(part)
             if part.children:
                 self._make_content_page(part)
                 for chapter in part.children:
                     self._make_content_page(chapter)
-                    # TODO: process index (maybe simply add one if the nod has children??)
                     if chapter.children:
                         for section in chapter.children:
-                            # TODO: process section
                             self._make_content_page(section)
 
     def common_filters(self):
@@ -169,67 +161,6 @@ class JekyllWriter(object):
             partial(macros.MacroFilter.filter),
             partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
         ]
-
-    def _build_chapters_overview(self):
-        """Build list of the chapters on the website from template. Already translation-aware."""
-        # TODO: port or remove this
-        print("_build_chapters_overview() not implemented")
-        return
-
-        with codecs.open(self.args.template, 'r', 'utf-8') as source:
-            with codecs.open(os.path.join(self.target_folder, md_filename("index")), 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.config[CONTENT].chapters),
-                    partial(mdp.write, target),
-                ])
-                processor.process()
-
-
-    def _build_chapter_index(self, chapter):
-
-        # TODO: port or remove this
-        print("_build_chapter_index() not implemented")
-        return
-
-        with codecs.open(os.path.join(self.target_folder, chapter.md_filename()), 'w+', 'utf-8') as target:
-            target.write(mdp.FRONT_MATTER_SEPARATOR)
-            target.write(mdp.FRONT_MATTER_TITLE % chapter.title)
-            target.write(mdp.FRONT_MATTER_SEPARATOR)
-            target.write('\n')
-
-            # copy in chapter index
-            chapter_index_file = os.path.join(self.source_folder, chapter.slug, 'index.md')
-            if os.path.exists(chapter_index_file):
-                with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
-                    cif.next()  # skip headline
-                    processor = mdp.MarkdownProcessor(cif, filters=self.common_filters())
-                    processor.add_filter(partial(mdp.write, target))
-                    processor.process()
-                target.write('\n')
-
-            # build section index
-            for section in chapter.sections:
-                target.write(mdp.html_index_element(section.title, section.slug, self.summary_db))
-            self.chapter_navigation(target, chapter)
-
-    def _compile_front_matter(self):
-        # TODO: port or remove this
-        print("_compile_front_matter() not implemented")
-        return
-
-        with codecs.open(os.path.join(self.target_folder, self.config[CONTENT].introduction.md_filename()), 'w+', 'utf-8') as target:
-            with codecs.open(self.args.introduction_template, 'r', 'utf-8') as template:
-                for line in template:
-                    target.write(line)
-
-            for item in self.config[CONTENT].introduction.sections:
-                source_path = os.path.join(self.source_folder, self.config[CONTENT].introduction.slug, item.md_filename())
-                with codecs.open(source_path, 'r', 'utf-8') as source:
-                    processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
-                    processor.add_filter(partial(mdp.write, target))
-                    processor.process()
-                target.write('\n')
-            self.intro_navigation(target)
 
     def _make_content_page(self, node):
         """Copy each section to a separate file."""
@@ -269,32 +200,4 @@ class JekyllWriter(object):
         # up: parent
         if not node.parent.is_root():
             nav_el(target, UP_ELEMENT, node.parent)
-        target.write("\n\n")
-
-    def chapter_navigation(self, target, chapter):
-        """Insert prev/next."""
-        # TODO: port or remove this        
-        target.write("\n\n")
-
-        # next link: always first pattern in group
-        item = chapter.sections[0]
-        nav_el(target, NEXT_ELEMENT, item)
-        target.write("<br/>")
-        # back:
-        if chapter.id > 1:
-            # last pattern of previous group
-            target_chapter = self.config[CONTENT].chapters[chapter.id - 2]
-        else:
-            # last pattern of last group
-            target_chapter = self.config[CONTENT].chapters[-1]
-        item = target_chapter.sections[-1]
-        nav_el(target, PREV_ELEMENT, item)
-        target.write("\n\n")
-
-    def intro_navigation(self, target):
-        """Link to first group"""
-        target.write("\n\n")
-        item = self.config[CONTENT].chapters[0]
-        nav_el(target, NEXT_ELEMENT, item)
-
         target.write("\n\n")
