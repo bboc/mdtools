@@ -5,7 +5,7 @@ Tests for reading the config and building in-memory objects
 
 import unittest
 
-from slides.macros import register_macro, MacroFilter
+from mdbuild.macros import register_macro, MacroFilter
 
 
 class MacroTests(unittest.TestCase):
