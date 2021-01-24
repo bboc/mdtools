@@ -14,7 +14,7 @@ FILENAME_PATTERN = '%s.md'
 
 def read_config_file(filename):
     stream = open(filename, "r")
-    return yaml.load(stream)
+    return yaml.load(stream, Loader=yaml.FullLoader)
 
 
 def make_pathname(name):
