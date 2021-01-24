@@ -81,7 +81,7 @@ class GlossaryPlainProcessor(GlossaryProcessor):
 
 class GlossaryUnderlineProcessor(GlossaryProcessor):
     """Underline all glossary links."""
-    INLINE_TEMPLATE = """`\underline{%(title)s}`{=latex}"""
+    INLINE_TEMPLATE = """`\\underline{%(title)s}`{=latex}"""
 
 
 class GlossaryFootnoteProcessor(GlossaryProcessor):
