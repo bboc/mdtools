@@ -346,38 +346,13 @@ def remove_breaks_and_conts(lines):
         yield line
 
 
-INDEX_ELEMENT = "- [%(name)s](%(path)s.html)\n"
-INDEX_ELEMENT_HTML = """
-  <dt><a href="%(path)s.html">%(name)s</a></dt>
-  <dd>%(summary)s</dd>
-"""
-
-
-def html_index_element(name, path, summary_db):
-    summary = markdown2html("".join(summary_db[path]))
-    return INDEX_ELEMENT_HTML % locals()
-
-
 def insert_index(marker, items, lines, sort=False, summary_db=None, format=None):
     """
     Insert an index as markdown-links, can be used for groups and sections.
     Items is a list of dictionaries with keys path and name.
     """
-    if sort:
-        items.sort(key=attrgetter('title'))
-    for line in lines:
-        if line.strip() == marker:
-            if format == 'html':
-                yield "<dl>"
-                for item in items:
-                    yield html_index_element(item.title, item.slug, summary_db)
-                yield "</dl>"
-            else:  # plain list
-                for item in items:
-                    yield INDEX_ELEMENT % dict(name=item.title, path=item.slug)
 
-        else:
-            yield line
+    raise Exception("use macro instead!")
 
 
 TRANSLATION_MARKER = re.compile('\$\{_\("(?P<text>.*?)"\)\}')

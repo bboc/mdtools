@@ -55,6 +55,7 @@ def process_macro(match):
     else:
         name = macro_string
 
+    # print('macro', name)
     if name not in macros:
         print('warning: unknown macro:', name)
     else:

@@ -8,8 +8,10 @@ import codecs
 from collections import defaultdict
 from functools import partial
 import os
+from operator import attrgetter
 from textwrap import dedent
 
+from common import markdown2html
 from common import md_filename
 import markdown_processor as mdp
 import glossary
@@ -36,6 +38,85 @@ def nav_el(target, template, item):
     target.write(template % dict(name=item.title, path=item.slug))
 
 
+class IndexMacro(object):
+    """
+    Process index macros.
+
+    old code for index
+    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.config[CONTENT].chapters),
+    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[CONTENT].index, summary_db=self.summary_db, format='html', sort=True),
+    """
+
+    @classmethod
+    def render(cls, structure, format, *args, **kwargs):
+        """Create a (sorted) index of pages.
+
+        {{index:tag=pattern,sort=title}} create an index for all entries tagged 'pattern'
+        {{index:root=slug}} create an index of all children of node
+        sort and format default to None.
+        root is processed before tag filter.
+
+        # TODO: the structure module might be a better place for this
+        """
+        # get arguments
+        tag_filter = kwargs.get('tag')
+        sort = kwargs.get('sort')
+        root = structure
+
+        if 'root' in kwargs:
+            root = kwargs['root']
+
+        # select which nodes to show
+        nodes_to_show = []
+        if tag_filter:
+
+            current_node = root
+            while current_node:
+                if tag_filter in current_node.tags:
+                    nodes_to_show.append(current_node)
+                current_node = current_node.successor
+        else:
+            nodes_to_show = root.children.copy()
+
+        if sort:
+            nodes_to_show.sort(key=attrgetter(sort))
+
+        if format == 'html':
+            return cls.render_html(nodes_to_show)
+        else:  # plain list
+            return cls.render_plain(nodes_to_show)
+
+    INDEX_ELEMENT_PLAIN = "- [%(title)s](%(path)s.html)\n"
+
+    @classmethod
+    def render_plain(cls, nodes):
+        res = []
+        for node in nodes:
+            res.append(cls.INDEX_ELEMENT_PLAIN % dict(title=node.title, path=node.slug))
+        return '\n'.join(res)
+
+    @classmethod
+    def render_html(cls, nodes):
+        res = ["<dl>"]
+        for node in nodes:
+            res.append(cls.html_index_element(node.title, node.slug, node.summary))
+        res.append("</dl>")
+        return '\n'.join(res)
+
+    # TODO: enventually use dedent, but it messes up the diffs while the rewrite is in progress
+    INDEX_ELEMENT_HTML = """
+  <dt><a href="%(path)s.html">%(title)s</a></dt>
+  <dd>%(summary)s</dd>"""
+
+    @classmethod
+    def html_index_element(cls, title, path, summary):
+        if summary:
+            summary = markdown2html(summary)
+        else:
+            summary = ''
+        return cls.INDEX_ELEMENT_HTML % locals()
+
+
 class JekyllWriter(object):
     GROUP_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
 
@@ -49,7 +130,7 @@ class JekyllWriter(object):
 
         # register all macros here
         macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer(9999)))
-
+        macros.register_macro('index', partial(IndexMacro.render, self.structure, 'html'))
 
     def build(self):
         """Render the jekyll output.
@@ -62,9 +143,7 @@ class JekyllWriter(object):
         """
 
         self._build_chapters_overview()
-        self._build_section_index()
         self._compile_front_matter()
-        self._copy_appendix()
 
         for part in self.structure.children:
             # TODO: process index
@@ -92,7 +171,7 @@ class JekyllWriter(object):
     def _build_chapters_overview(self):
         """Build list of the chapters on the website from template. Already translation-aware."""
         # TODO: port or remove this
-        print("TODO: _build_chapters_overview() not implemented")
+        print("_build_chapters_overview() not implemented")
         return
 
         with codecs.open(self.args.template, 'r', 'utf-8') as source:
@@ -103,19 +182,6 @@ class JekyllWriter(object):
                 ])
                 processor.process()
 
-    def _build_section_index(self):
-        """Build index of all sections from template. Already translation-aware."""
-        # TODO: port or remove this
-        print("_build_chapters_overview() not implemented")
-        return
-
-        with codecs.open(self.args.section_index_template, 'r', 'utf-8') as source:
-            with codecs.open(os.path.join(self.target_folder, os.path.basename(self.args.section_index_template)), 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=[
-                    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[CONTENT].index, summary_db=self.summary_db, format='html', sort=True),
-                    partial(mdp.write, target),
-                ])
-                processor.process()
 
     def _build_chapter_index(self, chapter):
 
@@ -163,28 +229,6 @@ class JekyllWriter(object):
                 target.write('\n')
             self.intro_navigation(target)
 
-    def _copy_appendix(self):
-        """Copy all files in the appendix to individual files (skip glossary)."""
-        # TODO: port or remove this
-        print("_copy_appendix() not implemented")
-        return
-
-        for item in self.config[CONTENT].appendix.sections:
-            if item.slug not in ['glossary', 'authors']:  # TODO: this should be a setting (maybe not glossary, but 'authors')
-                self._copy_appendix_section(item.md_filename())
-
-    def _copy_appendix_section(self, section_path):
-        """Copy each section to a separate file."""
-        # TODO: port or remove this
-        source_path = os.path.join(self.source_folder, self.config[CONTENT].appendix.slug, section_path)
-        target_path = os.path.join(self.target_folder, section_path)
-        with codecs.open(source_path, 'r', 'utf-8') as source:
-            with codecs.open(target_path, 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
-                processor.add_filter(mdp.jekyll_front_matter)
-                processor.add_filter(partial(mdp.write, target))
-                processor.process()
-
     def _make_content_page(self, node):
         """Copy each section to a separate file."""
         # target_path = os.path.join(self.cfg.target, md_filename(node.relpath))
@@ -210,7 +254,7 @@ class JekyllWriter(object):
             target.write("<br/>")
 
         previous_item = node.predecessor
-        if node.parent.is_node():
+        if not node.parent.is_root():
             parent_item = node.parent
         else:
             parent_item = None
@@ -221,7 +265,7 @@ class JekyllWriter(object):
             target.write("<br/>")
 
         # up: parent
-        if node.parent.is_node():
+        if not node.parent.is_root():
             nav_el(target, UP_ELEMENT, node.parent)
         target.write("\n\n")
 
