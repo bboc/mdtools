@@ -9,6 +9,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import sys
+import argparse
 
 from .config import get_project_config
 from .structure import get_structure
@@ -16,7 +17,7 @@ from .glossary import set_glossary
 from . import translate
 
 from .build_jekyll import JekyllWriter
-from .ebook_builder import EbookWriter
+# from .ebook_builder import EbookWriter
 
 TMP_FOLDER = 'tmp-groups'
 
@@ -60,3 +61,17 @@ def build(args):
     else:
         print("unknown renderer", cfg.format)
         sys.exit(1)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='A commandline tools for publishing various document formats (Jekyll, LaTeX, ePub etc.) from a single markdown source.',
+        fromfile_prefix_chars='@'
+    )
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('preset',
+                        help="The preset (defined in the project configuration file) to use for this build.")
+    parser.add_argument('project', help='the configuration file for the project (yaml)')
+
+    args = parser.parse_args()
+    build(args)

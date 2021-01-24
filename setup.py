@@ -29,8 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'mdimg = mdimg.command:main',
-            'mdslides = slides.commands:main',
-            'mdbuild = slides.commands:new',
+            'mdbuild = mdbuild.main:main',
             'mddiff = diff:main',
         ],
     }

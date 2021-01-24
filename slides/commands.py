@@ -4,7 +4,6 @@ from __future__ import absolute_import
 import argparse
 
 from .build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
-from .build import build
 from .index import cmd_build_index
 from .template import cmd_template
 
@@ -100,21 +99,6 @@ def get_parser():
     add_parser_template(subparsers)
 
     return parser
-
-
-def new():
-    """Argument Parser for mdtools 2.0."""
-    parser = argparse.ArgumentParser(
-        description='A commandline tools for publishing various document formats (Jekyll, LaTeX, ePub etc.) from a single markdown source.',
-        fromfile_prefix_chars='@'
-    )
-    parser.add_argument('--verbose', '-v', action='count')
-    parser.add_argument('preset',
-                        help="The preset (defined in the project configuration file) to use for this build.")
-    parser.add_argument('project', help='the configuration file for the project (yaml)')
-
-    args = parser.parse_args()
-    build(args)
 
 
 def main():
