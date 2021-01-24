@@ -32,12 +32,15 @@ Usage: see `mddiff -h`
 
 ## Installation
 
-It's a good idea to install this in a virtual environment.
+mdtools requires Python 3.
 
-    pip install -r requirements.txt
+It's a good idea to install _mdtools_ in a [virtual environment](
+https://docs.python.org/3/library/venv.html).
+     
+    # install dependencies    
+    $ pip install -r requirements.txt
+    # setup for using mdtool
+    $ python setup.py install
+    # ...or for development
+    $ python setup.py develop
 
-    
-
-
-
-pip install -r /path/to/requirements.txt
