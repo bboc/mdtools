@@ -22,7 +22,7 @@ setup(
         "Development Status :: 4 - Beta",
         'Operating System :: MacOS :: MacOS X',
         "Environment :: Console",
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.0",
         "Topic :: Utilities"
     ],
 

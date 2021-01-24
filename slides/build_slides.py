@@ -123,7 +123,7 @@ def cmd_create_source_files_for_slides(args):
         make_file(args.target, content.end, content.end)
 
 
-class SectionCompiler():
+class SectionCompiler(object):
     """Compile all source files relevant for building the slide deck:
         - title
         - front-matter
