@@ -318,7 +318,7 @@ def insert_glossary(renderer, lines):
     Insert full glossary when GLOSSARY_MARKER is encountered.
     TODO: convert for macro renderer
     """
-
+    raise Exception('use the macro instead!')
     glossary_contents = []
 
     def callback(text):

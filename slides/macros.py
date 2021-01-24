@@ -28,7 +28,7 @@ def register_macro(name, function):
     Register a macro for processing.
     """
     if name in macros:
-        print('ovveriding macro:', name)
+        print('overriding macro:', name)
     globals()['macros'][name] = function
 
 
@@ -46,16 +46,19 @@ def process_macro(match):
     else:
         name = macro_string
         params = []
-    return macros[name](*params)
+
+    if name not in macros:
+        print('warning: unknown macro:', name)
+    else:
+        return macros[name](*params)
 
 
-class MacroPlugin(object):
+class MacroFilter(object):
     """A markdown processor for expanding macros."""
     MACRO_PATTERN = re.compile("\{\{.*?\}\}")
 
     @classmethod
     def filter(cls, lines):
-        print(lines)
         for line in lines:
             line = cls.MACRO_PATTERN.sub(process_macro, line)
             yield line

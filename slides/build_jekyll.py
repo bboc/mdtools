@@ -13,7 +13,7 @@ from textwrap import dedent
 from common import md_filename
 import markdown_processor as mdp
 import glossary
-from macros import register_macro
+import macros
 
 CHAPTER_INDEX_TEMPLATE = dedent("""
 ---
@@ -47,9 +47,8 @@ class JekyllWriter(object):
         self.glossary_renderer = glossary.JekyllGlossaryRenderer(9999)
         self.summary_db = defaultdict(list)
 
-
-        ## register all macros:
-        register_macro
+        # register all macros here
+        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer(9999)))
 
 
     def build(self):
@@ -86,9 +85,8 @@ class JekyllWriter(object):
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
             partial(mdp.inject_glossary),
+            partial(macros.MacroFilter.filter),
             partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
-            # TODO: move that to the macro processor
-            partial(mdp.insert_glossary, self.glossary_renderer),
         ]
 
     def _build_chapters_overview(self):

@@ -15,6 +15,21 @@ def set_glossary(filename):
         globals()['glossary'] = read_config_file(filename)
 
 
+def glossary_macro(renderer):
+    """
+    Insert full glossary in alphabetical order .
+    """
+
+    glossary_contents = []
+
+    def callback(text):
+        glossary_contents.append(text)
+
+    renderer.render(callback)
+    callback('\n')
+    return '\n'.join(glossary_contents)
+
+
 class GlossaryRenderer(object):
     """Base class for rendering a full glossary. Subclasses mostly define class variables."""
 
