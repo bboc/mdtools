@@ -29,3 +29,15 @@ Usage: see `mddiff -h`
 ## Upcoming
 
 * file transclusion for Multimarkdown files (with error output for missing files) (currently located in [this repository]())
+
+## Installation
+
+It's a good idea to install this in a virtual environment.
+
+    pip install -r requirements.txt
+
+    
+
+
+
+pip install -r /path/to/requirements.txt
