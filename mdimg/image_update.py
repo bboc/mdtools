@@ -8,6 +8,7 @@ TODO: refactor so the tool adds error markup and variants inline {++![](variant1
 """
 
 from __future__ import print_function
+from __future__ import absolute_import
 
 import logging
 import os
@@ -17,8 +18,8 @@ import shutil
 import sys
 
 
-from common import filter_dirs, DOCUMENT_TYPES
-from image_repo import ImageRepo
+from .common import filter_dirs, DOCUMENT_TYPES
+from .image_repo import ImageRepo
 
 
 # TODO: add command to parse for unknown image references and list errors only
@@ -136,13 +137,13 @@ class Document(object):
                     logging.debug('>> %s' % result.strip())
                 writer(result)
 
-            except ImageRepo.ImageNotFoundException, e:
+            except ImageRepo.ImageNotFoundException as e:
                 self.document_has_errors = True
                 print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--image reference not found:<<}\n')
                 writer(line)
 
-            except ImageRepo.DuplicateImageException, e:
+            except ImageRepo.DuplicateImageException as e:
                 self.document_has_errors = True
                 print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--ambiguous image reference:<<}\n')

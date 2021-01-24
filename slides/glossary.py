@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from common import read_config_file
+from __future__ import absolute_import
+from .common import read_config_file
 from operator import itemgetter
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'

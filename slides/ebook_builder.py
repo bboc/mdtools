@@ -3,13 +3,15 @@
 """
 Compile all files so that they can be rendered to LaTEX and ePub.
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 import codecs
 from functools import partial
 import os
 
-import markdown_processor as mdp
-from glossary import EbookGlossaryRenderer, glossary
+from . import markdown_processor as mdp
+from .glossary import EbookGlossaryRenderer, glossary
 
 
 def get_glossary_processor(style, glossary):
@@ -67,8 +69,8 @@ class GlossaryMagicProcessor(GlossaryProcessor):
     """
     def __init__(self, glossary, template):
         super(GlossaryMagicProcessor, self).__init__(glossary)
-        print template
-        print "--------------------"
+        print(template)
+        print("--------------------")
         self.INLINE_TEMPLATE = template
 
 
@@ -182,7 +184,7 @@ class EbookWriter(object):
         chapter_index_file = os.path.join(self.source_folder, chapter.slug, 'index.md')
         if os.path.exists(chapter_index_file):
             with codecs.open(chapter_index_file, 'r', 'utf-8') as cif:
-                cif.next()  # skip headline
+                next(cif)  # skip headline
                 processor = mdp.MarkdownProcessor(cif, filters=self.common_filters())
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()

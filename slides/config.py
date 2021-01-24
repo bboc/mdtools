@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from __future__ import absolute_import
 
 from operator import attrgetter
 
-from common import read_config_file
+from .common import read_config_file
 
 # section names
 PARTS = 'parts'

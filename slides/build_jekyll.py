@@ -3,6 +3,8 @@
 """
 Compile and preprocess all files so that jekyll can build a static (github) page out of it.
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 import codecs
 from collections import defaultdict
@@ -11,11 +13,11 @@ import os
 from operator import attrgetter
 from textwrap import dedent
 
-from common import markdown2html
-from common import md_filename
-import markdown_processor as mdp
-import glossary
-import macros
+from .common import markdown2html
+from .common import md_filename
+from . import markdown_processor as mdp
+from . import glossary
+from . import macros
 
 CHAPTER_INDEX_TEMPLATE = dedent("""
 ---

@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
 import argparse
 
-from build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
-from build import build
-from index import cmd_build_index
-from template import cmd_template
+from .build_slides import cmd_build_slides, cmd_create_source_files_for_slides, cmd_convert_slides, cmd_compile_slides
+from .build import build
+from .index import cmd_build_index
+from .template import cmd_template
 
 
 def add_parser_compile(subparsers):

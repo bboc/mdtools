@@ -5,6 +5,8 @@ Build a slide deck (either in Deckset format or as reveal.js.
 """
 
 from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
 
 import codecs
 import os
@@ -12,17 +14,17 @@ import re
 import sys
 from shutil import copyfile
 
-from common import create_directory, md_filename
-from config import get_project_config
-from glossary import set_glossary
-import translate
+from .common import create_directory, md_filename
+from .config import get_project_config
+from .glossary import set_glossary
+from . import translate
 
-from build_deckset_slides import DecksetWriter
-from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
-from build_web_content import cmd_convert_to_web
-from build_jekyll import JekyllWriter
-from ebook_builder import EbookWriter
-from revealjs_converter import RevealJsHtmlConverter
+from .build_deckset_slides import DecksetWriter
+from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
+from .build_web_content import cmd_convert_to_web
+from .build_jekyll import JekyllWriter
+from .ebook_builder import EbookWriter
+from .revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
 
@@ -108,7 +110,7 @@ def cmd_create_source_files_for_slides(args):
                 fp.write('%s %s\n\n' % (markup, make_title(title_root)))
         else:
             if args.verbose:
-                print "skipped %s" % title_root
+                print("skipped %s" % title_root)
 
     make_file(args.target, content.title, content.title)
     if content.introduction:
@@ -241,7 +243,7 @@ class SectionCompiler():
         with codecs.open(os.path.join(folder, name), 'r', 'utf-8') as section:
             if headline_prefix:
                 # insert pattern number into first headline of file
-                line = section.next()
+                line = next(section)
                 try:
                     pos = line.index('# ')
                 except ValueError():

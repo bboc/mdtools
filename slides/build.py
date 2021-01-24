@@ -5,16 +5,18 @@ Build a slide deck (either in Deckset format or as reveal.js.
 """
 
 from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
 
 import sys
 
-from config import get_project_config
-from structure import get_structure
-from glossary import set_glossary
-import translate
+from .config import get_project_config
+from .structure import get_structure
+from .glossary import set_glossary
+from . import translate
 
-from build_jekyll import JekyllWriter
-from ebook_builder import EbookWriter
+from .build_jekyll import JekyllWriter
+from .ebook_builder import EbookWriter
 
 TMP_FOLDER = 'tmp-groups'
 

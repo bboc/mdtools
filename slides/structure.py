@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+from __future__ import absolute_import
 
 import os
 import codecs
 
-import markdown_processor as mdp
-from common import read_config_file, FILENAME_PATTERN
+from . import markdown_processor as mdp
+from .common import read_config_file, FILENAME_PATTERN
 
 # section names
 PARTS = 'parts'

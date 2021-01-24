@@ -7,6 +7,8 @@ Process markdown file into webpage content.
 
 
 from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
 
 from glob import glob
 import codecs
@@ -14,9 +16,9 @@ import os
 import os.path
 import sys
 
-from common import LineWriter, SLIDE_MARKERS
-from glossary import GLOSSARY_MARKER, WordpressGlossaryRenderer
-from translate import translate as _
+from .common import LineWriter, SLIDE_MARKERS
+from .glossary import GLOSSARY_MARKER, WordpressGlossaryRenderer
+from .translate import translate as _
 
 
 STATUS_TEMPLATE = """
@@ -60,7 +62,7 @@ def convert_to_web(source, target, footer, glossary_renderer, increase_headline_
         # source is a directory: process all files inside
         if os.path.exists(target):
             if not os.path.isdir(target):
-                print "target exsists but is not a directory."
+                print("target exsists but is not a directory.")
                 sys.exit(1)
         else:
             os.makedirs(target)

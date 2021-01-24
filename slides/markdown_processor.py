@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from __future__ import absolute_import
 from operator import attrgetter
 import re
 
-from common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
-import glossary
-from translate import translate as _
+from .common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
+from . import glossary
+from .translate import translate as _
 
 
 class MarkdownProcessor(object):
@@ -63,7 +65,7 @@ def write(target, lines):
 def prefix_headline(prefix, lines):
     """Prefix the first headline."""
     if prefix:
-        line = lines.next()
+        line = next(lines)
         try:
             pos = line.index('# ')
         except ValueError:
@@ -134,7 +136,7 @@ FRONT_MATTER_SEPARATOR = "---\n"
 
 def jekyll_front_matter(lines, params=None):
     # TODO: raise exception if no headline in first line of file!!!
-    line = lines.next()
+    line = next(lines)
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
     title = match.group('title')
@@ -193,7 +195,7 @@ def extract_summary(summary_db, name, lines):
     """
     for line in lines:
         if line.strip() == BEGIN_SUMMARY:
-            line = lines.next()
+            line = next(lines)
             while line.strip() != END_SUMMARY:
                 # remove bold around summary if present
                 if line.startswith("**"):
@@ -202,7 +204,7 @@ def extract_summary(summary_db, name, lines):
                     sline = line
                 summary_db[name].append(sline)
                 yield line
-                line = lines.next()
+                line = next(lines)
         else:
             yield line
 
@@ -245,14 +247,14 @@ class MetadataPlugin(object):
 
         # TODO: process metadata if present
 
-        headline = lines.next()
+        headline = next(lines)
         match = HEADLINE_PATTERN.search(headline)
         cls.title = match.group('title')
         # TODO: error if title doesn't match
 
         for line in lines:
             if line.strip() == BEGIN_SUMMARY:
-                line = lines.next()
+                line = next(lines)
                 while line.strip() != END_SUMMARY:
                     # remove bold around summary if present
                     if line.startswith("**") or line.startswith("__"):
@@ -261,7 +263,7 @@ class MetadataPlugin(object):
                         sline = line
                     summary.append(sline)
                     yield line
-                    line = lines.next()
+                    line = next(lines)
             else:
                 yield line
         if summary:
@@ -373,7 +375,7 @@ def template(config, lines):
         try:
             return config[name]
         except KeyError:
-            print "ERROR: Unknown Parameter", name
+            print("ERROR: Unknown Parameter", name)
             return "${%s}" % name
 
     for line in lines:

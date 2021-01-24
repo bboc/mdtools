@@ -3,13 +3,14 @@
 """
 Build the All Patterns Explained slide deck in Deckset format.
 """
+from __future__ import absolute_import
 
 import codecs
 from functools import partial
 import os
 
-from glossary import DecksetGlossaryRenderer
-import markdown_processor as mdp
+from .glossary import DecksetGlossaryRenderer
+from . import markdown_processor as mdp
 
 
 class DecksetWriter(object):

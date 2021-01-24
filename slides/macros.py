@@ -16,6 +16,7 @@ Possible enhancements:
   or is it enough to simply register different macros for for different formats?
 
 """
+from __future__ import print_function
 
 
 import re
