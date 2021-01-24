@@ -31,10 +31,11 @@ mdtools 2.0:
 				- main index page is written
 			- epub builder uses new format
 			- ebook builder  uses new format
-			- part, chapter and section is consistently used in throughout the entire codebase
+			- cmd_template is working with new config format
+			- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
 			- section links are still working
 			- all pattern related features (links to pattern groups, pattern index) are still working
-			- all obsolte code is removed 
+			- all obsolete code is removed 
 		
 		Macro Support:
 			- macros processing is consolidated into one markdown filter that takes plugins: @done
@@ -69,7 +70,7 @@ mdtools 2.0:
 			As author I want a simple way to configure the output for various formats so that I it is easy to set up new output formats and I don't have to learn about makefiles or shell scripts.
 			- read document presets from project.yaml instead of the commandline @done
 			- commandline input takes preset as parameter @done
-			- global variables in project.yaml can be overridden in individual presets
+			- global variables in project.yaml can be overridden in individual presets @done
 			- there is a default value for at least some (e.g. no_section_prefix)
 			
 		Release of the Practical Guide: @estimate(4h)
