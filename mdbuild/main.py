@@ -95,7 +95,7 @@ def template(args):
 # TODO: test command
 def main_template():
     parser = argparse.ArgumentParser(
-        description='help="Inject translations (and optionally parameters from a config) into a template file.",
+        description="Inject translations (and optionally parameters from a config) into a template file.",
         fromfile_prefix_chars='@'
     )
     parser.add_argument('--verbose', '-v', action='count')
