@@ -11,10 +11,6 @@ from mdbuild.common import markdown2html
 class IndexMacro(object):
     """
     Process index macros.
-
-    old code for index
-    partial(mdp.insert_index, '<!-- GROUP-INDEX -->', self.config[CONTENT].chapters),
-    partial(mdp.insert_index, '<!-- PATTERN-INDEX -->', self.config[CONTENT].index, summary_db=self.summary_db, format='html', sort=True),
     """
 
     @classmethod
