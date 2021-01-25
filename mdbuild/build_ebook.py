@@ -62,7 +62,7 @@ class EbookWriter(object):
 
         # build all the chapters/sections
         target_path = os.path.join(self.target_folder, 'tmp-chapters.md')
-        with codecs.open(target_path, 'w+', 'utf-8') as target:
+        with codecs.open(target_path, 'a', 'utf-8') as target:
             for chapter in content.chapters:
                 self._build_chapter_index(target, chapter)
                 for section in chapter.sections:
@@ -86,6 +86,8 @@ class EbookWriter(object):
                 mdp.remove_breaks_and_conts,
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
                 mdp.inject_glossary,
+                macros.MacroFilter.filter,
+
                 # TODO: this needs to be configurable
                 # self.gp.replace_glossary_references,
                 partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
