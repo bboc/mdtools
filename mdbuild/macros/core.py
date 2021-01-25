@@ -72,3 +72,13 @@ class MacroFilter(object):
         for line in lines:
             line = cls.MACRO_PATTERN.sub(process_macro, line)
             yield line
+
+
+class DeleteMacro(object):
+    """
+    Simply delete the macro
+    """
+    @classmethod
+    def render(cls, *args, **kwargs):
+        """Simply ignore everything and return an empty string."""
+        return ''
