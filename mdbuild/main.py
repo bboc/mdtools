@@ -21,24 +21,19 @@ from .build_jekyll import JekyllWriter
 
 TMP_FOLDER = 'tmp-groups'
 
-# TODO: this needs to go somewhere else
-translate.read_translation_memory('content/localization.po')
-
-
 def build(args):
     """Build from the selected configuration."""
 
-    print("setting things up…")
-    # read config
-    cfg = get_project_config(args.project, args.preset)
-    # build glossary (if defined)
-    if cfg.glossary:
-        set_glossary(cfg.glossary)
-    # read structure
-    structure = get_structure(cfg.structure, cfg.source)
+    cfg, structure = setup(args)
 
     # select and run the appropriate builder
-    if cfg.renderer == 'revealjs':
+    if cfg.renderer == 'jekyll':
+        j = JekyllWriter(cfg, structure)
+        j.build()
+    elif cfg.renderer == 'ebook':
+        e = EbookWriter(cfg)
+        e.build()
+    elif cfg.renderer == 'revealjs':
         print("revealjs writer not ported to 2.0")
         sys.exit(1)
         build_reveal_slides(cfg)
@@ -50,17 +45,24 @@ def build(args):
         print("Wordpress writer not ported to 2.0")
         sys.exit(1)
         build_wordpress(cfg)
-    elif cfg.renderer == 'jekyll':
-        j = JekyllWriter(cfg, structure)
-        j.build()
-    elif cfg.renderer == 'ebook':
-        print("ebook writer not ported to 2.0")
-        sys.exit(1)
-        e = EbookWriter(cfg)
-        e.build()
     else:
-        print("unknown renderer", cfg.format)
+        print("ERROR: unknown renderer", cfg.format)
         sys.exit(1)
+
+
+def setup(args):
+    print("setting things up…")
+    # read config
+    cfg = get_project_config(args.project, args.preset)
+    # build glossary (if defined)
+    if cfg.glossary:
+        set_glossary(cfg.glossary)
+    # read structure
+    structure = get_structure(cfg.structure, cfg.source)
+
+    translate.read_translation_memory(cfg.localization)
+
+    return cfg, structure
 
 
 def main():
