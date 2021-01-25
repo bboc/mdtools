@@ -78,15 +78,7 @@ def add_parser_build_index(subparsers):
     sp.set_defaults(func=cmd_build_index)
 
 
-# TODO: port this command, , move argument parser to code
-def add_parser_template(subparsers):
-    sp = subparsers.add_parser('template',
-                               help="Inject translations (and optionally parameters from a config) into a template file.")
-    sp.add_argument('template', help='Source template')
-    sp.add_argument('target', help='Filename for the resulting template')
-    sp.add_argument('translations', help='gettext file')
-    sp.add_argument('config', nargs='?', default=None, help="config file to read parameter values from")
-    sp.set_defaults(func=cmd_template)
+
 
 
 def get_parser():

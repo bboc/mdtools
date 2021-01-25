@@ -65,7 +65,7 @@ def setup(args):
     return cfg, structure
 
 
-def main():
+def main_build():
     parser = argparse.ArgumentParser(
         description='A commandline tools for publishing various document formats (Jekyll, LaTeX, ePub etc.) from a single markdown source.',
         fromfile_prefix_chars='@'
@@ -77,3 +77,33 @@ def main():
 
     args = parser.parse_args()
     build(args)
+
+
+def template(args):
+    """Process one template."""
+    # TODO: code is untested
+    setup(args)
+    with codecs.open(args.source, 'r', 'utf-8') as source:
+        with codecs.open(args.target, 'w+', 'utf-8') as target:
+            processor = mdp.MarkdownProcessor(source, filters=[
+                partial(mdp.template, config),
+                partial(mdp.write, target),
+            ])
+            processor.process()
+
+
+# TODO: test command
+def main_template():
+    parser = argparse.ArgumentParser(
+        description='help="Inject translations (and optionally parameters from a config) into a template file.",
+        fromfile_prefix_chars='@'
+    )
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('preset',
+                        help="The preset (defined in the project configuration file) to use for this build.")
+    parser.add_argument('project', help='the configuration file for the project (yaml)')
+
+    parser.add_argument('source', help='Source template')
+    parser.add_argument('target', help='Filename for the resulting template')
+    args = parser.parse_args()
+    cmd_template(args)

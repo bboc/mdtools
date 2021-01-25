@@ -28,8 +28,9 @@ setup(
 
     entry_points={
         'console_scripts': [
+            'mdbuild = mdbuild.main:main_build',
+            'mdtemplate = mdbuild.main:main_template',
             'mdimg = mdimg.command:main',
-            'mdbuild = mdbuild.main:main',
             'mddiff = diff:main',
         ],
     }
