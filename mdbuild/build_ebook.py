@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
 Compile all files into one file so that they can be rendered to LaTEX and ePub.
@@ -10,23 +9,45 @@ import codecs
 from functools import partial
 import os
 
+from .glossary_processor import get_glossary_processor
 from . import markdown_processor as mdp
-from .glossary import EbookGlossaryRenderer, glossary
-from glossary_processor import get_glossary_processor
-
+from . import macros
+from . import glossary
+from . import template
 
 class EbookWriter(object):
-    
-    def __init__(self, args):
-        self.args = args
-        self.source_folder = args.source
-        self.target_folder = args.target
-        self.config = get_config(self.args.config)
-        self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary, 9999)
-        self.glossary = glossary
-        self.gp = get_glossary_processor(args.glossary_style, self.glossary)
+
+    def __init__(self, config, structure):
+        self.cfg = config
+        self.structure = structure
+
+        # self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary,)
+        # self.gp = get_glossary_processor(args.glossary_style, self.glossary)
 
     def build(self):
+        """
+        Add all documents into one target file.
+        """
+        # register all macros before processing templates
+        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.EbookGlossaryRenderer()))
+        # ignore all indexes
+        macros.register_macro('index', macros.IgnoreMacro.render)
+
+        template.process_templates_in_config(self.cfg)
+
+        # start by copying the main template
+        template.template('default', self.cfg.template, self.cfg.target, self.cfg)
+
+        # then append all the content pages
+
+        with codecs.open(self.cfg.target, 'w+', 'utf-8') as target:
+            current_node = self.structure.children[0]
+            while current_node:
+                self._append_content(target, current_node)
+                current_node = current_node.successor
+
+
+    def build_old(self):
         """Build three files: intro/patterns/appendix."""
         content = self.config[CONTENT]
         # build introduction
@@ -58,28 +79,21 @@ class EbookWriter(object):
         with codecs.open(os.path.join(self.target_folder, 'tmp-appendix.md'), 'a', 'utf-8') as target:
             self.gp.glossary_post_processing(target)
 
-    def common_filters(self):
-        """Return the set of filters common to all pipelines."""
-
-        return [
-            mdp.remove_breaks_and_conts,
-            partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
-            partial(mdp.inject_glossary, self.glossary),
-
-            self.gp.replace_glossary_references,
-            partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
-            mdp.clean_images,
-        ]
-
-    def _append_section(self, target, chapter, section, headline_level_increase=0, headline_prefix=None):
-        """Append each section to self.target."""
-        source_path = os.path.join(self.source_folder, chapter.slug, section.md_filename())
-        with codecs.open(source_path, 'r', 'utf-8') as source:
-            processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
-            processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
-            processor.add_filter(partial(mdp.increase_all_headline_levels, headline_level_increase))
-            processor.add_filter(partial(mdp.insert_glossary, self.glossary_renderer))
-            processor.add_filter(partial(mdp.write, target))
+    def _append_content(self, target, node, headline_level_increase=0, headline_prefix=None):
+        """Append each section to target."""
+        with codecs.open(node.source_path, 'r', 'utf-8') as source:
+            processor = mdp.MarkdownProcessor(source, filters=[
+                mdp.remove_breaks_and_conts,
+                partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
+                mdp.inject_glossary,
+                # TODO: this needs to be configurable
+                # self.gp.replace_glossary_references,
+                partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
+                mdp.clean_images,
+                partial(mdp.prefix_headline, headline_prefix),
+                partial(mdp.increase_all_headline_levels, headline_level_increase),
+                partial(mdp.write, target),
+            ])
             processor.process()
         target.write("\n\n")
 
