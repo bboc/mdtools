@@ -99,11 +99,14 @@ def main_template():
         fromfile_prefix_chars='@'
     )
     parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('mode', choices=['copy', 'markdown', 'default'],
+                    default='default',
+                    help="Output format (deckset | ebook | jekyll | revealjs | wordpress)")
     parser.add_argument('preset',
-                        help="The preset (defined in the project configuration file) to use for this build.")
+                        help="The preset (defined in the project configuration file) to use.")
     parser.add_argument('project', help='the configuration file for the project (yaml)')
 
     parser.add_argument('source', help='Source template')
     parser.add_argument('target', help='Filename for the resulting template')
     args = parser.parse_args()
-    cmd_template(args)
+    template(args)
