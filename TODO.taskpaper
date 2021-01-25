@@ -34,12 +34,12 @@ mdtools 2.0:
 				- section links are still working
 			- epub builder uses new format @estimate(4h)
 			- ebook builder  uses new format @estimate(4h)
-			simple unified glossary code:
+			simple unified glossary code: @estimate(2h)
 				all code that processes glossary items should be located in glossary.py or in macro package
 				- markdown processor
+				- glossary processor
 				- macros
-				- ebook builder 
-				- glossary py
+				- glossary.py
 			- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
 			- all obsolete code is removed 
 		Macro Support: @estimate(30min)
@@ -112,17 +112,19 @@ mdtools 2.0:
 			- update German version
 			- update Hebrew version??
 			- update Dutch version
-	Milestone 3: Redirections:
-		Redirections: @estimate(6h)
-			As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
-			- create first version of redirections.yaml file from structure.yaml
-			- add template for redirection files (including requred JS)
-			- add configurable build step for generating redirection files from redirections.yaml
-		Release:
-			- simply release it
+	Redirections: @estimate(6h)
+		As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
+		can simply be released when ready
+		- create first version of redirections.yaml file from structure.yaml
+		- add template for redirection files (including requred JS)
+		- add configurable build step for generating redirection files from redirections.yaml
+	Linkable Glossary:
+		maybe, see github issue
+		- update renderer
+		- nice CSS
 	Milestone 4: Better Document Structure:
 		Better Document Structure: @estimate(6h)
-			… 
+			As an author, I want to use identical file names in different folders so that I don't have to use weird workarounds, e.g. when each part starts with an 'overview' .
 			- part and chapter index are read from index document inside folder or from document outside the folder @done
 			- error is raised if both exist at the same time
 			- website is published in folders now
