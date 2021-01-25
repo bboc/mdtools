@@ -26,15 +26,20 @@ mdtools 2.0:
 				- obsolete Templates are removed: @done
 				- glossary is created @done
 				- pattern-index.md with all patterns and summaries is written @done
-				- all-in-one page is written
+				- all-in-one page is written (requires ebook builder)
 				- all content from concepts and principles is moved to content tree @done
 				- main index page is written @done
-				- main index page uses plain index format
+				- main index page uses plain index format @done
 				- output is compared in detail once more 
 				- section links are still working
 			- epub builder uses new format @estimate(4h)
 			- ebook builder  uses new format @estimate(4h)
-			- cmd_template is working with new config format @estimate(30min)
+			simple unified glossary code:
+				all code that processes glossary items should be located in glossary.py or in macro package
+				- markdown processor
+				- macros
+				- ebook builder 
+				- glossary py
 			- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
 			- all obsolete code is removed 
 		Macro Support: @estimate(30min)
@@ -48,14 +53,14 @@ mdtools 2.0:
 			- variables:
 					green: #FF0000
 				{{name:$green}} or {{name:var(green)}}
-		Python 3: @estimate(15min)
+		Python 3: @done
 			As soon as everything is working again, or sooner, because looking up stuff for python 2 is a mess.
 			Test who difficult this would get:
 				- install a venv @done
 				- install dependencies @done
 				- run and see what happens @done
 			- Port to Python 3 @done
-			- make sure install documentation is complete (see Github Issue for details)
+			- make sure install documentation is complete (see Github Issue for details) @done
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
 			- add html template for menu (and if necessary add js to body)
@@ -107,7 +112,7 @@ mdtools 2.0:
 			- update German version
 			- update Hebrew version??
 			- update Dutch version
-	Milestone 3:
+	Milestone 3: Redirections:
 		Redirections: @estimate(6h)
 			As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
 			- create first version of redirections.yaml file from structure.yaml
@@ -115,10 +120,10 @@ mdtools 2.0:
 			- add configurable build step for generating redirection files from redirections.yaml
 		Release:
 			- simply release it
-	Milestone 4:
+	Milestone 4: Better Document Structure:
 		Better Document Structure: @estimate(6h)
 			… 
-			- part and chapter index are read from index document inside folder or from document outside the folder
+			- part and chapter index are read from index document inside folder or from document outside the folder @done
 			- error is raised if both exist at the same time
 			- website is published in folders now
 			- all indexes and menus are still working
@@ -130,7 +135,12 @@ mdtools 2.0:
 			- manually move files in crowdin!!!
 			- release
 		
-	Milestone 5:
+	Sometimes:
+			Add separate template command: @estimate(2h)
+				cmd_template is working with new config format 
+				requires some thought, because of new config format, running it with full config is a lot of hassle,
+				manually handing in translations and variables is also not right for some usecases.
+				Therefore it makes sense to wait if this is needed at all, and if so, in what way
 		- fix deckset renderer
 		- fix reveal.js renderer
 		- update tests
