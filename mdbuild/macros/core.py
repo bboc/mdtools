@@ -74,7 +74,7 @@ class MacroFilter(object):
             yield line
 
 
-class DeleteMacro(object):
+class IgnoreMacro(object):
     """
     Simply delete the macro
     """
