@@ -11,45 +11,20 @@ from __future__ import absolute_import
 import codecs
 import os
 import re
-import sys
 from shutil import copyfile
 
 from .common import create_directory, md_filename
-from .config import get_project_config
-from .glossary import set_glossary
 from . import translate
 
 from .build_deckset_slides import DecksetWriter
 from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
 from .build_web_content import cmd_convert_to_web
-from .build_jekyll import JekyllWriter
-from .ebook_builder import EbookWriter
 from .revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
 
 # TODO: this needs to go somewhere else
 translate.read_translation_memory('content/localization.po')
-
-
-def cmd_build_slides(args):
-    """Build slides decks"""
-
-    if args.format == 'revealjs':
-        build_reveal_slides(args)
-    elif args.format == 'deckset':
-        build_deckset_slides(args)
-    elif args.format == 'wordpress':
-        build_wordpress(args)
-    elif args.format == 'jekyll':
-        j = JekyllWriter(args)
-        j.build()
-    elif args.format == 'ebook':
-        e = EbookWriter(args)
-        e.build()
-    else:
-        print("unknown format", args.format)
-        sys.exit(1)
 
 
 def cmd_convert_slides(args):
