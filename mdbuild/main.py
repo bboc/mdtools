@@ -10,16 +10,16 @@ from __future__ import absolute_import
 
 import sys
 import argparse
+import codecs
 
+from .build_jekyll import JekyllWriter
 from .config import get_project_config
 from .structure import get_structure
 from .glossary import set_glossary
+from . import template
 from . import translate
-
-from .build_jekyll import JekyllWriter
 # from .ebook_builder import EbookWriter
 
-TMP_FOLDER = 'tmp-groups'
 
 def build(args):
     """Build from the selected configuration."""
@@ -61,7 +61,7 @@ def setup(args):
     structure = get_structure(cfg.structure, cfg.source)
 
     translate.read_translation_memory(cfg.localization)
-
+    template.copy_templates(cfg)
     return cfg, structure
 
 
