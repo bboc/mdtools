@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 # TODO: make a nicer setup.py from https://github.com/navdeep-G/setup.py
 setup(
     name="mdtools",
