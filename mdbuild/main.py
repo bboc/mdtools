@@ -58,6 +58,8 @@ def setup(args):
     # build glossary (if defined)
     if cfg.glossary:
         set_glossary(cfg.glossary)
+    else:
+        print('WARNING: no glossary defined!')
 
     translate.read_translation_memory(cfg.localization)
     return cfg
