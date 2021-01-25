@@ -32,7 +32,7 @@ def build(args):
         j = JekyllWriter(cfg, structure)
         j.build()
     elif cfg.renderer == 'ebook':
-        e = EbookWriter(cfg)
+        e = EbookWriter(cfg, structure)
         e.build()
     elif cfg.renderer == 'revealjs':
         print("revealjs writer not ported to 2.0")
