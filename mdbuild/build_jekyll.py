@@ -7,7 +7,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import codecs
-from collections import defaultdict
 from functools import partial
 import os
 
@@ -15,7 +14,7 @@ from .common import md_filename
 from . import glossary
 from . import macros
 from . import markdown_processor as mdp
-
+from . import template
 
 PREV_ELEMENT = "[&#9664; %(name)s](%(path)s.html)"
 UP_ELEMENT = "[&#9650; %(name)s](%(path)s.html)"
@@ -31,19 +30,16 @@ class JekyllWriter(object):
 
     def __init__(self, config, structure):
         self.cfg = config
-        self.source_folder = self.cfg.source
-        self.target_folder = self.cfg.target
         self.structure = structure
-        self.glossary_renderer = glossary.JekyllGlossaryRenderer(9999)
-        self.summary_db = defaultdict(list)
-
-        # register all macros here
-        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer(9999)))
-        macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
 
     def build(self):
         """Render the jekyll output.
         """
+        # register all macros before processing templates
+        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer(9999)))
+        macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
+
+        template.process_templates_in_config(self.cfg)
         self.make_content_pages()
 
     def make_content_pages(self):

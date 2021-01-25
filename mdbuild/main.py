@@ -24,10 +24,8 @@ def build(args):
     """Build from the selected configuration."""
 
     cfg = setup(args)
-
     # read structure
     structure = get_structure(cfg.structure, cfg.source)
-    template.process_templates_in_config(cfg)
 
     # select and run the appropriate builder
     if cfg.renderer == 'jekyll':
@@ -98,4 +96,5 @@ def main_template():
     args = parser.parse_args()
 
     cfg = setup(args)
+
     template(args.mode, args.source, args.destination, cfg)

@@ -39,6 +39,7 @@ def template(mode, source, destination, cfg):
     - copy: simply copy, don't touch
     - markdown: full markdown processing (inkl. jekyll front matter and macros)
     """
+    print(mode, source, destination)
     if mode == 'copy':
         shutil.copy(source, destination)
     elif mode == 'markdown':
@@ -71,8 +72,8 @@ def _markdown_template(src, dest, cfg):
 def _default_template(src, dest, cfg):
     """Substitute variables and translations."""
 
-    with codecs.open(template.source, 'r', 'utf-8') as source:
-        with codecs.open(template.destination, 'w+', 'utf-8') as target:
+    with codecs.open(src, 'r', 'utf-8') as source:
+        with codecs.open(dest, 'w+', 'utf-8') as target:
             processor = mdp.MarkdownProcessor(source, filters=[
                 partial(mdp.template, cfg.variables),
                 partial(mdp.write, target),
