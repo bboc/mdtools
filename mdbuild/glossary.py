@@ -34,7 +34,7 @@ def glossary_macro(renderer):
 class GlossaryRenderer(object):
     """Base class for rendering a full glossary. Subclasses mostly define class variables."""
 
-    def __init__(self, items_per_page):
+    def __init__(self, items_per_page=None):
         if not glossary:
             raise Exception('glossary not defined')
         self.glossary = glossary
@@ -44,7 +44,7 @@ class GlossaryRenderer(object):
     def iterate_elements(self):
         self.emit_header()
         for idx, item in enumerate(sorted(self.glossary['terms'].values(), key=itemgetter('name'))):
-            if not (idx + 1) % self.items_per_page:
+            if self.items_per_page and not (idx + 1) % self.items_per_page:
                 self.emit_header(True)
             self.emit_entry(item)
 

@@ -26,23 +26,20 @@ def nav_el(target, template, item):
 
 
 class JekyllWriter(object):
-    GROUP_INDEX_IMAGE = '\n![inline,fit](img/grouped-patterns/group-%s.png)\n\n'
 
     def __init__(self, config, structure):
         self.cfg = config
         self.structure = structure
 
     def build(self):
-        """Render the jekyll output.
-        """
+        """Render the jekyll output."""
         # register all macros before processing templates
-        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer(9999)))
+        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer()))
         macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
 
         template.process_templates_in_config(self.cfg)
-        self.make_content_pages()
 
-    def make_content_pages(self):
+        # make content pages
         current_node = self.structure.children[0]
         while current_node:
             self._make_content_page(current_node)
@@ -51,11 +48,6 @@ class JekyllWriter(object):
     def common_filters(self):
         """Return the set of filters common to all pipelines."""
         return [
-            mdp.remove_breaks_and_conts,
-            partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
-            partial(mdp.inject_glossary),
-            partial(macros.MacroFilter.filter),
-            partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
         ]
 
     def _make_content_page(self, node):
@@ -65,11 +57,17 @@ class JekyllWriter(object):
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=self.common_filters())
-                processor.add_filter(mdp.jekyll_front_matter)
-                # processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
-                processor.add_filter(partial(mdp.summary_tags, mode=mdp.STRIP_MODE))
-                processor.add_filter(partial(mdp.write, target))
+                processor = mdp.MarkdownProcessor(source, filters=[
+                    mdp.remove_breaks_and_conts,
+                    partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
+                    mdp.inject_glossary,
+                    partial(macros.MacroFilter.filter),
+                    partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+                    mdp.jekyll_front_matter,
+                    # partial(mdp.prefix_headline, headline_prefix),
+                    partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
+                    partial(mdp.write, target),
+                ])
                 processor.process()
                 self._add_navigation(node, target)
 
