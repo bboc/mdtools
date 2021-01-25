@@ -19,17 +19,6 @@ from . import markdown_processor as mdp
 from . import glossary
 from . import macros
 
-CHAPTER_INDEX_TEMPLATE = dedent("""
----
-title: <!-- CHAPTER-NAME -->
----
-
-<!-- CHAPTER-INTRO -->
-
-<!-- SECTION-INDEX -->
-
-""")
-
 
 PREV_ELEMENT = "[&#9664; %(name)s](%(path)s.html)"
 UP_ELEMENT = "[&#9650; %(name)s](%(path)s.html)"
