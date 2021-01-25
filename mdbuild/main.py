@@ -12,12 +12,12 @@ import sys
 import argparse
 
 from .build_jekyll import JekyllWriter
+from .build_ebook import EbookWriter
 from .config import get_project_config
 from .structure import get_structure
 from .glossary import set_glossary
 from . import template
 from . import translate
-# from .ebook_builder import EbookWriter
 
 
 def build(args):
