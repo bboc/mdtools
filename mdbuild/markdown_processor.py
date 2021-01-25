@@ -3,10 +3,9 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
-from operator import attrgetter
 import re
 
-from .common import SLIDE_MARKERS, escape_html_delimiters, markdown2html
+from .common import SLIDE_MARKERS, escape_html_delimiters
 from . import glossary
 from .translate import translate as _
 
