@@ -14,6 +14,12 @@ from . import macros
 
 def process_templates_in_config(cfg):
     """Process all templated defined in config.templates."""
+    try:
+        cfg.templates
+    except AttributeError:
+        print("WARNING: no templates defined for preset")
+        return
+
     for t in cfg.templates:
         try:
             mode = t.mode
