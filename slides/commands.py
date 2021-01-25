@@ -9,6 +9,7 @@ from .template import cmd_template
 
 
 def add_parser_compile(subparsers):
+    """This is no longer needed."""
     sp = subparsers.add_parser('compile',
                                help="Compile and collect source files into one file per group/chapter.")
     sp.add_argument('config', help='yaml file with presentation structure')
@@ -25,6 +26,7 @@ def add_parser_compile(subparsers):
 
 
 def add_parser_build(subparsers):
+    """This is no longer needed."""
     sp = subparsers.add_parser('build',
                                help="Build a slide deck.")
     sp.add_argument('format', choices=['deckset', 'wordpress', 'revealjs', 'jekyll', "ebook"],
@@ -54,6 +56,7 @@ def add_parser_convert(subparsers):
     sp.set_defaults(func=cmd_convert_slides)
 
 
+# TODO: maybe port this command, move argument parser to code
 def add_parser_skeleton(subparsers):
     sp = subparsers.add_parser('skeleton',
                                help="Create skeleton directories and files for slides.")
@@ -63,6 +66,7 @@ def add_parser_skeleton(subparsers):
 
 
 def add_parser_build_index(subparsers):
+    """This is probably no longer necessary."""
     sp = subparsers.add_parser('index',
                                help="Create an alphabetical index.")
     # \label{pattern1.10:proposalforming}
@@ -74,6 +78,7 @@ def add_parser_build_index(subparsers):
     sp.set_defaults(func=cmd_build_index)
 
 
+# TODO: port this command, , move argument parser to code
 def add_parser_template(subparsers):
     sp = subparsers.add_parser('template',
                                help="Inject translations (and optionally parameters from a config) into a template file.")
