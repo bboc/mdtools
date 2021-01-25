@@ -32,7 +32,14 @@ mdtools 2.0:
 				- main index page uses plain index format @done
 				- output is compared in detail once more 
 				- section links are still working
-			- epub builder uses new format @estimate(4h)
+			- decide: separate builder and renderer??
+			ebook builder uses new format:
+				- glossary entries can be replaced depending on ebook type
+				- epub is working
+				- pdf is working
+				all-in-one html:
+					- add glossary tooltips
+					- add pattern index
 			- ebook builder  uses new format @estimate(4h)
 			simple unified glossary code: @estimate(2h)
 				all code that processes glossary items should be located in glossary.py or in macro package
