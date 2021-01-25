@@ -23,15 +23,17 @@ class IndexMacro(object):
 
         {{index:tag=pattern,sort=title}} create an index for all entries tagged 'pattern'
         {{index:root=slug}} create an index of all children of node
+        {{index:force_format=plain}} force a format (useful for
+            conent-specific templates, not so much for content file)
         sort and format default to None.
         root is processed before tag filter.
-
-        # TODO: the structure module might be a better place for this
         """
         # get arguments
         tag_filter = kwargs.get('tag')
         sort = kwargs.get('sort')
+        format = kwargs.get('force_format', format)
         root = structure
+
         if 'root' in kwargs:
             root = structure.find(kwargs['root'])
             if not root:
@@ -64,7 +66,7 @@ class IndexMacro(object):
         res = []
         for node in nodes:
             res.append(cls.INDEX_ELEMENT_PLAIN % dict(title=node.title, path=node.slug))
-        return '\n'.join(res)
+        return ''.join(res)
 
     @classmethod
     def render_html(cls, nodes):
