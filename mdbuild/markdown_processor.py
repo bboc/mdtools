@@ -318,26 +318,6 @@ def convert_section_links(template, lines):
         yield line
 
 
-def insert_glossary(renderer, lines):
-    """
-    Insert full glossary when GLOSSARY_MARKER is encountered.
-    TODO: convert for macro renderer
-    """
-    raise Exception('use the macro instead!')
-    glossary_contents = []
-
-    def callback(text):
-        glossary_contents.append(text)
-
-    for line in lines:
-        if line.strip() == glossary.GLOSSARY_MARKER:
-            renderer.render(callback)
-            callback('\n')
-            yield '\n'.join(glossary_contents)
-        else:
-            yield line
-
-
 def remove_breaks_and_conts(lines):
     """
     Must be applied before jekyll_front_matter(), otherwise the front matter
@@ -349,15 +329,6 @@ def remove_breaks_and_conts(lines):
         if line.strip().endswith(_(u"(…)")):
             continue
         yield line
-
-
-def insert_index(marker, items, lines, sort=False, summary_db=None, format=None):
-    """
-    Insert an index as markdown-links, can be used for groups and sections.
-    Items is a list of dictionaries with keys path and name.
-    """
-
-    raise Exception("use macro instead!")
 
 
 TRANSLATION_MARKER = re.compile('\$\{_\("(?P<text>.*?)"\)\}')
