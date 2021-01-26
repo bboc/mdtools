@@ -36,6 +36,7 @@ class ConfigObject(object):
 
     def _build_structure(self, data):
         for key, value in data.items():
+            key = key.replace('-', '_')
             if value.__class__ == dict:
                 self.__dict__[key] = ConfigObject(value)
             elif value.__class__ == list:
@@ -57,11 +58,13 @@ class ConfigObject(object):
         return result
 
     def set(self, name, value):
+        name = name.replace('-', '_')
         self.__dict__[name] = value
 
     def _update(self, data):
         """Update from data structure"""
         for key, value in data.items():
+            key = key.replace('-', '_')
             if value.__class__ == dict:
                 # dictionary exists
                 if hasattr(self, key):
