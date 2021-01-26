@@ -49,8 +49,8 @@ def template(mode, source, destination):
     print(mode, source, destination)
     if mode == 'copy':
         shutil.copy(source, destination)
-    elif mode == 'markdown':
-        _markdown_template(source, destination)
+    elif mode in ['html', 'markdown']:
+        _processed_template(mode, source, destination)
     elif mode == 'default':
         _default_template(source, destination)
     else:
@@ -58,8 +58,11 @@ def template(mode, source, destination):
         sys.exit(1)
 
 
-def _markdown_template(src, dest):
-    """Run the template through most of the markdown filters."""
+def _processed_template(mode, src, dest):
+    """
+    Run the template through several filters, skip jekyll front matter for
+    html templates.
+    """
 
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
@@ -68,10 +71,10 @@ def _markdown_template(src, dest):
                 partial(mdp.template, config.cfg.variables),
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                 partial(macros.MacroFilter.filter),
-                partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
-                mdp.jekyll_front_matter,
-                partial(mdp.write, target),
-            ])
+                partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE)])
+            if mode == 'markdown':
+                processor.add_filter(mdp.jekyll_front_matter)
+            processor.add_filter(partial(mdp.write, target))
             processor.process()
 
 
