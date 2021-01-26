@@ -61,7 +61,7 @@ class JekyllWriter(object):
                     mdp.remove_breaks_and_conts,
                     partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                     mdp.inject_glossary,
-                    partial(macros.MacroFilter.filter),
+                    macros.MacroFilter.filter,
                     partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
                     mdp.jekyll_front_matter,
                     # partial(mdp.prefix_headline, headline_prefix),
