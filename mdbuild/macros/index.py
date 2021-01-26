@@ -17,10 +17,20 @@ class IndexMacro(object):
     def render(cls, structure, format, *args, **kwargs):
         """Create a (sorted) index of pages.
 
-        {{index:tag=pattern,sort=title}} create an index for all entries tagged 'pattern'
-        {{index:root=slug}} create an index of all children of node
-        {{index:force_format=plain}} force a format (useful for
-            conent-specific templates, not so much for content file)
+        Parameters:
+            - tag: filter by tag before creating the index
+            - root: only show children of one specific node (by slug)
+            - sort: sort index by node attribute (mostly title)
+            - force_format: force a specific format
+            - style:
+              - full: one entry per paragraph: title and summary
+              - simple: a list with one entry per item
+        Examples:
+            {{index:tag=pattern,sort=title}} create an index for all entries tagged 'pattern'
+            {{index:root=slug}} create an index of all children of node
+            {{index:force_format=plain}} force a format (useful for
+                content-specific templates, not so much for content file)
+
         sort and format default to None.
         root is processed before tag filter.
         """
