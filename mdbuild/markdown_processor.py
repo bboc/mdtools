@@ -305,6 +305,8 @@ TRANSLATION_MARKER = re.compile('\$\{_\("(?P<text>.*?)"\)\}')
 PARAMETER_MARKER = re.compile('\$\{(?P<name>.*?)\}')
 
 
+# TODO: rename to inject_variables_and_translations
+# TODO: remove passing of config
 def template(config, lines):
     """Insert translations und config parameters marked in the text like
     ${_("a string to translate")} or ${my_parameter}.
