@@ -22,7 +22,7 @@ Examples:
 
 Creating custom macros is easy, they only need to provide a render method:
 
-    def render_my_macro(cfg, structure, *args, **kwargs):
+    def render_my_macro(config, structure, *args, **kwargs):
         return "macros will be replaced with this text"
 
 
