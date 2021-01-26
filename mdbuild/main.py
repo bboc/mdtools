@@ -80,6 +80,16 @@ def main_build():
 
 
 def main_template():
+    """
+    Copy a template to destination, potentially
+    using config vars and even a strcuture file...
+
+    TODO: this needs some tweaking:
+    - it should run with a minimal config file (variables, glossary, structure)
+    - it shuld also run with a full configuration (with an existing or a dedicated preset)
+    - therefore preset should be optional
+    - to make use of project structure, structure needs to be globally accessible.
+    """
     # TODO: test command
     parser = argparse.ArgumentParser(
         description="Inject translations (and optionally parameters from a config) into a template file.",
