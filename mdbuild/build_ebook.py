@@ -10,15 +10,16 @@ from functools import partial
 import os
 
 from .glossary_processor import get_glossary_processor
-from . import markdown_processor as mdp
-from . import macros
+
+from . import config
 from . import glossary
+from . import macros
+from . import markdown_processor as mdp
 from . import template
 
 class EbookWriter(object):
 
-    def __init__(self, config, structure):
-        self.cfg = config
+    def __init__(self, structure):
         self.structure = structure
 
         # self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary,)
@@ -31,16 +32,16 @@ class EbookWriter(object):
         # register all macros before processing templates
         macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.EbookGlossaryRenderer()))
         # ignore all indexes
-        macros.register_macro('index', macros.IgnoreMacro.render)
+        macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
 
-        template.process_templates_in_config(self.cfg)
+        template.process_templates_in_config()
 
         # start by copying the main template
-        template.template('default', self.cfg.template, self.cfg.target, self.cfg)
+        template.template('default', config.cfg.template, config.cfg.target)
 
         # then append all the content pages
 
-        with codecs.open(self.cfg.target, 'w+', 'utf-8') as target:
+        with codecs.open(config.cfg.target, 'w+', 'utf-8') as target:
             current_node = self.structure.children[0]
             while current_node:
                 self._append_content(target, current_node)

@@ -8,19 +8,20 @@ from functools import partial
 
 import sys
 import shutil
+from . import config
 from . import markdown_processor as mdp
 from . import macros
 
 
-def process_templates_in_config(cfg):
+def process_templates_in_config():
     """Process all templated defined in config.templates."""
     try:
-        cfg.templates
+        config.cfg.templates
     except AttributeError:
         print("WARNING: no templates defined for preset")
         return
 
-    for t in cfg.templates:
+    for t in config.cfg.templates:
         try:
             mode = t.mode
         except AttributeError:
@@ -35,10 +36,10 @@ def process_templates_in_config(cfg):
         except AttributeError:
             print('ERROR: no destination for template', t.source)
             sys.exit(1)
-        template(mode, source, destination, cfg)
+        template(mode, source, destination)
 
 
-def template(mode, source, destination, cfg):
+def template(mode, source, destination):
     """
     Template processing has 3 modes:
     - default: substitute variables and translations
@@ -49,22 +50,22 @@ def template(mode, source, destination, cfg):
     if mode == 'copy':
         shutil.copy(source, destination)
     elif mode == 'markdown':
-        _markdown_template(source, destination, cfg)
+        _markdown_template(source, destination)
     elif mode == 'default':
-        _default_template(source, destination, cfg)
+        _default_template(source, destination)
     else:
         print("ERROR: unknown mode ", mode, 'for template', source)
         sys.exit(1)
 
 
-def _markdown_template(src, dest, cfg):
+def _markdown_template(src, dest):
     """Run the template through most of the markdown filters."""
 
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
             processor = mdp.MarkdownProcessor(source, filters=[
 
-                partial(mdp.template, cfg.variables),
+                partial(mdp.template, config.cfg.variables),
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                 partial(mdp.inject_glossary),
                 partial(macros.MacroFilter.filter),
@@ -75,13 +76,13 @@ def _markdown_template(src, dest, cfg):
             processor.process()
 
 
-def _default_template(src, dest, cfg):
+def _default_template(src, dest):
     """Substitute variables and translations."""
 
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
             processor = mdp.MarkdownProcessor(source, filters=[
-                partial(mdp.template, cfg.variables),
+                partial(mdp.template, config.cfg.variables),
                 partial(mdp.write, target),
             ])
             processor.process()

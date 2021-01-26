@@ -3,8 +3,6 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
-from operator import attrgetter
-
 from .common import read_config_file
 
 # section names
@@ -14,15 +12,17 @@ SECTIONS = 'sections'
 # attribute for title
 TITLE = 'title'
 
+# global project config
+cfg = {}
 
-def get_project_config(filename, preset):
+
+def set_project_config(filename, preset):
     """Get a config object for the selected preset."""
-    # TODO: when all is refactored, rename that to config again??
     config_data = read_config_file(filename)
     cfg = ConfigObject(config_data['defaults'], config_data['presets'][preset])
     print("------- config ---------")
     # print(cfg)
-    return cfg
+    globals()['cfg'] = cfg
 
 
 class ConfigObject(object):

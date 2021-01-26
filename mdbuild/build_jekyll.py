@@ -11,6 +11,7 @@ from functools import partial
 import os
 
 from .common import md_filename
+from . import config
 from . import glossary
 from . import macros
 from . import markdown_processor as mdp
@@ -27,8 +28,7 @@ def nav_el(target, template, item):
 
 class JekyllWriter(object):
 
-    def __init__(self, config, structure):
-        self.cfg = config
+    def __init__(self, structure):
         self.structure = structure
 
     def build(self):
@@ -37,7 +37,7 @@ class JekyllWriter(object):
         macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer()))
         macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
 
-        template.process_templates_in_config(self.cfg)
+        template.process_templates_in_config()
 
         # make content pages
         current_node = self.structure.children[0]
@@ -52,8 +52,8 @@ class JekyllWriter(object):
 
     def _make_content_page(self, node):
         """Copy each section to a separate file."""
-        # target_path = os.path.join(self.cfg.target, md_filename(node.relpath))
-        target_path = os.path.join(self.cfg.target, md_filename(node.slug))
+        # target_path = os.path.join(config.cfg.target, md_filename(node.relpath))
+        target_path = os.path.join(config.cfg.target, md_filename(node.slug))
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:

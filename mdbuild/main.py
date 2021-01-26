@@ -13,7 +13,7 @@ import argparse
 
 from .build_jekyll import JekyllWriter
 from .build_ebook import EbookWriter
-from .config import get_project_config
+from . import config
 from .structure import get_structure
 from .glossary import set_glossary
 from . import template
@@ -23,46 +23,45 @@ from . import translate
 def build(args):
     """Build from the selected configuration."""
 
-    cfg = setup(args)
+    setup(args)
     # read structure
-    structure = get_structure(cfg.structure, cfg.source)
+    structure = get_structure(config.cfg.structure, config.cfg.source)
 
     # select and run the appropriate builder
-    if cfg.renderer == 'jekyll':
-        j = JekyllWriter(cfg, structure)
+    if config.cfg.renderer == 'jekyll':
+        j = JekyllWriter(structure)
         j.build()
-    elif cfg.renderer == 'ebook':
-        e = EbookWriter(cfg, structure)
+    elif config.cfg.renderer == 'ebook':
+        e = EbookWriter(structure)
         e.build()
-    elif cfg.renderer == 'revealjs':
+    elif config.cfg.renderer == 'revealjs':
         print("revealjs writer not ported to 2.0")
         sys.exit(1)
-        build_reveal_slides(cfg)
-    elif cfg.renderer == 'deckset':
+        # build_reveal_slides()
+    elif config.cfg.renderer == 'deckset':
         print("Deckset writer not ported to 2.0")
         sys.exit(1)
-        build_deckset_slides(cfg)
-    elif cfg.renderer == 'wordpress':
+        # build_deckset_slides()
+    elif config.cfg.renderer == 'wordpress':
         print("Wordpress writer not ported to 2.0")
         sys.exit(1)
-        build_wordpress(cfg)
+        # build_wordpress()
     else:
-        print("ERROR: unknown renderer", cfg.format)
+        print("ERROR: unknown renderer", config.cfg.format)
         sys.exit(1)
 
 
 def setup(args):
     print("setting things up…")
     # read config
-    cfg = get_project_config(args.project, args.preset)
+    config.set_project_config(args.project, args.preset)
     # build glossary (if defined)
-    if cfg.glossary:
-        set_glossary(cfg.glossary)
+    if config.cfg.glossary:
+        set_glossary(config.cfg.glossary)
     else:
         print('WARNING: no glossary defined!')
 
-    translate.read_translation_memory(cfg.localization)
-    return cfg
+    translate.read_translation_memory(config.cfg.localization)
 
 
 def main_build():
