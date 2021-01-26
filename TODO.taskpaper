@@ -26,20 +26,31 @@ mdtools 2.0:
 				- obsolete Templates are removed: @done
 				- glossary is created @done
 				- pattern-index.md with all patterns and summaries is written @done
-				- all-in-one page is written (requires ebook builder)
 				- all content from concepts and principles is moved to content tree @done
 				- main index page is written @done
 				- main index page uses plain index format @done
 				- output is compared in detail once more 
 				- section links are still working
-			- decide: separate builder and renderer??
-			ebook builder uses new format:
 				- glossary entries can be replaced depending on ebook type
-				- epub is working
-				- pdf is working
+			- decide: separate builder and renderer??
+			all-in-one page:
+				- replace glossary links properly:
+					- move glossary item replacement to macro
+					- use target format
+			- ebook builder uses new format
+			epub is working:
+				- ???
+			pdf is working:
+				- glossary links should be removed
+				- glossary has duplicate header
+				- header indentation is messed up
 				all-in-one html:
-					- add glossary tooltips
-					- add pattern index
+					- markdown processor has access to structure and config
+					- glossary tooltips are output format aware
+					- glossary links are output format aware
+					- index supports style @done
+					- add pattern index @done
+			- check that a simplified format for structure (like used in the docs) is still possible
 			- ebook builder  uses new format @estimate(4h)
 			simple unified glossary code: @estimate(2h)
 				all code that processes glossary items should be located in glossary.py or in macro package
@@ -49,6 +60,7 @@ mdtools 2.0:
 				- glossary.py
 			- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
 			- all obsolete code is removed 
+			- access to undefined config element produces a nice error
 		Macro Support: @estimate(30min)
 			- macros processing is consolidated into one markdown filter that takes plugins: @done
 				1. parse string for {{macro}} 
