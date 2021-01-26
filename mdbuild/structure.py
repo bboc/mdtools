@@ -15,15 +15,18 @@ SECTIONS = 'sections'
 # attribute for title
 TITLE = 'title'
 
+# the document structure
+structure = None
 
-def get_structure(filename, content_path):
+
+def set_structure(filename, content_path):
     print("------- structure---------")
     print(filename)
 
     cs = ContentRoot.from_config(read_config_file(filename))
     cs.read_info(content_path)
     # print(pformat(cs.to_dict()))
-    return cs
+    globals()['structure'] = cs
 
 
 class ContentNode(object):
@@ -48,7 +51,7 @@ class ContentNode(object):
         self.title = 'to title set'
         self.config = {}
         self.tags = []
-        self.summary = None
+        self.summary = ''
 
     def is_root(self):
         return self is self.root

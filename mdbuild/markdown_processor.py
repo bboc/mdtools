@@ -8,6 +8,8 @@ import re
 from .common import SLIDE_MARKERS, escape_html_delimiters
 from . import glossary
 from .translate import translate as _
+from . import structure
+from . import config
 
 
 class MarkdownProcessor(object):

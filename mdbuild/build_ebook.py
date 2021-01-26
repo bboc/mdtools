@@ -15,15 +15,15 @@ from . import config
 from . import glossary
 from . import macros
 from . import markdown_processor as mdp
+from . import structure
 from . import template
 
 class EbookWriter(object):
 
-    def __init__(self, structure):
-        self.structure = structure
-
+    def __init__(self):
         # self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary,)
         # self.gp = get_glossary_processor(args.glossary_style, self.glossary)
+        pass
 
     def build(self):
         """
@@ -31,9 +31,7 @@ class EbookWriter(object):
         """
         # register all macros before processing templates
         macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.EbookGlossaryRenderer()))
-        # ignore all indexes
-        macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
-
+        macros.register_macro('index', macros.IndexMacro.render),
         template.process_templates_in_config()
 
         # start by copying the main template
@@ -42,11 +40,10 @@ class EbookWriter(object):
         # then append all the content pages
 
         with codecs.open(config.cfg.target, 'w+', 'utf-8') as target:
-            current_node = self.structure.children[0]
+            current_node = structure.structure.children[0]
             while current_node:
                 self._append_content(target, current_node)
                 current_node = current_node.successor
-
 
     def build_old(self):
         """Build three files: intro/patterns/appendix."""

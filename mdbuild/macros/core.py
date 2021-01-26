@@ -9,9 +9,7 @@ Expand macros of the following format
     {{macro:skip=foo|bar}} returns empty string in presets foo and bar
     {{macro:only=foo|bar}} macro is rendered only in presets foo and bar
 
-
-
-Possible enhancements: 
+Possible enhancements:
 
 - Currently, parameters are only literals, but maybe in the future they can be
   config variables, in a format like {{macro:$name}} or {{macro:var(name)}}
@@ -24,6 +22,8 @@ from __future__ import print_function
 
 from mdbuild import config
 import re
+
+from mdbuild import structure, config
 
 macros = {}
 
@@ -74,7 +74,7 @@ def process_macro(match):
     if name not in macros:
         print('warning: unknown macro:', name)
     else:
-        return macros[name](*args, **kwargs)
+        return macros[name](config.cfg, structure.structure, *args, **kwargs)
 
 
 class MacroFilter(object):
@@ -93,6 +93,6 @@ class IgnoreMacro(object):
     Simply delete the macro
     """
     @classmethod
-    def render(cls, *args, **kwargs):
+    def render(cls, config, structure, *args, **kwargs):
         """Simply ignore everything and return an empty string."""
         return ''

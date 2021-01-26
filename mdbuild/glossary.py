@@ -16,7 +16,7 @@ def set_glossary(filename):
         globals()['glossary'] = read_config_file(filename)
 
 
-def glossary_macro(renderer):
+def glossary_macro(renderer, config, structure):
     """
     Insert full glossary in alphabetical order .
     """

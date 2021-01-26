@@ -15,6 +15,7 @@ from . import config
 from . import glossary
 from . import macros
 from . import markdown_processor as mdp
+from . import structure
 from . import template
 
 PREV_ELEMENT = "[&#9664; %(name)s](%(path)s.html)"
@@ -28,19 +29,19 @@ def nav_el(target, template, item):
 
 class JekyllWriter(object):
 
-    def __init__(self, structure):
-        self.structure = structure
+    def __init__(self):
+        pass
 
     def build(self):
         """Render the jekyll output."""
         # register all macros before processing templates
         macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer()))
-        macros.register_macro('index', partial(macros.IndexMacro.render, self.structure, 'html'))
+        macros.register_macro('index', macros.IndexMacro.render)
 
         template.process_templates_in_config()
 
         # make content pages
-        current_node = self.structure.children[0]
+        current_node = structure.structure.children[0]
         while current_node:
             self._make_content_page(current_node)
             current_node = current_node.successor

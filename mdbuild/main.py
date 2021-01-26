@@ -14,7 +14,7 @@ import argparse
 from .build_jekyll import JekyllWriter
 from .build_ebook import EbookWriter
 from . import config
-from .structure import get_structure
+from .structure import set_structure
 from .glossary import set_glossary
 from . import template
 from . import translate
@@ -25,14 +25,14 @@ def build(args):
 
     setup(args)
     # read structure
-    structure = get_structure(config.cfg.structure, config.cfg.source)
+    set_structure(config.cfg.structure, config.cfg.source)
 
     # select and run the appropriate builder
     if config.cfg.renderer == 'jekyll':
-        j = JekyllWriter(structure)
+        j = JekyllWriter()
         j.build()
     elif config.cfg.renderer == 'ebook':
-        e = EbookWriter(structure)
+        e = EbookWriter()
         e.build()
     elif config.cfg.renderer == 'revealjs':
         print("revealjs writer not ported to 2.0")
@@ -106,6 +106,6 @@ def main_template():
     parser.add_argument('target', help='Filename for the resulting template')
     args = parser.parse_args()
 
-    cfg = setup(args)
+    setup(args)
 
-    template(args.mode, args.source, args.destination, cfg)
+    template(args.mode, args.source, args.destination)
