@@ -14,7 +14,7 @@ class IndexMacro(object):
     """
 
     @classmethod
-    def render(cls, structure, format, *args, **kwargs):
+    def render(cls, config, structure, *args, **kwargs):
         """Create a (sorted) index of pages.
 
         Parameters:
@@ -23,8 +23,8 @@ class IndexMacro(object):
             - sort: sort index by node attribute (mostly title)
             - force_format: force a specific format
             - style:
-              - full: one entry per paragraph: title and summary
-              - simple: a list with one entry per item
+              - summary: one entry per paragraph: title and summary
+              - list: a list with one entry per item
         Examples:
             {{index:tag=pattern,sort=title}} create an index for all entries tagged 'pattern'
             {{index:root=slug}} create an index of all children of node
@@ -33,13 +33,20 @@ class IndexMacro(object):
 
         sort and format default to None.
         root is processed before tag filter.
+
+
+        TODO: format is no longer an argument, but comes from cfg.target_format
+        TODO: process style=list or style = summary
+
         """
         # get arguments
         tag_filter = kwargs.get('tag')
         sort = kwargs.get('sort')
-        format = kwargs.get('force_format', format)
+        format = kwargs.get('force_format', config.target_format)
+        style = kwargs.get('style', 'list')
         root = structure
 
+        # find rood node for index
         if 'root' in kwargs:
             root = structure.find(kwargs['root'])
             if not root:
@@ -61,16 +68,30 @@ class IndexMacro(object):
             nodes_to_show.sort(key=attrgetter(sort))
 
         if format == 'html':
-            return cls.render_html(nodes_to_show)
-        else:  # plain list
-            return cls.render_plain(nodes_to_show)
+            if style == 'summary':
+                return cls.render_html(nodes_to_show)
+            else:
+                return cls.render_markdown_list(nodes_to_show)
+        else:  # markdown
+            if style == 'summary':
+                return cls.render_markdown_summaries(nodes_to_show)
+            else:
+                return cls.render_markdown_list(nodes_to_show)
 
     @classmethod
-    def render_plain(cls, nodes):
-        INDEX_ELEMENT_PLAIN = "- [%(title)s](%(path)s.html)\n"
+    def render_markdown_summaries(cls, nodes):
+        INDEX_ELEMENT = "**[%(title)s](%(path)s.html)**\n\n%(summary)s\n"
         res = []
         for node in nodes:
-            res.append(INDEX_ELEMENT_PLAIN % dict(title=node.title, path=node.slug))
+            res.append(INDEX_ELEMENT % dict(title=node.title, path=node.slug, summary=node.summary))
+        return ''.join(res)
+
+    @classmethod
+    def render_markdown_list(cls, nodes):
+        INDEX_ELEMENT = "- [%(title)s](%(path)s.html)\n"
+        res = []
+        for node in nodes:
+            res.append(INDEX_ELEMENT % dict(title=node.title, path=node.slug))
         return ''.join(res)
 
     @classmethod
