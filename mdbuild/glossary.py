@@ -37,7 +37,7 @@ def glossary_term_macro(renderer, config, term):
 
 
 def glossary_definition_macro(renderer, config, term):
-    """Expand glossart term definition."""
+    """Expand glossary term definition."""
     return _expand_term(term, 'definition', "_%s_")
 
 
