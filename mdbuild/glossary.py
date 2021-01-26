@@ -16,7 +16,7 @@ def set_glossary(filename):
         globals()['glossary'] = read_config_file(filename)
 
 
-def glossary_macro(renderer, config, structure):
+def full_glossary_macro(renderer, config, structure):
     """
     Insert full glossary in alphabetical order .
     """
@@ -31,6 +31,26 @@ def glossary_macro(renderer, config, structure):
     return '\n'.join(glossary_contents)
 
 
+def glossary_term_macro(renderer, config, term):
+    """Expand glossary term."""
+    return _expand_term(term, 'glossary', "%s")
+
+
+def glossary_definition_macro(renderer, config, term):
+    """Expand glossart term definition."""
+    return _expand_term(term, 'definition', "_%s_")
+
+
+def _expand_term(term, key, pattern):
+    """Return glossary entry or definition."""
+    try:
+        return pattern % glossary['terms'][term][key]
+    except KeyError:
+        print('cant find ', key, " for glossary entry ", term)
+        raise
+
+
+# TODO: unify this with the other glossary code!!
 class GlossaryRenderer(object):
     """Base class for rendering a full glossary. Subclasses mostly define class variables."""
 

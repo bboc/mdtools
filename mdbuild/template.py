@@ -67,7 +67,6 @@ def _markdown_template(src, dest):
 
                 partial(mdp.template, config.cfg.variables),
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
-                partial(mdp.inject_glossary),
                 partial(macros.MacroFilter.filter),
                 partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
                 mdp.jekyll_front_matter,

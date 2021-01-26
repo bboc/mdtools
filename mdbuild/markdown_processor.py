@@ -155,36 +155,6 @@ def jekyll_front_matter(lines, params=None):
         yield line
 
 
-DEFINE_PATTERN = re.compile("\{\{define\:(?P<name>.*)\}\}")
-GLOSSARY_PATTERN = re.compile("\{\{glossary\:(?P<name>.*)\}\}")
-
-
-def inject_glossary(lines):
-    """Expand glossary terms and definitions.
-    """
-    def glossary_replace(match, key, pattern):
-        """Get a definition of a term from the glossary."""
-        name = match.group('name')
-        try:
-            return pattern % glossary.glossary['terms'][name][key]
-        except KeyError:
-            print('cant find ', key, " for glossary entry ", name)
-            raise
-
-    def insert_definition(match):
-        return glossary_replace(match, 'definition', "_%s_")
-
-    def insert_glossary_term(match):
-        return glossary_replace(match, 'glossary', "%s")
-
-    for line in lines:
-        if glossary:
-            # replace definitions from glossary
-            line = DEFINE_PATTERN.sub(insert_definition, line)
-            line = GLOSSARY_PATTERN.sub(insert_glossary_term, line)
-        yield line
-
-
 BEGIN_SUMMARY = "<summary>"
 END_SUMMARY = "</summary>"
 
