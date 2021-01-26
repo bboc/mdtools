@@ -32,12 +32,31 @@ class JekyllWriter(object):
     def __init__(self):
         pass
 
+    def configure(self):
+        """Configure everything for the build."""
+        # register all macros before processing templates
+        macros.register_macro('full-glossary', partial(glossary.full_glossary_macro, glossary.JekyllGlossaryRenderer()))
+        macros.register_macro('index', macros.IndexMacro.render)
+        macros.register_macro('glossary', glossary.glossary_term_macro)
+        macros.register_macro('define', glossary.glossary_definition_macro)
+
+        # set up filters for markdown processor:
+        self.filters = [
+            mdp.remove_breaks_and_conts,
+            partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
+            macros.MacroFilter.filter,
+            partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+            mdp.jekyll_front_matter,
+            # partial(mdp.prefix_headline, headline_prefix),
+            partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
+        ]
+
     def build(self):
         """Render the jekyll output."""
-        # register all macros before processing templates
-        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.JekyllGlossaryRenderer()))
-        macros.register_macro('index', macros.IndexMacro.render)
 
+        self.configure()
+
+        # process templates _after_ registering macros!
         template.process_templates_in_config()
 
         # make content pages
@@ -46,11 +65,6 @@ class JekyllWriter(object):
             self._make_content_page(current_node)
             current_node = current_node.successor
 
-    def common_filters(self):
-        """Return the set of filters common to all pipelines."""
-        return [
-        ]
-
     def _make_content_page(self, node):
         """Copy each section to a separate file."""
         # target_path = os.path.join(config.cfg.target, md_filename(node.relpath))
@@ -58,17 +72,9 @@ class JekyllWriter(object):
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=[
-                    mdp.remove_breaks_and_conts,
-                    partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
-                    mdp.inject_glossary,
-                    macros.MacroFilter.filter,
-                    partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
-                    mdp.jekyll_front_matter,
-                    # partial(mdp.prefix_headline, headline_prefix),
-                    partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
-                    partial(mdp.write, target),
-                ])
+                processor = mdp.MarkdownProcessor(source, filters=self.filters)
+
+                processor.add_filter(partial(mdp.write, target))
                 processor.process()
                 self._add_navigation(node, target)
 

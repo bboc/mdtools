@@ -21,17 +21,40 @@ from . import template
 class EbookWriter(object):
 
     def __init__(self):
-        # self.glossary_renderer = EbookGlossaryRenderer(self.args.glossary,)
-        # self.gp = get_glossary_processor(args.glossary_style, self.glossary)
         pass
+
+    def configure(self):
+        """Configure everything for the build."""
+
+        # register all macros before processing templates
+        macros.register_macro('full-glossary', partial(glossary.full_glossary_macro, glossary.EbookGlossaryRenderer()))
+        macros.register_macro('index', macros.IndexMacro.render)
+        macros.register_macro('glossary', glossary.glossary_term_macro)
+        macros.register_macro('define', glossary.glossary_definition_macro)
+
+        # set up filters for markdown processor:
+        self.filters = [
+            mdp.remove_breaks_and_conts,
+            partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
+            macros.MacroFilter.filter,
+
+            partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
+            mdp.clean_images,
+        ]
+        if config.cfg.target_format == 'foobar':
+            # add a filter dependent on output format
+            self.filters.append()
+            # self.gp = get_glossary_processor(args.glossary_style, self.glossary)
+            # self.gp.replace_glossary_references,
 
     def build(self):
         """
         Add all documents into one target file.
         """
-        # register all macros before processing templates
-        macros.register_macro('full-glossary', partial(glossary.glossary_macro, glossary.EbookGlossaryRenderer()))
-        macros.register_macro('index', macros.IndexMacro.render),
+
+        self.configure()
+
+        # process templates _after_ registering macros!
         template.process_templates_in_config()
 
         # start by copying the main template
@@ -43,7 +66,6 @@ class EbookWriter(object):
                 pass
 
         # then append all the content pages
-
         with codecs.open(config.cfg.target, 'w+', 'utf-8') as target:
             current_node = structure.structure.children[0]
             while current_node:
@@ -51,21 +73,18 @@ class EbookWriter(object):
                 current_node = current_node.successor
 
     def _append_content(self, target, node, headline_level_increase=0, headline_prefix=None):
-        """Append each section to target."""
+        """
+        Append each section to target.
+        # TODO: calculate headline level increase and
+            potentially headline level,
+            is that dependent on output format??
+        """
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
-            processor = mdp.MarkdownProcessor(source, filters=[
-                mdp.remove_breaks_and_conts,
-                partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
-                mdp.inject_glossary,
-                macros.MacroFilter.filter,
+            processor = mdp.MarkdownProcessor(source, filters=self.filters)
 
-                # TODO: this needs to be configurable
-                # self.gp.replace_glossary_references,
-                partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
-                mdp.clean_images,
-                partial(mdp.prefix_headline, headline_prefix),
-                partial(mdp.increase_all_headline_levels, headline_level_increase),
-                partial(mdp.write, target),
-            ])
+            processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
+            processor.add_filter(partial(mdp.increase_all_headline_levels, headline_level_increase))
+            processor.add_filter(partial(mdp.write, target))
+
             processor.process()
         target.write("\n\n")
