@@ -16,10 +16,11 @@ TITLE = 'title'
 cfg = {}
 
 
-def set_project_config(filename, preset):
+def set_project_config(filename, preset=None):
     """Get a config object for the selected preset."""
     config_data = read_config_file(filename)
     cfg = ConfigObject(config_data['defaults'], config_data['presets'][preset])
+    cfg.set('preset', preset)
     print("------- config ---------")
     # print(cfg)
     globals()['cfg'] = cfg
@@ -54,6 +55,9 @@ class ConfigObject(object):
             else:
                 result.append(item)
         return result
+
+    def set(self, name, value):
+        self.__dict__[name] = value
 
     def _update(self, data):
         """Update from data structure"""
