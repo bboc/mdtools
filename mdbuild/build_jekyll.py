@@ -39,6 +39,7 @@ class JekyllWriter(object):
         macros.register_macro('index', macros.IndexMacro.render)
         macros.register_macro('glossary', glossary.glossary_term_macro)
         macros.register_macro('define', glossary.glossary_definition_macro)
+        macros.register_macro('html-menu', macros.MenuMacro.render)
 
         # set up filters for markdown processor:
         self.filters = [

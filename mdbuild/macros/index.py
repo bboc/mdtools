@@ -122,5 +122,5 @@ class MenuMacro(object):
 
     @classmethod
     def render(cls, config, stucture, css_class, *args, **kwargs):
-        pass
+        return 'my menu'
 
