@@ -55,13 +55,12 @@ class IndexMacro(object):
         else:  # plain list
             return cls.render_plain(nodes_to_show)
 
-    INDEX_ELEMENT_PLAIN = "- [%(title)s](%(path)s.html)\n"
-
     @classmethod
     def render_plain(cls, nodes):
+        INDEX_ELEMENT_PLAIN = "- [%(title)s](%(path)s.html)\n"
         res = []
         for node in nodes:
-            res.append(cls.INDEX_ELEMENT_PLAIN % dict(title=node.title, path=node.slug))
+            res.append(INDEX_ELEMENT_PLAIN % dict(title=node.title, path=node.slug))
         return ''.join(res)
 
     @classmethod
