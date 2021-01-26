@@ -114,3 +114,13 @@ class IndexMacro(object):
         else:
             summary = ''
         return cls.INDEX_ELEMENT_HTML % locals()
+
+
+class MenuMacro(object):
+    """Render a nested list for use in a menu."""
+    pass
+
+    @classmethod
+    def render(cls, config, stucture, css_class, *args, **kwargs):
+        pass
+
