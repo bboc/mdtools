@@ -35,7 +35,12 @@ class EbookWriter(object):
         template.process_templates_in_config()
 
         # start by copying the main template
-        template.template('default', config.cfg.template, config.cfg.target)
+        if config.cfg.template:
+            template.template('default', config.cfg.template, config.cfg.target)
+        else:
+            # truncate file if it exists
+            with open(config.cfg.target, 'w'):
+                pass
 
         # then append all the content pages
 
