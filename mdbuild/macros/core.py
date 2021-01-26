@@ -6,6 +6,10 @@ Expand macros of the following format
     {{macro}}
     {{macro:param1,param2}}
 
+    {{macro:skip=foo|bar}} returns empty string in presets foo and bar
+    {{macro:only=foo|bar}} macro is rendered only in presets foo and bar
+
+
 
 Possible enhancements: 
 
@@ -18,7 +22,7 @@ Possible enhancements:
 """
 from __future__ import print_function
 
-
+from mdbuild import config
 import re
 
 macros = {}
@@ -55,6 +59,16 @@ def process_macro(match):
                 args.append(item)
     else:
         name = macro_string
+
+    # process 'skip' and 'only':
+    if 'skip' in kwargs:
+        if config.cfg.preset in kwargs['skip'].split('|'):
+            print('skipped macro:', name)
+            return ''
+    elif 'only' in kwargs:
+        if config.cfg.preset not in kwargs['only'].split('|'):
+            print('macro available only in other presets:', name)
+            return ''
 
     # print('macro', name)
     if name not in macros:
