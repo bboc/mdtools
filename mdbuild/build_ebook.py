@@ -9,8 +9,6 @@ import codecs
 from functools import partial
 import os
 
-from .glossary_processor import get_glossary_processor
-
 from . import config
 from . import glossary
 from . import macros
@@ -40,12 +38,12 @@ class EbookWriter(object):
             partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
-        # add a filter dependent on output format
+        # process glossary links
         if config.cfg.target_format == 'html':
             self.filters.append(partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
             self.filters.append(partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
         else:
-            gp = get_glossary_processor('plain')
+            gp = glossary.get_glossary_link_processor('plain')
             self.filters.append(gp.replace_glossary_references)
 
     def build(self):
