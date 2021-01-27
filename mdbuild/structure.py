@@ -236,6 +236,10 @@ class ContentRoot(ContentNode):
             part.read_info()
 
     @property
+    def level(self):
+        return 0
+
+    @property
     def id(self):
         return ''
 
@@ -268,13 +272,20 @@ class ContentRoot(ContentNode):
         else:
             return self.next_sibling_or_ancestor_sibling
 
+
 class Part(ContentNode):
-    pass
+    @property
+    def level(self):
+        return 1
 
 
 class Chapter(ContentNode):
-    pass
+    @property
+    def level(self):
+        return 2
 
 
 class Section(ContentNode):
-    pass
+    @property
+    def level(self):
+        return 3
