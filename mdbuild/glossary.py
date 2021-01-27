@@ -160,19 +160,21 @@ def add_glossary_term_tooltips(template, lines):
         yield line
 
 
-
 def get_glossary_link_processor(style):
     # TODO: this should distinguish between format and style
     if style == 'footnotes':
-        return GlossaryLinkFootnoteProcessor()
+        return GlossaryLinkFootnote()
     elif style == 'underline':
-        return GlossaryLinkUnderlineProcessor()
+        return GlossaryLinkUnderline()
     elif style == 'plain':
-        return GlossaryLinkPlainProcessor()
+        return GlossaryLinkPlain()
+    elif style == 'tooltip':
+        return GlossaryLinkTooltip()
     else:
-        return GlossaryLinkMagicProcessor(style)
+        return GlossaryLinkMagic(style)
 
-# TODO: refactor 
+
+# TODO: refactor so that the processor does not require an instance
 class GlossaryLinkProcessor(object):
     """
     This is the a glossary processor that replaces glossary links, it works like this:
@@ -223,36 +225,36 @@ class GlossaryLinkProcessor(object):
         pass
 
 
-class GlossaryLinkMagicProcessor(GlossaryLinkProcessor):
+class GlossaryLinkMagic(GlossaryLinkProcessor):
     """
     Use the argument --glossary-style as a template for replacing glossary links.
     make sure to escape backticks etc. "\`\\underline{%(title)s}\`{=latex}"
     TODO: this is probably best configured in the project.yaml in the future
     """
     def __init__(self, template):
-        super(GlossaryLinkMagicProcessor, self).__init__()
+        super(GlossaryLinkMagic, self).__init__()
         print(template)
         print("--------------------")
         self.INLINE_TEMPLATE = template
 
 
-class GlossaryLinkPlainProcessor(GlossaryLinkProcessor):
+class GlossaryLinkPlain(GlossaryLinkProcessor):
     """Remove all glossary links (replace with link title)."""
     INLINE_TEMPLATE = """%(title)s"""
 
 
-class GlossaryLinkUnderlineProcessor(GlossaryLinkProcessor):
+class GlossaryLinkUnderline(GlossaryLinkProcessor):
     """Underline all glossary links."""
     INLINE_TEMPLATE = """`\\underline{%(title)s}`{=latex}"""
 
 
-class GlossaryLinkFootnoteProcessor(GlossaryLinkProcessor):
+class GlossaryLinkFootnote(GlossaryLinkProcessor):
 
     INLINE_TEMPLATE = """%(title)s[^%(term)s]"""
     FOOTNOTE_TEXT_TEMPLATE = """[^%(term)s]: %(name)s: %(description)s"""
 
     def __init__(self):
-        super(GlossaryLinkFootnoteProcessor, self).__init__()
+        super(GlossaryLinkFootnote, self).__init__()
         # TODO: at least for LaTeX, that buffer should be maintained for the whole book, not for each source
         self.buffer = {}
 
@@ -267,3 +269,5 @@ class GlossaryLinkFootnoteProcessor(GlossaryLinkProcessor):
             target.write('\n\n')
 
 
+class GlossaryLinkTooltip(GlossaryLinkProcessor):
+    INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""

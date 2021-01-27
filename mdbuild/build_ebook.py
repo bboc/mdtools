@@ -39,11 +39,11 @@ class EbookWriter(object):
         ]
         # process glossary links
         if config.cfg.target_format == 'html':
-            self.filters.append(partial(glossary.add_glossary_term_tooltips, glossary.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
-            self.filters.append(partial(glossary.add_glossary_term_tooltips, glossary.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
+            style = 'tooltip'
         else:
-            gp = glossary.get_glossary_link_processor('plain')
-            self.filters.append(gp.replace_glossary_references)
+            style = 'plain'
+        gp = glossary.get_glossary_link_processor(style)
+        self.filters.append(gp.replace_glossary_references)
 
     def build(self):
         """
