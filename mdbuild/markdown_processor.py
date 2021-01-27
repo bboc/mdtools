@@ -5,10 +5,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 import re
 
-from .common import SLIDE_MARKERS, escape_html_delimiters
-from . import glossary
+from .common import SLIDE_MARKERS
 from .translate import translate as _
-from . import structure
 from . import config
 
 
@@ -161,7 +159,7 @@ END_SUMMARY = "</summary>"
 def extract_summary(summary_db, name, lines):
     """Extracty summaries and add to summary_db, strip ** summary tags.
 
-    Must come after inject_glossary so that the text is already expanded.
+    Must come after replacing glossary entries so that the text is already expanded.
     """
     for line in lines:
         if line.strip() == BEGIN_SUMMARY:
@@ -207,7 +205,7 @@ class MetadataPlugin(object):
     def filter(cls, lines):
         """Extract title, summary (and potentially other stuff.
 
-        Must come after inject_glossary so that the text is already expanded.
+        Must come after replacing glossary entries so that the text is already expanded.
 
         MMD Metadata Documentation:
         https://fletcher.github.io/peg-multimarkdown/mmd-manual.pdf
@@ -240,30 +238,6 @@ class MetadataPlugin(object):
                 yield line
         if summary:
             cls.summary = '\n'.join(summary)
-
-
-GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
-
-GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
-
-
-def add_glossary_term_tooltips(template, lines):
-    """Add tooltip for marked glossary entries."""
-    def glossary_replace(match):
-        """Replace term with glossary tooltip or other template."""
-        term = match.group('glossary_term')
-        description = glossary.glossary['terms'][term]['glossary']
-        description = escape_html_delimiters(description)
-        data = {
-            'title': match.group('title'),
-            'name': glossary.glossary['terms'][term]['name'],
-            'description': description,
-        }
-        return template % data
-
-    for line in lines:
-        line = GLOSSARY_TERM_PATTERN.sub(glossary_replace, line)
-        yield line
 
 
 SECTION_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(section:(?P<section>[^)]*)\)")

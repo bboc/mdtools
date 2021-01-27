@@ -3,7 +3,8 @@
 from __future__ import absolute_import
 from .common import read_config_file
 from operator import itemgetter
-from . import markdown_processor as mdp
+from .common import escape_html_delimiters
+import re
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
@@ -19,7 +20,9 @@ def set_glossary(filename):
 
 def full_glossary_macro(renderer, config, structure):
     """
-    Insert full glossary in alphabetical order .
+    Insert full glossary in alphabetical order.
+
+    TODO: this should be format aware....
     """
 
     glossary_contents = []
@@ -131,6 +134,33 @@ class EbookGlossaryRenderer(GlossaryRenderer):
     PAGE_BREAK = ''
 
 
+
+GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
+
+GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
+
+
+def add_glossary_term_tooltips(template, lines):
+    """Add tooltip for marked glossary entries."""
+    # TODO: this should be a GlossaryLinkProcessor?
+    def glossary_replace(match):
+        """Replace term with glossary tooltip or other template."""
+        term = match.group('glossary_term')
+        description = glossary['terms'][term]['glossary']
+        description = escape_html_delimiters(description)
+        data = {
+            'title': match.group('title'),
+            'name': glossary['terms'][term]['name'],
+            'description': description,
+        }
+        return template % data
+
+    for line in lines:
+        line = GLOSSARY_TERM_PATTERN.sub(glossary_replace, line)
+        yield line
+
+
+
 def get_glossary_link_processor(style):
     # TODO: this should distinguish between format and style
     if style == 'footnotes':
@@ -142,7 +172,7 @@ def get_glossary_link_processor(style):
     else:
         return GlossaryLinkMagicProcessor(style)
 
-
+# TODO: refactor 
 class GlossaryLinkProcessor(object):
     """
     This is the a glossary processor that replaces glossary links, it works like this:
@@ -185,7 +215,7 @@ class GlossaryLinkProcessor(object):
     def replace_glossary_references(self, lines):
         """Replace all inline glossary reference."""
         for line in lines:
-            line = mdp.GLOSSARY_TERM_PATTERN.sub(self.replace_callback, line)
+            line = GLOSSARY_TERM_PATTERN.sub(self.replace_callback, line)
             yield line
 
     def glossary_post_processing(self, target):
@@ -200,7 +230,7 @@ class GlossaryLinkMagicProcessor(GlossaryLinkProcessor):
     TODO: this is probably best configured in the project.yaml in the future
     """
     def __init__(self, template):
-        super(GlossaryMagicProcessor, self).__init__()
+        super(GlossaryLinkMagicProcessor, self).__init__()
         print(template)
         print("--------------------")
         self.INLINE_TEMPLATE = template
@@ -223,6 +253,7 @@ class GlossaryLinkFootnoteProcessor(GlossaryLinkProcessor):
 
     def __init__(self):
         super(GlossaryLinkFootnoteProcessor, self).__init__()
+        # TODO: at least for LaTeX, that buffer should be maintained for the whole book, not for each source
         self.buffer = {}
 
     def additional_item_processing(self, item_data):

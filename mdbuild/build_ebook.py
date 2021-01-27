@@ -7,7 +7,6 @@ from __future__ import absolute_import
 
 import codecs
 from functools import partial
-import os
 
 from . import config
 from . import glossary
@@ -40,8 +39,8 @@ class EbookWriter(object):
         ]
         # process glossary links
         if config.cfg.target_format == 'html':
-            self.filters.append(partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
-            self.filters.append(partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
+            self.filters.append(partial(glossary.add_glossary_term_tooltips, glossary.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
+            self.filters.append(partial(glossary.add_glossary_term_tooltips, glossary.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
         else:
             gp = glossary.get_glossary_link_processor('plain')
             self.filters.append(gp.replace_glossary_references)

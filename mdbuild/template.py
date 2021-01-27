@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 from __future__ import absolute_import
+
 import codecs
 from functools import partial
-
-import sys
 import shutil
+import sys
+
 from . import config
-from . import markdown_processor as mdp
+from . import glossary
 from . import macros
+from . import markdown_processor as mdp
 
 
 def process_templates_in_config():
@@ -72,7 +73,7 @@ def _processed_template(mode, src, dest):
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                 partial(macros.MacroFilter.filter),
                 # TODO: this is not always the right thing, but glossary entries in templates are pretty rare
-                partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE)])
+                partial(glossary.add_glossary_term_tooltips, glossary.GLOSSARY_TERM_TOOLTIP_TEMPLATE)])
             if mode == 'markdown':
                 processor.add_filter(mdp.jekyll_front_matter)
             processor.add_filter(partial(mdp.write, target))
