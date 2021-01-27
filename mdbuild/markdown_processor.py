@@ -95,7 +95,6 @@ def clean_images(lines):
     """Remove deckset formatters like "inline,fit" from images, skip background images ([fit])."""
 
     def clean_img(match):
-        """Get a definition of a term from the glossary."""
         caption = match.group('caption')
         url = match.group('url')
         if caption.lower() == 'fit':
