@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 from .common import read_config_file
+from . import config
 from operator import itemgetter
 from .common import escape_html_delimiters
 import re
@@ -134,65 +135,30 @@ class EbookGlossaryRenderer(GlossaryRenderer):
     PAGE_BREAK = ''
 
 
-
-GLOSSARY_TERM_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
-
-GLOSSARY_TERM_TOOLTIP_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
-
-
-def add_glossary_term_tooltips(template, lines):
-    """Add tooltip for marked glossary entries."""
-    # TODO: this should be a GlossaryLinkProcessor?
-    def glossary_replace(match):
-        """Replace term with glossary tooltip or other template."""
-        term = match.group('glossary_term')
-        description = glossary['terms'][term]['glossary']
-        description = escape_html_delimiters(description)
-        data = {
-            'title': match.group('title'),
-            'name': glossary['terms'][term]['name'],
-            'description': description,
-        }
-        return template % data
-
-    for line in lines:
-        line = GLOSSARY_TERM_PATTERN.sub(glossary_replace, line)
-        yield line
-
-
 def get_glossary_link_processor(style):
-    # TODO: this should distinguish between format and style
+    """Return a filter that processes glossary links."""
+
     if style == 'footnotes':
-        return GlossaryLinkFootnote()
+        return GlossaryLinkFootnote.replace_glossary_references
     elif style == 'underline':
-        return GlossaryLinkUnderline()
+        return GlossaryLinkUnderline.replace_glossary_references
     elif style == 'plain':
-        return GlossaryLinkPlain()
+        return GlossaryLinkPlain.replace_glossary_references
     elif style == 'tooltip':
-        return GlossaryLinkTooltip()
+        return GlossaryLinkTooltip.replace_glossary_references
     else:
-        return GlossaryLinkMagic(style)
+        GlossaryLinkMagic.INLINE_TEMPLATE = config.glossary_template
+        return GlossaryLinkMagic.replace_glossary_references
 
 
-# TODO: refactor so that the processor does not require an instance
 class GlossaryLinkProcessor(object):
     """
-    This is the a glossary processor that replaces glossary links, it works like this:
-
-    gp = get_glossary_processor(style)
-
-    then append this to a markdown processor:
-
-    self.gp.replace_glossary_references
-
-    TODO: The API is a bit lame, the first line should not be necessary
-    TODO: teach this pony to replace glossary links
+    This is the a glossary processor that replaces glossary links.
     """
+    GLOSSARY_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
-    def __init__(self):
-        pass
-
-    def get_item_data(self, match):
+    @classmethod
+    def get_item_data(cls, match):
         """Return a dictionary with all data about the glossary item."""
         term = match.group('glossary_term')
         description = glossary['terms'][term]['glossary']
@@ -203,39 +169,40 @@ class GlossaryLinkProcessor(object):
             'description': description,  # the explanation of the term
         }
 
-    def additional_item_processing(self, data):
+    @classmethod
+    def additional_item_processing(cls, data):
         """Override for additional processing for each glossary item."""
         pass
 
-    def replace_callback(self, match):
+    @classmethod
+    def replace_callback(cls, match):
         """Replace each match of the regex."""
-        data = self.get_item_data(match)
+        data = cls.get_item_data(match)
         # do some additional stuff beyond replacing the glossary link inline:
-        self.additional_item_processing(data)
-        return self.INLINE_TEMPLATE % data
+        cls.additional_item_processing(data)
+        return cls.INLINE_TEMPLATE % data
 
-    def replace_glossary_references(self, lines):
+    @classmethod
+    def replace_glossary_references(cls, lines):
         """Replace all inline glossary reference."""
         for line in lines:
-            line = GLOSSARY_TERM_PATTERN.sub(self.replace_callback, line)
+            line = cls.GLOSSARY_LINK_PATTERN.sub(cls.replace_callback, line)
             yield line
 
-    def glossary_post_processing(self, target):
+    @classmethod
+    def glossary_post_processing(cls, target):
         """Override to do something when after the complete ebook is processed, e.g. insert footnotes."""
         pass
 
 
 class GlossaryLinkMagic(GlossaryLinkProcessor):
     """
-    Use the argument --glossary-style as a template for replacing glossary links.
-    make sure to escape backticks etc. "\`\\underline{%(title)s}\`{=latex}"
-    TODO: this is probably best configured in the project.yaml in the future
+    Use the config parameter glossary_link_template
+    as a template for replacing glossary links.
+
+    Template is set by get_glossary_link_processor at runtime.
     """
-    def __init__(self, template):
-        super(GlossaryLinkMagic, self).__init__()
-        print(template)
-        print("--------------------")
-        self.INLINE_TEMPLATE = template
+    INLINE_TEMPLATE = ''
 
 
 class GlossaryLinkPlain(GlossaryLinkProcessor):
@@ -252,20 +219,18 @@ class GlossaryLinkFootnote(GlossaryLinkProcessor):
 
     INLINE_TEMPLATE = """%(title)s[^%(term)s]"""
     FOOTNOTE_TEXT_TEMPLATE = """[^%(term)s]: %(name)s: %(description)s"""
+    buffer = {}
 
-    def __init__(self):
-        super(GlossaryLinkFootnote, self).__init__()
-        # TODO: at least for LaTeX, that buffer should be maintained for the whole book, not for each source
-        self.buffer = {}
-
-    def additional_item_processing(self, item_data):
+    @classmethod
+    def additional_item_processing(cls, item_data):
         # buffer the explanation
-        self.buffer[item_data['term']] = self.FOOTNOTE_TEXT_TEMPLATE % item_data
+        cls.buffer[item_data['term']] = cls.FOOTNOTE_TEXT_TEMPLATE % item_data
 
-    def glossary_post_processing(self, target):
+    @classmethod
+    def glossary_post_processing(cls, target):
         """Emit all the buffered glossary items for footnotes."""
-        for key in sorted(self.buffer.keys()):
-            target.write(self.buffer[key])
+        for key in sorted(cls.buffer.keys()):
+            target.write(cls.buffer[key])
             target.write('\n\n')
 
 

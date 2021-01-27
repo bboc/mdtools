@@ -46,7 +46,7 @@ class JekyllWriter(object):
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
             macros.MacroFilter.filter,
-            partial(glossary.add_glossary_term_tooltips, glossary.GLOSSARY_TERM_TOOLTIP_TEMPLATE),
+            glossary.get_glossary_link_processor('tooltip'),
             mdp.jekyll_front_matter,
             # partial(mdp.prefix_headline, headline_prefix),
             partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
