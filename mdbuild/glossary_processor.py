@@ -1,30 +1,47 @@
 # -*- coding: utf-8 -*-
 from . import markdown_processor as mdp
 
+from . import glossary
 
-def get_glossary_processor(style, glossary):
+# TODO: move this code to glossary module
+
+def get_glossary_processor(style):
+    # TODO: this should distinguish between format and style
     if style == 'footnotes':
-        return GlossaryFootnoteProcessor(glossary)
+        return GlossaryFootnoteProcessor()
     elif style == 'underline':
-        return GlossaryUnderlineProcessor(glossary)
+        return GlossaryUnderlineProcessor()
     elif style == 'plain':
-        return GlossaryPlainProcessor(glossary)
+        return GlossaryPlainProcessor()
     else:
-        return GlossaryMagicProcessor(glossary, style)
+        return GlossaryMagicProcessor(style)
 
 
 class GlossaryProcessor(object):
-    def __init__(self, glossary):
-        self.glossary = glossary
+    """
+    This is the a glossary processor that replaces glossary links, it works like this:
+
+    gp = get_glossary_processor(style)
+
+    then append this to a markdown processor:
+
+    self.gp.replace_glossary_references
+
+    TODO: The API is a bit lame, the first line should not be necessary
+    TODO: teach this pony to replace glossary links
+    """
+
+    def __init__(self):
+        pass
 
     def get_item_data(self, match):
         """Return a dictionary with all data about the glossary item."""
         term = match.group('glossary_term')
-        description = self.glossary['terms'][term]['glossary']
+        description = glossary.glossary['terms'][term]['glossary']
         return {
             'title': match.group('title'),  # the title of the reference
             'term': term,  # the glossary term (identifier or key in the yaml glossary)
-            'name': self.glossary['terms'][term]['name'],  # the name of the glossary term
+            'name': glossary.glossary['terms'][term]['name'],  # the name of the glossary term
             'description': description,  # the explanation of the term
         }
 
@@ -54,9 +71,10 @@ class GlossaryMagicProcessor(GlossaryProcessor):
     """
     Use the argument --glossary-style as a template for replacing glossary links.
     make sure to escape backticks etc. "\`\\underline{%(title)s}\`{=latex}"
+    TODO: this is probably best configured in the project.yaml in the future
     """
-    def __init__(self, glossary, template):
-        super(GlossaryMagicProcessor, self).__init__(glossary)
+    def __init__(self, template):
+        super(GlossaryMagicProcessor, self).__init__()
         print(template)
         print("--------------------")
         self.INLINE_TEMPLATE = template

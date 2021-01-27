@@ -37,15 +37,16 @@ class EbookWriter(object):
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
             macros.MacroFilter.filter,
-
             partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
-        if config.cfg.target_format == 'foobar':
-            # add a filter dependent on output format
-            self.filters.append()
-            # self.gp = get_glossary_processor(args.glossary_style, self.glossary)
-            # self.gp.replace_glossary_references,
+        # add a filter dependent on output format
+        if config.cfg.target_format == 'html':
+            self.filters.append(partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
+            self.filters.append(partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE))
+        else:
+            gp = get_glossary_processor('plain')
+            self.filters.append(gp.replace_glossary_references)
 
     def build(self):
         """
