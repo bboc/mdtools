@@ -71,6 +71,7 @@ def _processed_template(mode, src, dest):
                 partial(mdp.template, config.cfg.variables),
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                 partial(macros.MacroFilter.filter),
+                # TODO: this is not always the right thing, but glossary entries in templates are pretty rare
                 partial(mdp.add_glossary_term_tooltips, mdp.GLOSSARY_TERM_TOOLTIP_TEMPLATE)])
             if mode == 'markdown':
                 processor.add_filter(mdp.jekyll_front_matter)
