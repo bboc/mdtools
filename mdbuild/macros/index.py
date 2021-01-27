@@ -121,6 +121,17 @@ class MenuMacro(object):
     pass
 
     @classmethod
-    def render(cls, config, stucture, css_class, *args, **kwargs):
-        return 'my menu'
+    def render(cls, config, structure, css_class, *args, **kwargs):
+        return '\n'.join(cls.render_children(structure, []))
+
+    @classmethod
+    def render_children(cls, node, res):
+        if node.children:
+            res.append("<ul>\n")
+            for c in node.children:
+                res.append("""<li><a href="%s.html">%s</a>\n""" % (c.slug, c.title))
+                cls.render_children(c, res)
+                res.append("</li>\n")
+            res.append("</ul>\n")
+        return res
 
