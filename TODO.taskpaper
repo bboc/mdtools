@@ -20,6 +20,7 @@ mdtools 2.0:
 			- errors in structure.yaml and in the content structure are reported properly @done
 			- patterns and pattern group are identified via tags in structure.yaml @done
 			- document titles are read from file @done
+			- decide: separate builder and renderer?? @done
 			jekyll builder uses new format: @estimate(2h)
 				- navigation in jekyll is still working (prev/next/up) @done
 				- indexes with summaries are written to all pattern group pages, to introduction and to appendix @done
@@ -31,36 +32,35 @@ mdtools 2.0:
 				- main index page uses plain index format @done
 				- output is compared in detail once more 
 				- section links are still working
-				- glossary entries can be replaced depending on ebook type
-			- decide: separate builder and renderer??
-			all-in-one page:
-				- replace glossary links properly:
-					- move glossary item replacement to macro
-					- use target format
-			- ebook builder uses new format
-			epub is working:
-				- ???
-			pdf is working:
-				- glossary links should be removed
+			one-page html:
+				- fix headline indentation
+					- then reactivate glossary tooltips!!!
+				- show glossary tooltips @done
+				- markdown processor has access to structure and config @done
+				- index supports style @done
+				- add pattern index @done
+				- move glossary item replacement to macro @done
+			pdf ebook:
+				- glossary links should be removed @done
 				- glossary has duplicate header
 				- header indentation is messed up
-				all-in-one html:
-					- markdown processor has access to structure and config
-					- glossary tooltips are output format aware
-					- glossary links are output format aware
-					- index supports style @done
-					- add pattern index @done
+			epub ebook:
+				- ???
+				- replace glossary links properly:
+			all-in-one html:
 			- check that a simplified format for structure (like used in the docs) is still possible
-			- ebook builder  uses new format @estimate(4h)
-			simple unified glossary code: @estimate(2h)
-				all code that processes glossary items should be located in glossary.py or in macro package
-				- markdown processor
-				- glossary processor
-				- macros
-				- glossary.py
-			- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
-			- all obsolete code is removed 
-			- access to undefined config element produces a nice error
+			Clean up Code (after the practical guide has been committed to branch!!):
+				- todo: default template mode should be copy????
+				- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
+				- all obsolete code is removed 
+				- access to undefined config element produces a nice error
+					This might take longer, because to display full path each content object needs access to its parent (FFS!)
+				simple unified glossary code: @estimate(2h) @done
+					all code that processes glossary items should be located in glossary.py or in macro package
+					- markdown processor @done
+					- glossary processor @done
+					- macros @done
+					- glossary.py @done
 		Macro Support: @estimate(30min)
 			- macros processing is consolidated into one markdown filter that takes plugins: @done
 				1. parse string for {{macro}} 
@@ -87,6 +87,21 @@ mdtools 2.0:
 			- add css for menu responsive menu
 			- create menu structure from structure yaml
 			- add tags for excluding items from menu
+			Links:
+				https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
+				seems to be the first thing I should try (use Complete navbar .sm-clean)
+				https://stackoverflow.com/questions/18023493/bootstrap-dropdown-sub-menu-missing
+				nested menu with bootstrap 4 (code and explanation)
+				https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
+					good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
+				https://getbootstrap.com - the bootstrap site
+				https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
+					explanation of html/css for responsive menus (nav element and media queries)
+				https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
+					best practices
+				https://github.com/dpstrange/jekyll-bootstrap
+				bootstrap temlate for jekyll
+				
 		Configuration as Code: @done
 			As author I want a simple way to configure the output for various formats so that I it is easy to set up new output formats and I don't have to learn about makefiles or shell scripts.
 			- read document presets from project.yaml instead of the commandline @done
