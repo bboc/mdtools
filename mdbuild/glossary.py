@@ -6,7 +6,7 @@ import logging
 from operator import itemgetter
 import re
 
-from .common import escape_html_delimiters, read_config_file
+from .common import read_config_file
 from . import config
 
 logger = logging.getLogger(__name__)
@@ -55,11 +55,10 @@ def _expand_term(term, key, pattern):
     try:
         return pattern % glossary['terms'][term][key]
     except KeyError:
-        logger.error("can't find '%s' for glossary entry '%s'" (key,term))
+        logger.error("can't find '%s' for glossary entry '%s'" (key, term))
         raise
 
 
-# TODO: unify this with the other glossary code!!
 class GlossaryRenderer(object):
     """Base class for rendering a full glossary. Subclasses mostly define class variables."""
 
@@ -214,6 +213,10 @@ class GlossaryLinkPlain(GlossaryLinkProcessor):
     INLINE_TEMPLATE = """%(title)s"""
 
 
+class GlossaryLinkTooltip(GlossaryLinkProcessor):
+    INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
+
+
 class GlossaryLinkUnderline(GlossaryLinkProcessor):
     """Underline all glossary links."""
     INLINE_TEMPLATE = """`\\underline{%(title)s}`{=latex}"""
@@ -236,7 +239,3 @@ class GlossaryLinkFootnote(GlossaryLinkProcessor):
         for key in sorted(cls.buffer.keys()):
             target.write(cls.buffer[key])
             target.write('\n\n')
-
-
-class GlossaryLinkTooltip(GlossaryLinkProcessor):
-    INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""

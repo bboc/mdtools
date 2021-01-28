@@ -15,6 +15,7 @@ from . import markdown_processor as mdp
 from . import structure
 from . import template
 
+
 class EbookWriter(object):
 
     def __init__(self):
@@ -42,7 +43,6 @@ class EbookWriter(object):
             style = 'tooltip'
         else:
             style = 'plain'
-        #gp = glossary.get_glossary_link_processor(style)
         self.filters.append(glossary.get_glossary_link_processor(style))
 
     def build(self):
