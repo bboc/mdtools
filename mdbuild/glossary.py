@@ -134,8 +134,8 @@ class JekyllGlossaryRenderer(GlossaryRenderer):
 class EbookGlossaryRenderer(GlossaryRenderer):
 
     TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
-    HEADER_TEMPLATE = '\n## %s %s\n\n'
-    #HEADER_TEMPLATE = None
+    # HEADER_TEMPLATE = '\n## %s %s\n\n'
+    HEADER_TEMPLATE = None
     PAGE_BREAK = ''
 
 
