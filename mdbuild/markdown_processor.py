@@ -138,7 +138,7 @@ def jekyll_front_matter(lines, params=None):
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
     title = match.group('title')
-    yield FRONT_MATTER_TITLE % title
+    yield FRONT_MATTER_TITLE % title.replace("\"", "\\\"")
     if params:
         # insert parameters into front matter if present
         # preserve order of parameters to avoid random changes in files
