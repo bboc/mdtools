@@ -5,8 +5,11 @@ A tiny implementation of gettext-like translation.
 """
 from __future__ import print_function
 
+import logging
 import os.path
 import polib
+
+logger = logging.getLogger(__name__)
 
 translation_memory = {}
 
@@ -14,7 +17,7 @@ translation_memory = {}
 def read_translation_memory(filename):
     """Read translation memory from a po-file."""
     if not os.path.exists(filename):
-        print(">>>translation memory not found:", filename, "<<<")
+        logger.warning("translation memory not found: '%s'", filename)
         return
     tm = {}
     po = polib.pofile(filename)
@@ -29,5 +32,5 @@ def translate(message, warnings=None):
         return translation_memory[message]
     else:
         if warnings:
-            print("WARNING: ", message, "not in translation translation_memory")
+            logger.warning("message not in translation translation_memory: '%s'", message)
         return message

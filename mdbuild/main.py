@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import absolute_import
 
+import logging
 import sys
 import argparse
 
@@ -19,13 +20,22 @@ from .glossary import set_glossary
 from . import template
 from . import translate
 
+logger = logging.getLogger(__name__)
+
 
 def build(args):
     """Build from the selected configuration."""
 
+    print('------- Starting Build ---------')
+
+    logger.debug("args: %s" % repr(args))
+
     setup(args)
+
     # read structure
     set_structure(config.cfg.structure, config.cfg.source)
+
+    logger.info("selecting the renderer...")
 
     # select and run the appropriate builder
     if config.cfg.renderer == 'jekyll':
@@ -35,33 +45,70 @@ def build(args):
         e = EbookWriter()
         e.build()
     elif config.cfg.renderer == 'revealjs':
-        print("revealjs writer not ported to 2.0")
+        logger.error("revealjs writer not ported to 2.0")
         sys.exit(1)
         # build_reveal_slides()
     elif config.cfg.renderer == 'deckset':
-        print("Deckset writer not ported to 2.0")
+        logger.error("Deckset writer not ported to 2.0")
         sys.exit(1)
         # build_deckset_slides()
     elif config.cfg.renderer == 'wordpress':
-        print("Wordpress writer not ported to 2.0")
+        logger.error("Wordpress writer not ported to 2.0")
         sys.exit(1)
         # build_wordpress()
     else:
-        print("ERROR: unknown renderer", config.cfg.format)
+        logger.error("unknown renderer '%s' " % config.cfg.format)
         sys.exit(1)
 
 
 def setup(args):
-    print("setting things up…")
+
+    # set up logger first
+    logging_setup(args)
+    logger.info("setting things up...")
+
     # read config
     config.set_project_config(args.project, args.preset)
     # build glossary (if defined)
     if config.cfg.glossary:
         set_glossary(config.cfg.glossary)
     else:
-        print('WARNING: no glossary defined!')
+        logger.warning('no glossary defined!')
 
     translate.read_translation_memory(config.cfg.localization)
+
+
+def logging_setup(args):
+    """
+    -v show warnings
+    -vv show info
+    -vvv DEBUG and a formatter that shows the module
+    """
+
+    def suppress_markdown_messages(record):
+        """Suppress all the noise the markdown module makes."""
+        if record.name == 'MARKDOWN':
+            return 0
+        else:
+            return 1
+
+    # calculate format from verbose
+    lvl = max(40 - (10 * args.verbose), 10)
+    if lvl == logging.DEBUG:
+        FORMAT = '%(levelname)s::%(name)s::%(message)s'
+    else:
+        FORMAT = '%(message)s'
+    h = logging.StreamHandler(stream=sys.stdout)
+    h.addFilter(suppress_markdown_messages)
+    h.setFormatter(logging.Formatter(FORMAT))
+    if logging.root.hasHandlers():
+        print("has handlers")
+    logging.root.addHandler(h)
+
+    logging.root.setLevel(lvl)
+
+    logging.getLogger('mdbuild.macros.core').addHandler(logging.NullHandler())
+
 
 
 def main_build():
@@ -69,7 +116,7 @@ def main_build():
         description='A commandline tools for publishing various document formats (Jekyll, LaTeX, ePub etc.) from a single markdown source.',
         fromfile_prefix_chars='@'
     )
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('preset',
                         help="The preset (defined in the project configuration file) to use for this build.")
     parser.add_argument('project', help='the configuration file for the project (yaml)')
@@ -94,7 +141,7 @@ def main_template():
         description="Inject translations (and optionally parameters from a config) into a template file.",
         fromfile_prefix_chars='@'
     )
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('mode', choices=['copy', 'markdown', 'default'],
                         default='default',
                         help="Output format (deckset | ebook | jekyll | revealjs | wordpress)")

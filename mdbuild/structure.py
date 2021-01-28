@@ -2,35 +2,31 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
-import os
 import codecs
+from functools import partial
+import logging
+import os
 
 from . import markdown_processor as mdp
 from .common import read_config_file, FILENAME_PATTERN
 from . import glossary
 from . import macros
 
-# section names
-PARTS = 'parts'
-CHAPTERS = 'chapters'
-SECTIONS = 'sections'
-# attribute for title
-TITLE = 'title'
+logger = logging.getLogger(__name__)
 
 # the document structure
 structure = None
 
 
 def set_structure(filename, content_path):
-    print("------- structure---------")
-    print(filename)
+    logger.info("-- reading structure '%s'" % filename)
 
     macros.register_macro('glossary', glossary.glossary_term_macro)
     macros.register_macro('define', glossary.glossary_definition_macro)
 
     cs = ContentRoot.from_config(read_config_file(filename))
     cs.read_info(content_path)
-    # print(pformat(cs.to_dict()))
+    # logger.debug(cs.to_dict())
     globals()['structure'] = cs
 
 
@@ -47,13 +43,18 @@ class ContentNode(object):
     - parameters (extracted from structure yaml)
     - tags (part of parameters??)
     """
+
+    PARTS = 'parts'
+    CHAPTERS = 'chapters'
+    SECTIONS = 'sections'
+
     def __init__(self, slug, parent, root):
         pass
         self.parent = parent
         self.root = root
         self.slug = slug
         self.children = []
-        self.title = 'to title set'
+        self.title = ''
         self.config = {}
         self.tags = []
         self.summary = ''
@@ -165,10 +166,10 @@ class ContentNode(object):
             item.tags = data['tags']
         if 'config' in data:
             item.config = data['config']
-        if item.__class__ == Part and CHAPTERS in data:
-            item.children = [Chapter.from_config(d, item, parent) for d in data[CHAPTERS]]
-        elif item.__class__ == Chapter and SECTIONS in data:
-            item.children = [Section.from_config(d, item, parent) for d in data[SECTIONS]]
+        if item.__class__ == Part and cls.CHAPTERS in data:
+            item.children = [Chapter.from_config(d, item, parent) for d in data[cls.CHAPTERS]]
+        elif item.__class__ == Chapter and cls.SECTIONS in data:
+            item.children = [Section.from_config(d, item, parent) for d in data[cls.SECTIONS]]
 
         return item
 
@@ -185,12 +186,11 @@ class ContentNode(object):
             raise Exception("ERROR: source_path %s doesn't exist)" % self.path)
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=[
-                macros.MacroFilter.filter,
+                partial(macros.MacroFilter.filter, ignore_unknown=True),
                 mdp.MetadataPlugin.filter
             ])
             processor.process()
-            # print(mdp.MetadataPlugin.title)
-            # print(mdp.MetadataPlugin.summary)
+            logger.debug("node title: '%s'" % mdp.MetadataPlugin.title)
             self.title = mdp.MetadataPlugin.title
             self.summary = mdp.MetadataPlugin.summary
 
@@ -211,7 +211,6 @@ class ContentRoot(ContentNode):
     A representation of entire content.
 
     The content has parts, the parts have chapters, and the chapters have sections.
-    TODO: make this a ContenNode object that holds the index document???
     """
     def __init__(self, root_path):
         self.root_path = root_path
@@ -222,8 +221,7 @@ class ContentRoot(ContentNode):
         c = cls(path)
         c.root_path = path
         c.config = structure['config']
-        c.children = [Part.from_config(part, c, c) for part in structure[PARTS]]
-        # TODO: raise exception for wrong config format and sys.exit(1)
+        c.children = [Part.from_config(part, c, c) for part in structure[cls.PARTS]]
         return c
 
     def to_dict(self):

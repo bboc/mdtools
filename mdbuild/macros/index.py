@@ -3,9 +3,12 @@
 A macro that renders indexes.
 """
 
+import logging
 from operator import attrgetter
 
 from mdbuild.common import markdown2html
+
+logger = logging.getLogger(__name__)
 
 
 class IndexMacro(object):
@@ -34,7 +37,6 @@ class IndexMacro(object):
         sort and format default to None.
         root is processed before tag filter.
 
-
         TODO: format is no longer an argument, but comes from cfg.target_format
         TODO: process style=list or style = summary
 
@@ -50,7 +52,7 @@ class IndexMacro(object):
         if 'root' in kwargs:
             root = structure.find(kwargs['root'])
             if not root:
-                print('WARNING: could not resolve item: {{index:root=', kwargs['root'], '}}')
+                logger.warning("could not resolve item: {{index:root='%s'}}" % kwargs['root'])
                 return "{{index:root=%s ERRROR UNKNOWN ROOT}}" % kwargs['root']
 
         # select which nodes to show

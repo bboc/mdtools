@@ -3,11 +3,14 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
+import logging
 import re
 
 from .common import SLIDE_MARKERS
-from .translate import translate as _
 from . import config
+from .translate import translate as _
+
+logger = logging.getLogger(__name__)
 
 
 class MarkdownProcessor(object):
@@ -127,18 +130,23 @@ def clean_images_old(lines):
             yield line
 
 
-HEADLINE_PATTERN = re.compile("#{0,7} (?P<title>.*)")
+HEADLINE_PATTERN = re.compile("#{1,7} (?P<title>.*)")
 FRONT_MATTER_TITLE = "title: \"%s\"\n"
 FRONT_MATTER_SEPARATOR = "---\n"
 
 
 def jekyll_front_matter(lines, params=None):
-    # TODO: raise exception if no headline in first line of file!!!
     line = next(lines)
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
-    title = match.group('title')
-    yield FRONT_MATTER_TITLE % title.replace("\"", "\\\"")
+    try:
+        title = match.group('title')
+    except AttributeError:
+        pass
+    else:
+        # escape quotes in title
+        yield FRONT_MATTER_TITLE % title.replace("\"", "\\\"")
+        line = None
     if params:
         # insert parameters into front matter if present
         # preserve order of parameters to avoid random changes in files
@@ -146,6 +154,10 @@ def jekyll_front_matter(lines, params=None):
             yield ':'.join((key, params[key]))
     yield FRONT_MATTER_SEPARATOR
     yield "\n"
+
+    if line:
+        # first line wasn't a header
+        yield line
 
     # add rest of stream
     for line in lines:
@@ -197,7 +209,6 @@ def summary_tags(lines, mode=STRIP_MODE):
 
 
 class MetadataPlugin(object):
-    # TODO: check if that is really a good plugin API
     title = None
     summary = None
 
@@ -219,8 +230,11 @@ class MetadataPlugin(object):
 
         headline = next(lines)
         match = HEADLINE_PATTERN.search(headline)
-        cls.title = match.group('title')
-        # TODO: error if title doesn't match
+        try:
+            cls.title = match.group('title')
+        except AttributeError:
+            logger.warning("title not set")
+            cls.title = ''
 
         for line in lines:
             if line.strip() == BEGIN_SUMMARY:
@@ -294,8 +308,8 @@ def template(config, lines):
         try:
             return getattr(config, name)
         except AttributeError:
-            print("ERROR: Unknown Parameter", name)
-            return "${%s}" % name
+            logger.error("Unknown config variable '%s" % name)
+            return '${%s}' % name
 
     for line in lines:
         line = TRANSLATION_MARKER.sub(insert_translation, line)

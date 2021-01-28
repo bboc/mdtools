@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-from .common import read_config_file
-from . import config
+
+import logging
 from operator import itemgetter
-from .common import escape_html_delimiters
 import re
+
+from .common import escape_html_delimiters, read_config_file
+from . import config
+
+logger = logging.getLogger(__name__)
 
 GLOSSARY_MARKER = '{{insert-full-glossary}}'
 
@@ -51,7 +55,7 @@ def _expand_term(term, key, pattern):
     try:
         return pattern % glossary['terms'][term][key]
     except KeyError:
-        print('cant find ', key, " for glossary entry ", term)
+        logger.error("can't find '%s' for glossary entry '%s'" (key,term))
         raise
 
 

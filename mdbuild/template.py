@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import codecs
 from functools import partial
+import logging
 import shutil
 import sys
 
@@ -13,13 +14,15 @@ from . import glossary
 from . import macros
 from . import markdown_processor as mdp
 
+logger = logging.getLogger(__name__)
+
 
 def process_templates_in_config():
     """Process all templated defined in config.templates."""
     try:
         config.cfg.templates
     except AttributeError:
-        print("WARNING: no templates defined for preset")
+        logger.warning("no templates defined for preset")
         return
 
     for t in config.cfg.templates:
@@ -30,12 +33,12 @@ def process_templates_in_config():
         try:
             source = t.source
         except AttributeError:
-            print('ERROR: template has no source')
+            logger.error("source not set for template")
             sys.exit(1)
         try:
             destination = t.destination
         except AttributeError:
-            print('ERROR: no destination for template', t.source)
+            logger.error("no destination for template '%s'" % t.source)
             sys.exit(1)
         template(mode, source, destination)
 
@@ -47,7 +50,7 @@ def template(mode, source, destination):
     - copy: simply copy, don't touch
     - markdown: full markdown processing (inkl. jekyll front matter and macros)
     """
-    print(mode, source, destination)
+    logger.info("processing template: mode='%s', source='%s', destination='%s'" % (mode, source, destination))
     if mode == 'copy':
         shutil.copy(source, destination)
     elif mode in ['html', 'markdown']:
@@ -55,7 +58,7 @@ def template(mode, source, destination):
     elif mode == 'default':
         _default_template(source, destination)
     else:
-        print("ERROR: unknown mode ", mode, 'for template', source)
+        logger.error("unknown mode '%s' for template '%s'" % (mode, source))
         sys.exit(1)
 
 

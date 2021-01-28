@@ -20,10 +20,14 @@ Possible enhancements:
 """
 from __future__ import print_function
 
-from mdbuild import config
+from functools import partial
+import logging
 import re
 
-from mdbuild import structure, config
+from mdbuild import config
+from mdbuild import structure
+
+logger = logging.getLogger(__name__)
 
 macros = {}
 
@@ -33,11 +37,11 @@ def register_macro(name, function):
     Register a macro for processing.
     """
     if name in macros:
-        print('overriding macro:', name)
+        logger.warning("overriding macro '%s'" % name)
     globals()['macros'][name] = function
 
 
-def process_macro(match):
+def process_macro(match, ignore_unknown=False):
     """
     Extract macro name and parameters, call the registered
     macro handler and return the result.
@@ -47,7 +51,6 @@ def process_macro(match):
 
     kwargs = {}
     args = []
-    globals
 
     if ':' in macro_string:
         name, params = macro_string.split(':')
@@ -63,16 +66,16 @@ def process_macro(match):
     # process 'skip' and 'only':
     if 'skip' in kwargs:
         if config.cfg.preset in kwargs['skip'].split('|'):
-            print('skipped macro:', name)
+            logger.debug("skipped macro '%s'" % name)
             return ''
     elif 'only' in kwargs:
         if config.cfg.preset not in kwargs['only'].split('|'):
-            print('macro available only in other presets:', name)
+            logger.debug("macro '%s' available only in other presets:" % name)
             return ''
 
-    # print('macro', name)
     if name not in macros:
-        print('warning: unknown macro:', name)
+        if not ignore_unknown:
+            logger.warning("unknown macro '%s'" % name)
     else:
         return macros[name](config.cfg, structure.structure, *args, **kwargs)
 
@@ -82,9 +85,9 @@ class MacroFilter(object):
     MACRO_PATTERN = re.compile("\{\{.*?\}\}")
 
     @classmethod
-    def filter(cls, lines):
+    def filter(cls, lines, ignore_unknown=False):
         for line in lines:
-            line = cls.MACRO_PATTERN.sub(process_macro, line)
+            line = cls.MACRO_PATTERN.sub(partial(process_macro, ignore_unknown=ignore_unknown), line)
             yield line
 
 

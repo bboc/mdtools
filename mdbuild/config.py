@@ -3,14 +3,11 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
+import logging
+
 from .common import read_config_file
 
-# section names
-PARTS = 'parts'
-CHAPTERS = 'chapters'
-SECTIONS = 'sections'
-# attribute for title
-TITLE = 'title'
+logger = logging.getLogger(__name__)
 
 # global project config
 cfg = {}
@@ -21,8 +18,8 @@ def set_project_config(filename, preset=None):
     config_data = read_config_file(filename)
     cfg = ConfigObject(config_data['defaults'], config_data['presets'][preset])
     cfg.set('preset', preset)
-    print("------- config ---------")
-    # print(cfg)
+    logger.debug("-- config: '%s'" % filename)
+    logger.debug(cfg)
     globals()['cfg'] = cfg
 
 
