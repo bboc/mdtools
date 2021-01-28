@@ -48,7 +48,6 @@ class JekyllWriter(object):
             macros.MacroFilter.filter,
             glossary.get_glossary_link_processor('tooltip'),
             mdp.jekyll_front_matter,
-            # partial(mdp.prefix_headline, headline_prefix),
             partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
         ]
 
