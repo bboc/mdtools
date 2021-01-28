@@ -30,11 +30,17 @@ mdtools 2.0:
 				- all content from concepts and principles is moved to content tree @done
 				- main index page is written @done
 				- main index page uses plain index format @done
+				- section links are still working @done
+				- apparently glossary definitions are not replaced before summaries are rendered!!
 				- output is compared in detail once more 
-				- section links are still working
+				- css: make headlines a bit smaller
+			headline-levels:
+				in the old version the headline level was set up so that it was correct for the patterns when rendered as jekyll pages, and for intro and appendix when compiled.
+				For the single-page versions the headline_level had to be increased by 1 for the patterns, and left alone for intro and appendix.
+				- fix all intro, index and appendix files so that they are rendered correctly als jekyll pages @done
+				- for single page builds; increase headline level by 1 _per level of depth_ 
 			one-page html:
 				- fix headline indentation
-					- then reactivate glossary tooltips!!!
 				- show glossary tooltips @done
 				- markdown processor has access to structure and config @done
 				- index supports style @done
@@ -42,19 +48,19 @@ mdtools 2.0:
 				- move glossary item replacement to macro @done
 			pdf ebook:
 				- glossary links should be removed @done
-				- glossary has duplicate header
-				- header indentation is messed up
+				- glossary has duplicate header @done
+				- header indentation is messed up  @done
+				- fix headers in introduction
+				- pattern index is not written
 			epub ebook:
 				- ???
 				- replace glossary links properly:
-			all-in-one html:
 			- check that a simplified format for structure (like used in the docs) is still possible
+			- fix menu items so that teh site works (at least somewhat)
 			Clean up Code (after the practical guide has been committed to branch!!):
-				- todo: default template mode should be copy????
-				- part, chapter and section is consistently used in throughout the entire codebase (or not at all...)
-				- all obsolete code is removed 
-				- access to undefined config element produces a nice error
-					This might take longer, because to display full path each content object needs access to its parent (FFS!)
+				- todo: look at all TODOs in code
+				- part, chapter and section is consistently used in throughout the entire codebase (or not at all...) @done
+				- all obsolete code is removed @done
 				simple unified glossary code: @estimate(2h) @done
 					all code that processes glossary items should be located in glossary.py or in macro package
 					- markdown processor @done
@@ -82,11 +88,14 @@ mdtools 2.0:
 			- make sure install documentation is complete (see Github Issue for details) @done
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
-			- add html template for menu (and if necessary add js to body)
-			- test menu with static content
-			- add css for menu responsive menu
-			- create menu structure from structure yaml
-			- add tags for excluding items from menu
+			Menu Creation:
+				- create menu structure from structure yaml @done
+				- add tags for excluding items from menu
+				- add a way for setting a different (translatable title) for the website
+			Menu Integration:
+				- add html template for menu (and if necessary add js to body)
+				- test menu with static content
+				- add css for menu responsive menu
 			Links:
 				https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
 				seems to be the first thing I should try (use Complete navbar .sm-clean)
