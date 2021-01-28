@@ -37,6 +37,20 @@ def increase_headline_level(line):
     return line
 
 
+def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
+    if commandline_args.no_section_prefix:
+        return None
+    if commandline_args.section_prefix:
+        template = codecs.decode(commandline_args.section_prefix, 'utf-8')
+    else:
+        template = config.get('section-prefix', None)
+    if template:
+        return template % dict(chapter=chapter_idx, section=section_idx)
+    else:
+        return None
+
+
+
 def markdown2html(text):
     return markdown.markdown(text, extensions=['markdown.extensions.extra', 'markdown.extensions.meta'])
 
