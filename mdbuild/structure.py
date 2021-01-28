@@ -7,6 +7,8 @@ import codecs
 
 from . import markdown_processor as mdp
 from .common import read_config_file, FILENAME_PATTERN
+from . import glossary
+from . import macros
 
 # section names
 PARTS = 'parts'
@@ -22,6 +24,9 @@ structure = None
 def set_structure(filename, content_path):
     print("------- structure---------")
     print(filename)
+
+    macros.register_macro('glossary', glossary.glossary_term_macro)
+    macros.register_macro('define', glossary.glossary_definition_macro)
 
     cs = ContentRoot.from_config(read_config_file(filename))
     cs.read_info(content_path)
@@ -176,13 +181,11 @@ class ContentNode(object):
 
     def _read_info(self):
         """Extract titles and summaries (and maybe later tags and other metadata) from a node."""
-
         if not os.path.exists(self.source_path):
             raise Exception("ERROR: source_path %s doesn't exist)" % self.path)
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=[
-                # TODO: get glossary
-                # partial(mdp.inject_glossary, self.glossary),
+                macros.MacroFilter.filter,
                 mdp.MetadataPlugin.filter
             ])
             processor.process()
