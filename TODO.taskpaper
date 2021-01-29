@@ -4,7 +4,7 @@ mdtools 2.0:
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
 	
-	Milestone 1: New Structure and Menu:
+	MVP 1: New Structure, Menu and CSF:
 		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
 		This release affects crowdin! @priority
 		Preparation:
@@ -17,29 +17,33 @@ mdtools 2.0:
 			jekyll builder uses new format: @estimate(2h)
 				- apparently glossary definitions are not replaced before summaries are rendered!!
 				- output is compared in detail once more 
-				- css: make headlines a bit smaller
-			headline-levels:
+			headline-levels: @done
 				in the old version the headline level was set up so that it was correct for the patterns when rendered as jekyll pages, and for intro and appendix when compiled.
 				For the single-page versions the headline_level had to be increased by 1 for the patterns, and left alone for intro and appendix.
-				- for single page builds; increase headline level by 1 _per level of depth_ 
-			one-page html:
-				- fix headline indentation
+				- for single page builds; increase headline level by 1 _per level of depth_ @done
+				- add config variable headline-level-offset @done
+			one-page html: @done
+				- fix headline indentation @done
+				- Document title is missing @done
 			pdf ebook:
 				- fix headers in introduction
-				- pattern index is not written
+				- pattern index is not written @done
 			epub ebook:
 				- ???
 				- replace glossary links properly:
+			- simplify structure: 
+				- read parent node title from parent_node.md outside the folder
+				- use "sections" instead of parts, childeren, sections and chapters
 			- check that a simplified format for structure (like used in the docs) is still possible
 			- fix menu items so that teh site works (at least somewhat)
-			Clean up Code (after the practical guide has been committed to branch!!):
-				- todo: look at all TODOs in code
 		Macro Support: @estimate(30min)
 			- variables:
 					green: #FF0000
 				{{name:$green}} or {{name:var(green)}}
+			- test that variable-name can be correctly substituted in macros and templates (the cfg-object's key is "variable_name")
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
+			- css: make headlines a bit smaller
 			Menu Creation:
 				- add tags for excluding items from menu
 				- add a way for setting a different (translatable title) for the website
@@ -61,6 +65,11 @@ mdtools 2.0:
 					best practices
 				https://github.com/dpstrange/jekyll-bootstrap
 				bootstrap temlate for jekyll
+		Add the CSF:
+			pass
+		Clean up Code (after the practical guide has been committed to dev branch!!):
+			- todo: look at all TODOs in code
+			- find all config variables used in code and decide about adding a preset value for each
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
@@ -73,7 +82,7 @@ mdtools 2.0:
 			- update Hebrew version??
 			- update Dutch version
 			
-	Milestone 2: Responsive Pattern Map:
+	MVP 2: Responsive Pattern Map:
 		Plugin and Macro Support: @estimate(8h)
 			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
 			- configure plugins globally and per document type
@@ -121,7 +130,7 @@ mdtools 2.0:
 		- test if pandoc, latexmk or multimarkdown is installed (is mmd necessary at all??)
 		- 
 		- execute the build
-	Milestone 4: Better Document Structure:
+	Milestone 5: Better Document Structure:
 		Better Document Structure: @estimate(6h)
 			As an author, I want to use identical file names in different folders so that I don't have to use weird workarounds, e.g. when each part starts with an 'overview' .
 			- error is raised if both exist at the same time
