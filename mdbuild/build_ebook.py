@@ -62,9 +62,8 @@ class EbookWriter(object):
             # truncate file if it exists
             with open(config.cfg.target, 'w'):
                 pass
-
         # then append all the content pages
-        with codecs.open(config.cfg.target, 'w+', 'utf-8') as target:
+        with codecs.open(config.cfg.target, 'a', 'utf-8') as target:
             current_node = structure.structure.children[0]
             while current_node:
                 self._append_content(target, current_node)
