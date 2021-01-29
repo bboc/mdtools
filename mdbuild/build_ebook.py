@@ -69,18 +69,21 @@ class EbookWriter(object):
                 self._append_content(target, current_node)
                 current_node = current_node.successor
 
-    def _append_content(self, target, node, headline_level_increase=0, headline_prefix=None):
+    def _append_content(self, target, node):
         """
-        Append each section to target.
-        # TODO: calculate headline level increase and
-            potentially headline level,
-            is that dependent on output format??
+        Append content of one node to target.
         """
+        try:
+            header_offset = config.cfg.header_offset
+        except AttributeError:
+            header_offset = 0
+        header_offset = header_offset + node.level - 1
+
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=self.filters)
 
-            processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
-            processor.add_filter(partial(mdp.increase_all_headline_levels, node.level - 1))
+            # processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
+            processor.add_filter(partial(mdp.increase_all_headline_levels, header_offset))
             processor.add_filter(partial(mdp.write, target))
 
             processor.process()
