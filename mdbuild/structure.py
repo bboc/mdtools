@@ -140,7 +140,11 @@ class ContentNode(object):
     def to_dict(self):
         d = {
             'id': self.id,
-            'class': self.__class__
+            'class': self.__class__,
+            'slug': self.slug,
+            'summary': self.summary,
+            'title': self.title,
+            'path': self.path,
         }
         if self.children:
             d['children'] = [c.to_dict() for c in self.children]
@@ -148,10 +152,6 @@ class ContentNode(object):
             d['tags'] = self.tags
         if self.config:
             d['config'] = repr(self.config)
-        if self.title:
-            d['title'] = self.title
-        if self.summary:
-            d['summary'] = self.summary
 
         return d
 

@@ -36,10 +36,6 @@ class IndexMacro(object):
 
         sort and format default to None.
         root is processed before tag filter.
-
-        TODO: format is no longer an argument, but comes from cfg.target_format
-        TODO: process style=list or style = summary
-
         """
         # get arguments
         tag_filter = kwargs.get('tag')
@@ -69,23 +65,25 @@ class IndexMacro(object):
         if sort:
             nodes_to_show.sort(key=attrgetter(sort))
 
-        if format == 'html':
-            if style == 'summary':
+        if style == 'summary':
+            if format == 'html':
                 return cls.render_html(nodes_to_show)
-            else:
-                return cls.render_markdown_list(nodes_to_show)
-        else:  # markdown
-            if style == 'summary':
-                return cls.render_markdown_summaries(nodes_to_show)
-            else:
-                return cls.render_markdown_list(nodes_to_show)
+            elif format == 'latex':
+                return cls.render_markdown(nodes_to_show, cls.LATEX_SUMMARY_TEMPLATE)
+            else:  # markdown
+                return cls.render_markdown(nodes_to_show, cls.MD_SUMMARY_TEMPLATE)
+        else:  # list format
+            return cls.render_markdown(nodes_to_show, cls.MD_LIST_TEMPLATE)
+
+    LATEX_SUMMARY_TEMPLATE = "**%(title)s:** %(summary)s\n\n"
+    MD_LIST_TEMPLATE = "- [%(title)s](%(path)s.html)\n"
+    MD_SUMMARY_TEMPLATE = "**[%(title)s](%(path)s.html)**\n\n%(summary)s\n\n"
 
     @classmethod
-    def render_markdown_summaries(cls, nodes):
-        INDEX_ELEMENT = "**[%(title)s](%(path)s.html)**\n\n%(summary)s\n"
+    def render_markdown(cls, nodes, template):
         res = []
         for node in nodes:
-            res.append(INDEX_ELEMENT % dict(title=node.title, path=node.slug, summary=node.summary))
+            res.append(template % node.to_dict())
         return ''.join(res)
 
     @classmethod
@@ -120,7 +118,6 @@ class IndexMacro(object):
 
 class MenuMacro(object):
     """Render a nested list for use in a menu."""
-    pass
 
     @classmethod
     def render(cls, config, structure, css_class, *args, **kwargs):
