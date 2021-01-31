@@ -61,7 +61,7 @@ class IndexMacro(object):
                     nodes_to_show.append(current_node)
                 current_node = current_node.successor
         else:
-            nodes_to_show = root.children[:]
+            nodes_to_show = root.parts[:]
 
         if sort:
             nodes_to_show.sort(key=attrgetter(sort))
@@ -122,15 +122,15 @@ class MenuMacro(object):
 
     @classmethod
     def render(cls, config, structure, css_class, *args, **kwargs):
-        return '\n'.join(cls.render_children(structure, []))
+        return '\n'.join(cls.render_parts(structure, []))
 
     @classmethod
-    def render_children(cls, node, res):
-        if node.children:
+    def render_parts(cls, node, res):
+        if node.parts:
             res.append("<ul>\n")
-            for c in node.children:
-                res.append("""<li><a href="%s.html">%s</a>\n""" % (c.slug, c.title))
-                cls.render_children(c, res)
+            for part in node.parts:
+                res.append("""<li><a href="%s.html">%s</a>\n""" % (part.slug, part.title))
+                cls.render_parts(part, res)
                 res.append("</li>\n")
             res.append("</ul>\n")
         return res

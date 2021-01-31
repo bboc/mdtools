@@ -64,7 +64,7 @@ class EbookWriter(object):
                 pass
         # then append all the content pages
         with codecs.open(config.cfg.target, 'a', 'utf-8') as target:
-            current_node = structure.structure.children[0]
+            current_node = structure.structure.parts[0]
             while current_node:
                 self._append_content(target, current_node)
                 current_node = current_node.successor

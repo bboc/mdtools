@@ -60,7 +60,7 @@ class JekyllWriter(object):
         template.process_templates_in_config()
 
         # make content pages
-        current_node = structure.structure.children[0]
+        current_node = structure.structure.parts[0]
         while current_node:
             self._make_content_page(current_node)
             current_node = current_node.successor
