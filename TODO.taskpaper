@@ -10,24 +10,25 @@ mdtools 2.0:
 		Preparation:
 			- backup all files from crowdin
 			- deactivate crowdin upload @done
-		New Project Structure: @estimate(2d)
+		New Project Structure: @estimate(2d) @done
 			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
 			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
 			Can't be released without a new menu for the website, because new content will not be visible @priority
-			- fix menu items so that teh site works (at least somewhat)
+			- fix menu items so that teh site works (at least somewhat) @done
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
-			Update Content:
-				- index page
-				- menu titles and new headers / content from google doc about website  
-			- css: make headlines a bit smaller
-			Menu Creation:
-				- add tags for excluding items from menu
+			- test menu with static content @done
+			- generate the right content for the menu
+			- put the menu in the right place on the page
+			- add css as SCSS so that changing colors is simple
+			- style the menu so that it looks good
+			- update index page (content see https://trello.com/c/6FLDEzVH/585-website-menu-and-index-page)
+			- change the structure of the practical guide (see: https://docs.google.com/document/d/1vbKueX4wyi1GkO0J_GmGJ1lgmuD4UYJKYhTXulWq4wA/edit#heading=h.lct0ktqk122w)  
 				- add a way for setting a different (translatable title) for the website
-			Menu Integration:
-				- add html template for menu (and if necessary add js to body)
-				- test menu with static content
-				- add css for menu responsive menu
+			- add tags for excluding items from menu
+			- css: make headlines a bit smaller
+			- add keyboard nnavigation addon
+			- add a mega menu: 'tools'
 			Links:
 				https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
 				seems to be the first thing I should try (use Complete navbar .sm-clean)
