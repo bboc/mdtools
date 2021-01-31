@@ -32,7 +32,7 @@ def set_structure(filename, content_path):
 
 class ContentNode(object):
     """
-    The main content object consists of nested ContentNodes (parts, chapters, sections).
+    The main content object consists of nested ContentNodes.
 
     Each ContentNode has:
     - root (the content object)
@@ -203,9 +203,10 @@ class ContentNode(object):
 
 class ContentRoot(ContentNode):
     """
-    A representation of entire content.
+    A representation of the entire content.
 
-    The content has parts, the parts have chapters, and the chapters have sections.
+    Content is split into parts, which can havbe parts again, ad infinitum (in practcie, there's only a limited number
+    of header levels in most output formats).
     """
     def __init__(self, root_path):
         self.root_path = root_path
