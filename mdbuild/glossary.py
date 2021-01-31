@@ -156,7 +156,9 @@ def get_glossary_link_processor(style):
 
 class GlossaryLinkProcessor(object):
     """
-    This is the a glossary processor that replaces glossary links.
+    Markdown processor for finding and rendering glossary links. 
+
+    Each subclass renders on specific target format
     """
     GLOSSARY_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
 
