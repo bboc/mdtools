@@ -14,26 +14,7 @@ mdtools 2.0:
 			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
 			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
 			Can't be released without a new menu for the website, because new content will not be visible @priority
-			epub ebook: @done
-				- first test of test epub @done
-				- replace glossary links properly @done
-					- introduce new format epub/html @done
-				- fix build @done
-			simplify build: @done
-				- check if one tempfolder is enough @done
-				- clean up make setup and make variables @done
-				- make sure images are copied where they need to be with every build @done
-				- check what needs to go in config folder (if anything) @done
-			simplify structure:
-				- read parent node title from parent_node.md outside the folder @done
-				- use "sections" instead of parts, childeren, sections and chapters
-			- check that a simplified format for structure (like used in the docs) is still possible
 			- fix menu items so that teh site works (at least somewhat)
-			Render final output of all that stuff: @done
-				- compare and commit jekyll site @done
-				- compare PDF @done
-				- compare epub @done
-				- compare single page @done
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
 			Update Content:
@@ -66,8 +47,9 @@ mdtools 2.0:
 		Clean up Code (after the practical guide has been committed to dev branch!!):
 			- todo: look at all TODOs in code
 			- find all config variables used in code and decide about adding a preset value for each
-			- document temp folder, build.sh (to update all relevant files
+			- document temp folder, build.sh (to update all relevant files @done
 			- add upadting version template to build.sh
+			- check that a simplified format for structure (like used in the docs) is still possible
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
@@ -130,6 +112,8 @@ mdtools 2.0:
 		maybe, see github issue
 		- update renderer
 		- nice CSS
+	Link to Node:
+		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
 	Milestone 4: App with GUI:
 		As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
 		(people would still require to install MacTex, Jekyll, Pandoc etc., though)
