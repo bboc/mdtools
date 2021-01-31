@@ -14,35 +14,31 @@ mdtools 2.0:
 			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
 			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
 			Can't be released without a new menu for the website, because new content will not be visible @priority
-			jekyll builder uses new format: @estimate(2h)
-				- apparently glossary definitions are not replaced before summaries are rendered!!
-				- output is compared in detail once more 
-			headline-levels: @done
-				in the old version the headline level was set up so that it was correct for the patterns when rendered as jekyll pages, and for intro and appendix when compiled.
-				For the single-page versions the headline_level had to be increased by 1 for the patterns, and left alone for intro and appendix.
-				- for single page builds; increase headline level by 1 _per level of depth_ @done
-				- add config variable headline-level-offset @done
-			one-page html: @done
-				- fix headline indentation @done
-				- Document title is missing @done
-			pdf ebook:
-				- fix headers in introduction
-				- pattern index is not written @done
-			epub ebook:
-				- ???
-				- replace glossary links properly:
-			- simplify structure: 
-				- read parent node title from parent_node.md outside the folder
+			epub ebook: @done
+				- first test of test epub @done
+				- replace glossary links properly @done
+					- introduce new format epub/html @done
+				- fix build @done
+			simplify build: @done
+				- check if one tempfolder is enough @done
+				- clean up make setup and make variables @done
+				- make sure images are copied where they need to be with every build @done
+				- check what needs to go in config folder (if anything) @done
+			simplify structure:
+				- read parent node title from parent_node.md outside the folder @done
 				- use "sections" instead of parts, childeren, sections and chapters
 			- check that a simplified format for structure (like used in the docs) is still possible
 			- fix menu items so that teh site works (at least somewhat)
-		Macro Support: @estimate(30min)
-			- variables:
-					green: #FF0000
-				{{name:$green}} or {{name:var(green)}}
-			- test that variable-name can be correctly substituted in macros and templates (the cfg-object's key is "variable_name")
+			Render final output of all that stuff: @done
+				- compare and commit jekyll site @done
+				- compare PDF @done
+				- compare epub @done
+				- compare single page @done
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
+			Update Content:
+				- index page
+				- menu titles and new headers / content from google doc about website  
 			- css: make headlines a bit smaller
 			Menu Creation:
 				- add tags for excluding items from menu
@@ -70,6 +66,8 @@ mdtools 2.0:
 		Clean up Code (after the practical guide has been committed to dev branch!!):
 			- todo: look at all TODOs in code
 			- find all config variables used in code and decide about adding a preset value for each
+			- document temp folder, build.sh (to update all relevant files
+			- add upadting version template to build.sh
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
@@ -83,6 +81,11 @@ mdtools 2.0:
 			- update Dutch version
 			
 	MVP 2: Responsive Pattern Map:
+		Macro Support: @estimate(30min)
+			- variables:
+					green: #FF0000
+				{{name:$green}} or {{name:var(green)}}
+			- test that variable-name can be correctly substituted in macros and templates (the cfg-object's key is "variable_name")
 		Plugin and Macro Support: @estimate(8h)
 			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
 			- configure plugins globally and per document type
@@ -114,6 +117,15 @@ mdtools 2.0:
 		- create first version of redirections.yaml file from structure.yaml
 		- add template for redirection files (including requred JS)
 		- add configurable build step for generating redirection files from redirections.yaml
+	Support all editions from one structure:
+		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
+		Variant A:
+			add tags to each section: exclude:editon-A|edition-B include:editon-A|edition-B
+			add as literal to section
+				id: foobart
+				exclude:editon-A|edition-B 
+				include:editon-A|edition-B
+				sections: …
 	Linkable Glossary:
 		maybe, see github issue
 		- update renderer
