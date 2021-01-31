@@ -118,20 +118,30 @@ class IndexMacro(object):
 
 
 class MenuMacro(object):
-    """Render a nested list for use in a menu."""
+    """
+    Render a nested list for use in a menu.
+
+    Rendering starts with <li>, because:
+
+    - css classes of the outmost <ul> element
+      can be defined in the html template
+    - the menu can be extended easily in the html template
+      by prepending and appending more elements.
+    """
 
     @classmethod
-    def render(cls, config, structure, css_class, *args, **kwargs):
+    def render(cls, config, structure, *args, **kwargs):
+        if not structure.parts:
+            raise Exception("Can't render menu, menu parent has no parts!")
         return '\n'.join(cls.render_parts(structure, []))
 
     @classmethod
     def render_parts(cls, node, res):
-        if node.parts:
-            res.append("<ul>\n")
-            for part in node.parts:
-                res.append("""<li><a href="%s.html">%s</a>\n""" % (part.slug, part.title))
+        for part in node.parts:
+            res.append("""<li><a href="%s.html">%s</a>\n""" % (part.slug, part.title))
+            if part.parts:
+                res.append("<ul>\n")
                 cls.render_parts(part, res)
-                res.append("</li>\n")
-            res.append("</ul>\n")
+                res.append("</ul>\n")
+            res.append("</li>\n")
         return res
-
