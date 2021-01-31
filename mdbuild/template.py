@@ -75,6 +75,7 @@ def _processed_template(mode, src, dest):
                 partial(mdp.template, config.cfg.variables),
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                 partial(macros.MacroFilter.filter),
+                mdp.unescape_macros,
                 # TODO: this is not always the right thing, but glossary entries in templates are pretty rare
                 glossary.get_glossary_link_processor('tooltip'),
             ])

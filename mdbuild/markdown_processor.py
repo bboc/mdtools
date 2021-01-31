@@ -208,6 +208,23 @@ def summary_tags(lines, mode=STRIP_MODE):
             yield line
 
 
+def unescape_macros(lines):
+    """
+    Unescape macros in templates.
+
+    Jekyll variables also use two curly braces, so if a template uses
+    a macro _and_ a Jekyll variable, the latter needs to be escaped.
+    {{ site.url }} --> \{\{ site.url \}\}
+
+    This filter reverts that escaping so that Jekyll can replace that
+    variable.
+    """
+    for line in lines:
+        line = line.replace('\{', '{')
+        line = line.replace('\}', '}')
+        yield line
+
+
 class MetadataPlugin(object):
     title = None
     summary = None
