@@ -39,7 +39,7 @@ class EbookWriter(object):
             mdp.clean_images,
         ]
         # process glossary links
-        if config.cfg.target_format == 'html':
+        if config.cfg.target_format in ['html', 'epub']:
             style = 'tooltip'
         else:
             style = 'plain'

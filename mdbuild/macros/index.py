@@ -8,6 +8,7 @@ from operator import attrgetter
 
 from mdbuild.common import markdown2html
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -66,7 +67,7 @@ class IndexMacro(object):
             nodes_to_show.sort(key=attrgetter(sort))
 
         if style == 'summary':
-            if format == 'html':
+            if format in ('html', 'epub'):
                 return cls.render_html(nodes_to_show)
             elif format == 'latex':
                 return cls.render_markdown(nodes_to_show, cls.LATEX_SUMMARY_TEMPLATE)
