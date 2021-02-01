@@ -278,7 +278,7 @@ class MetadataPlugin(object):
             raise Exception('Metadata must be followed by an empty line!')
 
     @classmethod
-    def summary_filter(cls, line): 
+    def summary_filter(cls, line):
         """
         Read the summary and handle </summary>.
 
