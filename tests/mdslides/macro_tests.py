@@ -29,4 +29,4 @@ class MacroTests(unittest.TestCase):
 
         result = [line for line in MacroFilter.filter(self.data)]
         self.assertEqual(result[0],
-            "In this [paragraph](section:foobar) there are several macros <replaced m1>, some of them with parameters (<replaced m2>) <replaced what! foo>. All of those should be detected and replaced.")
+                         "In this [paragraph](section:foobar) there are several macros <replaced m1>, some of them with parameters (<replaced m2>) <replaced what! foo>. All of those should be detected and replaced.")
