@@ -100,16 +100,16 @@ class JekyllWriter(object):
         # Skip previous if it is the parent item
         if previous_item and previous_item is not parent_item:
             nav.append(nav_el(PREV, previous_item.slug,
-                       ' '.join((_('back to:'), previous_item.title))))
+                       ' '.join((_('Back to:'), previous_item.title))))
 
         # up: parent
         if not node.parent.is_root():
             nav.append(nav_el(UP, node.parent.slug,
-                       ' '.join((_('up:'), node.parent.title))))
+                       ' '.join((_('Up:'), node.parent.title))))
 
         next_item = node.successor
         if next_item:
-            nav.append(nav_el(' '.join((NEXT, _('read next:'), next_item.title)),
+            nav.append(nav_el(' '.join((NEXT, _('Read next:'), next_item.title)),
                        next_item.slug, ''))
 
         target.write(' '.join(nav))
