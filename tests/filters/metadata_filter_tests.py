@@ -86,8 +86,9 @@ class TestMetadataFilterMetadata(TestMetadataFilter):
 
         self.assertEqual(mdp.MetadataPlugin.title, 'my headline')
         self.assertEqual(mdp.MetadataPlugin.summary, 'this is my summary')
-        self.assertEqual(mdp.MetadataPlugin.metadata['menu-title'], 'a shorter title')
+        print(repr(mdp.MetadataPlugin.metadata))
         self.assertEqual(mdp.MetadataPlugin.metadata['author'], 'John Doe')
+        self.assertEqual(mdp.MetadataPlugin.metadata['menu-title'], 'a shorter title')
 
     def test_metadata_removal(self):
         """Metadata is removed from file."""
