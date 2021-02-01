@@ -177,7 +177,7 @@ class ContentNode(object):
             part.read_info()
 
     def _read_info(self):
-        """Extract titles and summaries (and maybe later tags and other metadata) from a node."""
+        """Extract titles, summaries and medatada from a node's content."""
         if not os.path.exists(self.source_path):
             raise Exception("ERROR: source_path %s doesn't exist)" % self.path)
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
@@ -189,6 +189,7 @@ class ContentNode(object):
             logger.debug("node title: '%s'" % mdp.MetadataPlugin.title)
             self.title = mdp.MetadataPlugin.title
             self.summary = mdp.MetadataPlugin.summary
+            self.metadata = mdp.MetadataPlugin.metadata
 
     def find(self, slug):
         """Find slug in this subtree"""
