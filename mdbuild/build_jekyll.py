@@ -10,7 +10,7 @@ import codecs
 from functools import partial
 import os
 
-from .common import md_filename
+from . import common
 from . import config
 from . import glossary
 from . import macros
@@ -20,14 +20,16 @@ from . import template
 from .translate import translate as _
 
 
-PREV = '&#9664;'
-UP = '&#9650;'
-NEXT = '&#9654;'
+PREV = '◀'
+UP = '▲'
+NEXT = '▶'
 NAVIGATION = "<a href=\"%(path)s.html\" title=\"%(alt_title)s\">%(title)s</a>"
 
 
 def nav_el(title, path, alt_title):
     """Create one navigation element."""
+    title = common.escape_html_delimiters(title)
+    alt_title = common.escape_html_delimiters(alt_title)
     return NAVIGATION % locals()
 
 
@@ -72,7 +74,7 @@ class JekyllWriter(object):
     def _make_content_page(self, node):
         """Copy each section to a separate file."""
         # target_path = os.path.join(config.cfg.target, md_filename(node.relpath))
-        target_path = os.path.join(config.cfg.target, md_filename(node.slug))
+        target_path = os.path.join(config.cfg.target, common.md_filename(node.slug))
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
