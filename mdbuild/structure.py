@@ -46,15 +46,16 @@ class ContentNode(object):
 
     def __init__(self, slug, parent, root, level):
         pass
+        self.slug = slug
         self.parent = parent
         self.root = root
-        self.slug = slug
+        self.level = level
         self.parts = []
         self.title = ''
+        self.nav_title = ''
         self.config = {}
         self.tags = []
         self.summary = ''
-        self.level = level
 
     def is_root(self):
         return self is self.root
