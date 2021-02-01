@@ -228,18 +228,34 @@ def unescape_macros(lines):
 class MetadataPlugin(object):
     title = None
     summary = None
+    metadata = None
 
     @classmethod
-    def filter(cls, lines):
-        """Extract title, summary (and potentially other stuff.
+    def filter(cls, lines, strip_summary_tags=False):
+        """
+        Extract title, summary and other metadata.
 
-        Must come after replacing glossary entries so that the text is already expanded.
+        Metadata is stripped from the file so that this filter can be used to
+        feed standard markdown to other filters down the line.
 
-        MMD Metadata Documentation:
-        https://fletcher.github.io/peg-multimarkdown/mmd-manual.pdf
+        Must come after replacing glossary entries so that the text in the summaries
+        is already expanded.
+
+        A metadata block must start at the top of the page, and is optionally followed
+        by a blank line.
+
+        [:author]: # "JohnDoe"
+
+        see this question on stackoverflow for a discussion of metadata formats:
+
+        https://stackoverflow.com/questions/44215896/markdown-metadata-format#44222826
+
+        TODO: figure out if an object-based (not class-based) approach is a cleaner
+            solution here?
         """
         cls.title = None
         cls.summary = None
+        cls.metadata = {}
 
         summary = []
 
@@ -252,9 +268,11 @@ class MetadataPlugin(object):
         except AttributeError:
             logger.warning("title not set")
             cls.title = ''
-
+        yield headline
         for line in lines:
             if line.strip() == BEGIN_SUMMARY:
+                if not strip_summary_tags:
+                    yield line
                 line = next(lines)
                 while line.strip() != END_SUMMARY:
                     # remove bold around summary if present
@@ -265,6 +283,8 @@ class MetadataPlugin(object):
                     summary.append(sline)
                     yield line
                     line = next(lines)
+                if not strip_summary_tags:
+                    yield line
             else:
                 yield line
         if summary:
