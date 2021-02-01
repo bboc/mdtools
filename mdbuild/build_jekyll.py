@@ -17,14 +17,18 @@ from . import macros
 from . import markdown_processor as mdp
 from . import structure
 from . import template
-
-PREV_ELEMENT = "[&#9664; %(name)s](%(path)s.html)"
-UP_ELEMENT = "[&#9650; %(name)s](%(path)s.html)"
-NEXT_ELEMENT = "[&#9654; %(name)s](%(path)s.html)"
+from .translate import translate as _
 
 
-def nav_el(target, template, item):
-    target.write(template % dict(name=item.title, path=item.slug))
+PREV = '&#9664;'
+UP = '&#9650;'
+NEXT = '&#9654;'
+NAVIGATION = "<a href=\"%(path)s.html\" title=\"%(alt_title)s\">%(title)s</a>"
+
+
+def nav_el(title, path, alt_title):
+    """Create one navigation element."""
+    return NAVIGATION % locals()
 
 
 class JekyllWriter(object):
@@ -76,16 +80,16 @@ class JekyllWriter(object):
 
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
-                self._add_navigation(node, target)
+                self._add_bottom_navigation(node, target)
 
-    def _add_navigation(self, node, target):
-        """Insert navigation for prev/up/next at the bottom of the page."""
-        target.write("\n\n")
+    def _add_bottom_navigation(self, node, target):
+        """Insert navigation for prev/up/next at the bottom of the page.
 
-        next_item = node.successor
-        if next_item:
-            nav_el(target, NEXT_ELEMENT, next_item)
-            target.write("<br/>")
+            e.g. "◀ ▲ ▶ Adapt Patterns To Context"
+        """
+        target.write('\n\n<div class="bottom-nav">\n')
+
+        nav = []
 
         previous_item = node.predecessor
         if not node.parent.is_root():
@@ -95,10 +99,18 @@ class JekyllWriter(object):
 
         # Skip previous if it is the parent item
         if previous_item and previous_item is not parent_item:
-            nav_el(target, PREV_ELEMENT, previous_item)
-            target.write("<br/>")
+            nav.append(nav_el(PREV, previous_item.slug,
+                       ' '.join((_('back to:'), previous_item.title))))
 
         # up: parent
         if not node.parent.is_root():
-            nav_el(target, UP_ELEMENT, node.parent)
-        target.write("\n\n")
+            nav.append(nav_el(UP, node.parent.slug,
+                       ' '.join((_('up:'), node.parent.title))))
+
+        next_item = node.successor
+        if next_item:
+            nav.append(nav_el(' '.join((NEXT, _('read next:'), next_item.title)),
+                       next_item.slug, ''))
+
+        target.write(' '.join(nav))
+        target.write("\n</div>\n")
