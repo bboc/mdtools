@@ -230,6 +230,41 @@ class MetadataPlugin(object):
     summary = None
     metadata = None
 
+    METADATA_PATTERN = re.compile("\[\:(?P<key>.*?)\]: # \"(?P<value>.*?)\"")
+
+    @classmethod
+    def header_filter(cls, line):
+        """
+        Read metadata up (and including) first header.
+
+        Transition to normal filter after headline.
+        """
+        if cls.METADATA_PATTERN.match(line.strip()) is not None:
+            m = cls.METADATA_PATTERN.match(line.strip())
+            key = m.groups()['key']
+            value = m.groups()['value']
+            cls.metadata[key] = value
+            return None, cls.header_filter
+
+
+    def summary_filter(cls): 
+        """
+        Read the summary and handle summary tags.
+
+        Transition to standard filter after end of summary.
+        """
+        pass
+
+
+
+    def standard_filter(cls):
+        """
+        Read all other input
+
+        Transition to summary filter on encountering summary tag.
+
+        """
+
     @classmethod
     def filter(cls, lines, strip_summary_tags=False):
         """
@@ -258,6 +293,7 @@ class MetadataPlugin(object):
         cls.metadata = {}
 
         summary = []
+
 
         # TODO: process metadata if present
 
