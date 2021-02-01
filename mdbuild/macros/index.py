@@ -77,22 +77,14 @@ class IndexMacro(object):
             return cls.render_markdown(nodes_to_show, cls.MD_LIST_TEMPLATE)
 
     LATEX_SUMMARY_TEMPLATE = "**%(title)s:** %(summary)s\n\n"
-    MD_LIST_TEMPLATE = "- [%(title)s](%(path)s.html)\n"
-    MD_SUMMARY_TEMPLATE = "**[%(title)s](%(path)s.html)**\n\n%(summary)s\n\n"
+    MD_LIST_TEMPLATE = "- [%(title)s](%(slug)s.html)\n"
+    MD_SUMMARY_TEMPLATE = "**[%(title)s](%(slug)s.html)**\n\n%(summary)s\n\n"
 
     @classmethod
     def render_markdown(cls, nodes, template):
         res = []
         for node in nodes:
             res.append(template % node.to_dict())
-        return ''.join(res)
-
-    @classmethod
-    def render_markdown_list(cls, nodes):
-        INDEX_ELEMENT = "- [%(title)s](%(path)s.html)\n"
-        res = []
-        for node in nodes:
-            res.append(INDEX_ELEMENT % dict(title=node.title, path=node.slug))
         return ''.join(res)
 
     @classmethod
