@@ -1,17 +1,176 @@
+mdtools 2.0:
+	User Stories and acceptace criteria for mdtools 2.0. 
+	see ./proposal-for-mdtools-2.0.md for details
+	Order of user stories is relevant for handling dependencies!
+	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
+	
+	MVP 1: New Structure, Menu and CSF:
+		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
+		This release affects crowdin! @priority
+		Preparation:
+			- backup all files from crowdin
+			- deactivate crowdin upload @done
+		New Project Structure: @estimate(2d) @done
+			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
+			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
+			Can't be released without a new menu for the website, because new content will not be visible @priority
+			- fix menu items so that teh site works (at least somewhat) @done
+		Responsive Website Menu: @estimate(4h)
+			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
+			- commit mdtools 2.0 to master (and add version tag) or else the translators who make their own builds are screwed
+		Add the CSF @done
+		Clean up Code (after the practical guide has been committed to dev branch!!):
+			- todo: look at all TODOs in code
+			- find all config variables used in code and decide about adding a preset value for each
+			- document temp folder, build.sh (to update all relevant files @done
+			- add updating version template to build.sh
+			- check that a simplified format for structure (like used in the docs) is still possible
+			- add config variables for adding page navigation and mousetrap integration
+		Release of the Practical Guide: @estimate(4h)
+			This release removes dependency of translation to structure.yaml.
+			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
+			This release affects crowdin! @priority
+			
+			- publish the English version of the practical guide with this version of mdtools
+			- integrate the Common Sense Framework
+			- update French version
+			- update German version
+			- update Hebrew version??
+			- update Dutch version
+			
+	MVP 2: Responsive Pattern Map:
+		Macro Support: @estimate(30min)
+			- variables:
+					green: #FF0000
+				{{name:$green}} or {{name:var(green)}}
+			- test that variable-name can be correctly substituted in macros and templates (the cfg-object's key is "variable_name")
+		Plugin and Macro Support: @estimate(8h)
+			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
+			- configure plugins globally and per document type
+			- plugins used for a specific document can be configured globally or in the preset 
+			- override and extend plugin list in document type
+			- define parameters per plugin
+			- add preprocessor plugins
+			- refactor S3-specific macros to use plugin architecture
+		Plugin for Clickable Pattern Map: @estimate(4h)
+			As reader of the practical guide, I want a responsive patter map so that I can navigate effortlessly between patterns.
+			- add plugin to create html for pattern map structure
+			- add remplate and JS for pattern map
+			- add css for pattern map
+			- add texts to localization.pot if required 
+		Release the practical guide: @estimate(2h)
+			this release requires moving many files in Crowdin by hand!!! @priority
+			Other languages can be updated as soon as the new templates (and updates to localization.pot) is translated
+			- ❗️backup all files in crowdin!
+			- manually move files in crowdin
+			- reactivate and dry-run crowdin-upload
+			- publish the English version of the practical guide with this version of mdtools
+			- update French version
+			- update German version
+			- update Hebrew version??
+			- update Dutch version
+	Redirections: @estimate(6h)
+		As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
+		can simply be released when ready
+		- create first version of redirections.yaml file from structure.yaml
+		- add template for redirection files (including requred JS)
+		- add configurable build step for generating redirection files from redirections.yaml
+	Better User Experience for Website:
+			- add smartmenu keyboard navigation addon @done
+			- add keyboard navigation for next page @done
+			- add tags for excluding items from menu (why here? might be an addon later!)
+		Links: @done
+			https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
+			seems to be the first thing I should try (use Complete navbar .sm-clean)
+			https://stackoverflow.com/questions/18023493/bootstrap-dropdown-sub-menu-missing
+			nested menu with bootstrap 4 (code and explanation)
+			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
+				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
+			https://getbootstrap.com - the bootstrap site
+			https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
+				explanation of html/css for responsive menus (nav element and media queries)
+			https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
+				best practices
+			https://github.com/dpstrange/jekyll-bootstrap
+			bootstrap temlate for jekyll
+	Support all editions from one structure:
+		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
+		Variant A:
+			add tags to each section: exclude:editon-A|edition-B include:editon-A|edition-B
+			add as literal to section
+				id: foobart
+				exclude:editon-A|edition-B 
+				include:editon-A|edition-B
+				sections: …
+	Linkable Glossary:
+		Glossary items should instead be rendered as dd tags within a dl (definition list) and they should have anchor links so that one can link such as https://patterns.sociocracy30.org/glossary.html#objection which isn't possible now.
+		- update renderer
+		- nice CSS
+	Link to Node:
+		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
+	MVP: App with GUI:
+		As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
+		(people would still require to install MacTex, Jekyll, Pandoc etc., though)
+		- build a gui (from on I already have probably)
+			- select project file
+			- select a preset
+			-- run | quit
+			- log level
+			- log output
+		- test if pandoc, latexmk or multimarkdown is installed (is mmd necessary at all??)
+		- 
+		- execute the build
+	MVP: Better Document Structure:
+		Better Document Structure: @estimate(6h)
+			As an author, I want to use identical file names in different folders so that I don't have to use weird workarounds, e.g. when each part starts with an 'overview' .
+			- error is raised if both exist at the same time
+			- website is published in folders now
+			- all indexes and menus are still working
+			- update redirections as necessary
+			
+		Release: @estimate(2h)
+			this release might require moving some files in Crowdin!!! @priority
+			- backup all files in crowdin!
+			- manually move files in crowdin!!!
+			- release
+		
+	Sometimes:
+		Add separate template command: @estimate(2h)
+			cmd_template is working with new config format 
+			requires some thought, because of new config format, running it with full config is a lot of hassle,
+			manually handing in translations and variables is also not right for some usecases.
+			Therefore it makes sense to wait if this is needed at all, and if so, in what way
+		Better glossary and links support for Latex (and other formats): @estimate(4h)
+			Make handling glossary and section links more flexible to enable output in PDF
+			most of the code is already there, requires some tweaking though.
+			
+			- add markdown rendering for emphasis and strong in glossary text
+			- render glossary terms as footnotes for LaTeX
+			- render section links as clickable links in LaTeX (like in the index)
+			- render section links as clickable links in ePub
+			Basic Footnoote Renderer for Ebooks:
+				replace glossary link with a footnote marker for that glossary term
+			Glossary for Epub:
+				glossary can be footnotes, or an epub glossary, but epub glossaries don't seem to be universally supported:
+					http://www.idpf.org/epub/dict/#sec-1
+					https://ebooks.stackexchange.com/questions/2344/epub-kindle-file-glossary-and-dictionary-selection
+					https://support.apple.com/kb/PH2753?locale=en_US&viewlocale=en_US
+					https://pressbooks.com/blog/our-gifts-to-you-this-holiday-a-new-glossary-feature-customizable-section-labels-and-more/
+					https://www.wikihow.com/Write-a-Glossary
+			Glossary for PDF:
+			Try footnotes, one footnote per glossary entry, or underlining all glossary entries with LaTeX markup (or both)
+					dotted underline https://tex.stackexchange.com/questions/27258/how-do-i-write-underline-text-but-with-a-dotted-line
+					underlines with ulem: http://texdoc.net/texmf-dist/doc/generic/ulem/ulem.pdf
+				undeline in Latex: https://alexwlchan.net/2017/10/latex-underlines/
+			- try https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#glossaries
+		Port Deckset renderer to mdtools 2.0:
+			- support simple document structure!
+		Port revealjs renderer to mdtools 2.0:
+			pass
+		Update documentation and Tests:
+			pass
 
-mdslides:
-	- publish on PyPI (https://blog.jetbrains.com/pycharm/2017/05/how-to-publish-your-package-on-pypi/)
-	- jekyll renderer expects intro and appendix, is that a problem?
-	✔ ebooks: strip deckset image commands, but preserve other captions @done (18-09-25 08:20)
-	glossary and section links:
-		Make handling glossary and section links more flexible to enable output in PDF
-		- refactor from templates to objects 
-		- add markdown rendering for emphasis and strong
-		- render glossary terms as footnotes for LaTeX
-		- render section links as clickable links in LaTeX (like in the index)
-		- rename link title in pdf from "section" to "pattern"
-		- render section links as clickable links in ePub
-		- fix all other output formats for glossary and section links
+processing slides:
 	set up basic test for all important formats (gold master): @1h
 		make sure all relevant features are covered
 		- speaker notes
@@ -19,26 +178,8 @@ mdslides:
 		- inline images
 		- section numbering
 		- image captions
-	section compiler:
-		- refactor SectionCompiler._append_section() to use mardown processor
-	general refactoring:
-		- remove the need for make-conf: all that should be in config.yaml
-		- rename Content() and 'content' to structure
-		- convert convert_file_for_web() to use MarkdownProcessor()
-		- make config, glossary, structure and translations available to the pipelines @30min
-		-  use constant (or config) in remove_breaks_and_conts() @15min
-		- later: add CHAPTER_NUMBER, CHAPTER_INDEX_FILENAME, CHAPTER_INDEX_IMAGE, CHAPTER_TITLE_IMAGE should have default values that can be overridden in config.yaml  @later @estimate(1h)
-		- class names and code layout can be improved @estimate(30min)
-	aligning the metaphor:
-		- refactor everything to use chapter and section instead of group and pattern!
-		index keys are messed up: 
-			- path for groups should not end in .md, but needs another way so crowdin does not pick it up
-			- all keys should use constants
-	deckset-renderer:
-		empty
-	reveal.js renderer:
+	reveal.js renderer: @later
 		- section links [Governance Facilitator](section:governance-facilitator) : replace with emphasis on title
-		- refactor revealjs.writer to use markdown processor (after basic tests are in place) @1h
 		- glossary overlays  [Driver](glossary:driver): add html overlay
 		- add support for right aligned images
 		- have chapter links link to slide https://github.com/hakimel/reveal.js/#internal-links
@@ -47,10 +188,7 @@ mdslides:
 			see https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md
 			- paragraphs are centered, should be aligned right (.reveal .slides { text-align: center;} 
 			- some slides are truncated (affects text-only slides also). Those slides are displayed completely when reducing the screen width
-	epub renderer:
-		- add section links so they link to the section headers
-	jekyll builder MVP:
-		- add file with translated terms for: next, previous, index, groups, intro, appendix etc.
+	
 mdimg:
 	- (optional) parse non-language assets?
 	- as of now, using one language only no longer works, this needs to be remedied @priority(high)
@@ -68,13 +206,4 @@ mdimg:
 					/en/…
 documentation/showcase:
 	Showcase features and document usage of mdtools in a documentation that is created with mdtools
-	✔ set up basic page structure @done (18-08-13 13:42)
-	✔ make reveal.js slides @done (18-08-13 15:15)
-		✔ integrate reveal.js templates @done (18-08-13 15:15)
-	✔ link to slides.html in documentation @done (18-08-13 22:53)
-	✔ set up jekyll site @done (18-08-13 18:16)
-	✔ set up skeleton dir @done (18-08-13 15:15)
-	✔ set up templates and styles @done (18-08-13 15:15)
-	✔ set up github page (decide on CNAME!!!) @done (18-08-14 13:14)
-	✔ find a way to escape markup so that documentation can contain things like {{define:thing}} and [Thing](glossary:thing) @done (18-08-13 18:16)
-		✔ test if backticks work: `[[`deinfe:thing``]]`` @done (18-08-13 18:16)
+	…

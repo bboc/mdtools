@@ -12,8 +12,12 @@ _mdslides_ can render the output in various formats:
 * a static website using Jekyll
 
 
-- [Deckset](deckset.html)
-- [Jekyll](jekyll.html)
+
+  <dt><a href="deckset.html">Deckset</a></dt>
+  <dd></dd>
+
+  <dt><a href="jekyll.html">Jekyll</a></dt>
+  <dd></dd>
 
 
 [&#9654; Deckset](deckset.html)<br/>[&#9664; Translating Templates](translating-templates.html)

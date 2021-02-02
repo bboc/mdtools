@@ -2,5 +2,5 @@
 title: Glossary 
 ---
 
-**Glossary**: A collection of explanations for words the reader might not be familiar with.
+**Glossary:** A collection of explanations for words the reader might not be familiar with.
 

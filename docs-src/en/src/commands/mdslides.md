@@ -1,5 +1,8 @@
 ## mdslides
 
+
+**Note: this command is currently deactivated!!!
+
 `mdslides` brings several commands for
 
 * `compile` creates one Markdown file per chapter

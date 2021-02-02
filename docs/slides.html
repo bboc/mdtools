@@ -83,9 +83,9 @@
 <p><em>A <strong>glossary</strong> is collection of explanations for words the reader might not be familiar with.</em></p>
 <p>mdtools expects the glossary in a YAML-file, and can do a few tricks with it: </p>
 <ul>
-<li>insert glossary explanations or definitions into the text using &#0123;&#0123;glossary:glossary-term&#0125;&#0125; or &#0123;&#0123;define:glossary-term&#0125;&#0125;</li>
-<li>render a full glossary using &#0123;&#0123;insert-full-glossary&#0125;&#0125;</li>
-<li>add an explanation for a <a href="glossary:glossary">glossary</a> term as an overlay (in html output) using &#0091;glossary&#0093;&#0040;glossary:glossary&#0041;</li>
+<li>insert glossary explanations or definitions into the text using <em>&#0123;&#0123;glossary:glossary-term&#0125;&#0125;</em> or <em>&#0123;&#0123;define:glossary-term&#0125;&#0125;</em></li>
+<li>render a full glossary using <em>&#0123;&#0123;insert-full-glossary&#0125;&#0125;</em></li>
+<li>add an explanation for a <a href="glossary:glossary">glossary</a> term as an overlay (in html output) using <em>&#0091;glossary&#0093;&#0040;glossary:glossary&#0041;</em></li>
 </ul>
 </section>
 
@@ -94,9 +94,32 @@
 <pre><code>terms:
   my-term:
     name: My Term
-definition: what you want to display in the definition of the term
-glossary: what you want to put into the glossary
+    definition: what you want to display in the definition of the term
+    glossary: what you want to put into the glossary
 </code></pre>
+</section>
+
+<section>
+<h2>Glossary Item Style (ebook only)</h2>
+<p>The ebook writer allows for replacing of glossary links with footnotes, plain text, LaTeX underline or custom formats</p>
+<p>Simply add the commandline option <code>--glossary-style</code> for rendering glossary links:</p>
+<ul>
+<li><code>--glossary-style=plain</code> (default) removes the glossary link by replacing it with the link title</li>
+<li><code>--glossary-style=footnotes</code> renders them as footnote references (and appends a list of footnotes into tmp-appendix.md)</li>
+<li><code>--glossary-style=underline</code> replaces links with LaTeX markup for underline</li>
+</ul>
+</section>
+
+<section>
+<h2>Glossary Item Style (ebook only)</h2>
+<p>Any other string passed to <code>--glossary-style</code> will be used a a template for replacing the glossary link. Make sure to escape backticks and slashes accordingly, e.g. <code>--glossary-style="\`\\underline{{%(title)s}}\`{=latex}"</code></p>
+<p>Variables in the template are:</p>
+<ul>
+<li><strong>title</strong>: the title of the link in the text</li>
+<li><strong>term</strong>: the glossary term (identifier in the glossary yaml file)</li>
+<li><strong>name</strong>: the name of the glossary term in the yaml file)</li>
+<li><strong>description</strong>: the description of the glossary term</li>
+</ul>
 </section>
 
 <section>
@@ -178,15 +201,19 @@ glossary: what you want to put into the glossary
 
 </section><section><section>
 <h1>Glossary</h1>
-<p><strong>Glossary</strong>: A collection of explanations for words the reader might not be familiar with. </p>
+<p><strong>Glossary:</strong> A collection of explanations for words the reader might not be familiar with.</p>
 </section>
 
 <section>
 <h2>Changelog</h2>
+<h3>March 2019</h3>
+<ul>
+<li>added commandline parameter --glossary-style for rendering glossary links in various formats, see documentation for details</li>
+</ul>
 <h3>August 2018</h3>
 <ul>
 <li>fixed a bug in the section navigation on the jekyll site</li>
-<li>added added a github page as a showcase that is built thorugh mdtools</li>
+<li>added a github page as a showcase that is built thorugh mdtools</li>
 <li>added section links and overlays for glossary terms</li>
 <li>added basic tests for all output formats of mdslides</li>
 </ul>

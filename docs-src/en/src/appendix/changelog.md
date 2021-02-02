@@ -1,9 +1,25 @@
-    ## Changelog
+## Changelog
+
+### January 2021
+
+-   new version: mdtools 2.0
+-   more flexible content structure that supports any number of parts and chapters, to just introcution, content and appendix.
+-   configuration-as-code
+    -   removed lots of dependencies on the idiosyncracies of the S3 practical guide in favor of a more flexible configuration-as-code approach
+    -   build behavior is defined in one project yamls for several output formats, with one global section and presets for each output format 
+    -   template rendering can be defined in the config, which makes for a much simpler makefile 
+-   extensible macro system
+-   much simpler and cleaner code
+-   **note**: for now, mdtools no longer supports building slide decks. This might be re-added later.
+
+### March 2019
+
+* added commandline parameter --glossary-style for rendering glossary links in various formats, see documentation for details
 
 ### August 2018
 
 * fixed a bug in the section navigation on the jekyll site
-* added added a github page as a showcase that is built thorugh mdtools
+* added a github page as a showcase that is built thorugh mdtools
 * added section links and overlays for glossary terms
 * added basic tests for all output formats of mdslides
 

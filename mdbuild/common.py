@@ -2,13 +2,21 @@
 
 from __future__ import print_function
 
-import codecs
+from contextlib import contextmanager
 import markdown
 import os
+import sys
+import yaml
 
 
 SLIDE_MARKERS = ['---', '***', '* * *']
 FILENAME_PATTERN = '%s.md'
+
+
+def read_config_file(filename):
+    stream = open(filename, "r")
+    with disable_exception_traceback():
+        return yaml.load(stream, Loader=yaml.FullLoader)
 
 
 def make_pathname(name):
@@ -31,8 +39,21 @@ def increase_headline_level(line):
     return line
 
 
-def markdown2html(text):
-    return markdown.markdown(text, extensions=['markdown.extensions.extra', 'markdown.extensions.meta'])
+@contextmanager
+def disable_exception_traceback():
+    """
+    All traceback information is suppressed and only the exception type
+    and value are printed.
+
+    Usage:
+
+    with disable_exception_traceback():
+        raise Exception()
+    """
+    default_value = getattr(sys, "tracebacklimit", 1000)  # `1000` is a Python's default value
+    sys.tracebacklimit = 0
+    yield
+    sys.tracebacklimit = default_value  # revert changes
 
 
 def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
@@ -46,6 +67,10 @@ def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
         return template % dict(chapter=chapter_idx, section=section_idx)
     else:
         return None
+
+
+def markdown2html(text):
+    return markdown.markdown(text, extensions=['markdown.extensions.extra', 'markdown.extensions.meta'])
 
 
 class LineWriter(object):
