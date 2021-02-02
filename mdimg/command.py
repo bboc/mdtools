@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import argparse
 import logging
 import os
 
-from image_update import check_images_cmd, update_images_cmd
+from .image_update import check_images_cmd, update_images_cmd
 
 
 def dir_type(dirname):

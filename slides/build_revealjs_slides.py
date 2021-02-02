@@ -3,15 +3,15 @@
 """
 Build the All Patterns Explained slide deck in reveal.js format.
 """
+from __future__ import absolute_import
 
 import codecs
 import os
 
-from config import get_config, CONTENT
-from common import md_filename
+from .common import md_filename
 
-from glossary import HtmlGlossaryRenderer
-from revealjs_converter import RevealJsHtmlConverter
+from .glossary import HtmlGlossaryRenderer
+from .revealjs_converter import RevealJsHtmlConverter
 
 
 class RevealJsWriter(object):

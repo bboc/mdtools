@@ -5,49 +5,26 @@ Build a slide deck (either in Deckset format or as reveal.js.
 """
 
 from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import absolute_import
 
 import codecs
 import os
 import re
-import sys
 from shutil import copyfile
 
-from common import create_directory, md_filename
-from config import get_config, CONTENT, make_title
-from glossary import read_glossary
-import translate
+from .common import create_directory, md_filename
+from . import translate
 
-from build_deckset_slides import DecksetWriter
-from build_revealjs_slides import RevealJsWriter, RevealJSBuilder
-from build_web_content import cmd_convert_to_web
-from build_jekyll import JekyllWriter
-from ebook_builder import EbookWriter
-from revealjs_converter import RevealJsHtmlConverter
+from .build_deckset_slides import DecksetWriter
+from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
+from .build_web_content import cmd_convert_to_web
+from .revealjs_converter import RevealJsHtmlConverter
 
 TMP_FOLDER = 'tmp-groups'
 
-
+# TODO: this needs to go somewhere else
 translate.read_translation_memory('content/localization.po')
-
-
-def cmd_build_slides(args):
-    """Build slides decks"""
-
-    if args.format == 'revealjs':
-        build_reveal_slides(args)
-    elif args.format == 'deckset':
-        build_deckset_slides(args)
-    elif args.format == 'wordpress':
-        build_wordpress(args)
-    elif args.format == 'jekyll':
-        j = JekyllWriter(args)
-        j.build()
-    elif args.format == 'ebook':
-        e = EbookWriter(args)
-        e.build()
-    else:
-        print("unknown format", args.format)
-        sys.exit(1)
 
 
 def cmd_convert_slides(args):
@@ -108,7 +85,7 @@ def cmd_create_source_files_for_slides(args):
                 fp.write('%s %s\n\n' % (markup, make_title(title_root)))
         else:
             if args.verbose:
-                print "skipped %s" % title_root
+                print("skipped %s" % title_root)
 
     make_file(args.target, content.title, content.title)
     if content.introduction:
@@ -121,7 +98,7 @@ def cmd_create_source_files_for_slides(args):
         make_file(args.target, content.end, content.end)
 
 
-class SectionCompiler():
+class SectionCompiler(object):
     """Compile all source files relevant for building the slide deck:
         - title
         - front-matter
@@ -241,7 +218,7 @@ class SectionCompiler():
         with codecs.open(os.path.join(folder, name), 'r', 'utf-8') as section:
             if headline_prefix:
                 # insert pattern number into first headline of file
-                line = section.next()
+                line = next(section)
                 try:
                     pos = line.index('# ')
                 except ValueError():

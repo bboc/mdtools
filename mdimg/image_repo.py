@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from __future__ import absolute_import
 
 import logging
 import os
@@ -8,9 +9,9 @@ import os.path
 from collections import defaultdict
 from textwrap import dedent
 
-from common import IMAGE_TYPES
+from .common import IMAGE_TYPES
 
-from common import filter_dirs
+from .common import filter_dirs
 
 
 class ImageRepo(object):
@@ -44,7 +45,7 @@ class ImageRepo(object):
 
     def _find_languages(self):
         # TODO: there must be a better way than using os.walk this way?
-        root, dirs, files = os.walk(self.root).next()
+        root, dirs, files = next(os.walk(self.root))
         filter_dirs(dirs)
         return dirs
 

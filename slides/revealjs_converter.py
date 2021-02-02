@@ -3,12 +3,13 @@
 """
 Convert slides(s) in Deckset Markdown to reveal.js slides.
 """
+from __future__ import absolute_import
 import codecs
 import re
 from string import Template
 
-from common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
-from glossary import GLOSSARY_MARKER
+from .common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
+from .glossary import GLOSSARY_MARKER
 
 
 class RevealJSMarkdownConverter(object):

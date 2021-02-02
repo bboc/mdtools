@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import codecs
 from string import Template
 from textwrap import dedent
 
-from config import get_config, CONTENT
-from translate import translate as _
+from .translate import translate as _
 
 import regex as re
 

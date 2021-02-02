@@ -1,5 +1,7 @@
 # mdslides
 
+**NOTICE: This documentation is outdated, and the code in this package is no longer working. Eventually everything may be ported to mdslides 2.0, but for now the focus is on LaTeX/pdf, ePub and Jekyll pages.**
+
 A set of tools to build slide decks from repositories of Markdown files for use in [Deckset](https://www.decksetapp.com/) and [reveal.js](http://lab.hakim.se/reveal-js/#/).
 
 A presentation is created from several groups that consist of one or more sections. Each section is a file that contains one or more slides separated by `---`:
