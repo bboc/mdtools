@@ -24,6 +24,16 @@ PREV = '◀'
 UP = '▲'
 NEXT = '▶'
 NAVIGATION = "<a href=\"%(path)s.html\" title=\"%(alt_title)s\">%(title)s</a>"
+MOUSETRAP = """
+
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = '%s.html';
+    return false;
+});
+</script>
+
+"""
 
 
 def nav_el(title, path, alt_title):
@@ -88,6 +98,9 @@ class JekyllWriter(object):
         """Insert navigation for prev/up/next at the bottom of the page.
 
             e.g. "◀ ▲ ▶ Adapt Patterns To Context"
+        TODO: use config variable to activate this
+        TODO: use another config variable to activate mousetrap keybinding
+
         """
         target.write('\n\n<div class="bottom-nav">\n')
 
@@ -116,3 +129,7 @@ class JekyllWriter(object):
 
         target.write(' '.join(nav))
         target.write("\n</div>\n")
+
+        if next_item:
+            target.write(MOUSETRAP % next_item.slug)
+
