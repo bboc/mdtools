@@ -18,34 +18,20 @@ mdtools 2.0:
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
 			- commit mdtools 2.0 to master (and add version tag) or else the translators who make their own builds are screwed
-				Maybe later:
-				- add smartmenu keyboard navigation addon
-					see https://www.smartmenus.org/wp-content/cache/all/docs/index.html
-				- add keyboard navigation for next page
-				- add tags for excluding items from menu (why here? might be an addon later!)
-			Links: @done
-				https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
-				seems to be the first thing I should try (use Complete navbar .sm-clean)
-				https://stackoverflow.com/questions/18023493/bootstrap-dropdown-sub-menu-missing
-				nested menu with bootstrap 4 (code and explanation)
-				https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
-					good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
-				https://getbootstrap.com - the bootstrap site
-				https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
-					explanation of html/css for responsive menus (nav element and media queries)
-				https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
-					best practices
-				https://github.com/dpstrange/jekyll-bootstrap
-				bootstrap temlate for jekyll
 		Add the CSF:
-			- add the csf
-			- updata changelog
-				- mdtools 2.0
-				- menu
-				- revised structure
-				- added csf
+			add the csf:
+				- add csf text
+				- split into parts
+				- add illustrations
+				- add new intro text from google doch
+			update changelog:
+				- mdtools 2.0 @done
+				- menu @done
+				- revised structure @done
+				- added csf @done
 			- bump version
 			- check ebook and pdf
+			- add illustrations to illustrations repo
 		Clean up Code (after the practical guide has been committed to dev branch!!):
 			- todo: look at all TODOs in code
 			- find all config variables used in code and decide about adding a preset value for each
@@ -101,6 +87,25 @@ mdtools 2.0:
 		- create first version of redirections.yaml file from structure.yaml
 		- add template for redirection files (including requred JS)
 		- add configurable build step for generating redirection files from redirections.yaml
+	Better User Experience for Website:
+			- add smartmenu keyboard navigation addon
+				see https://www.smartmenus.org/wp-content/cache/all/docs/index.html
+			- add keyboard navigation for next page
+			- add tags for excluding items from menu (why here? might be an addon later!)
+		Links: @done
+			https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
+			seems to be the first thing I should try (use Complete navbar .sm-clean)
+			https://stackoverflow.com/questions/18023493/bootstrap-dropdown-sub-menu-missing
+			nested menu with bootstrap 4 (code and explanation)
+			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
+				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
+			https://getbootstrap.com - the bootstrap site
+			https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
+				explanation of html/css for responsive menus (nav element and media queries)
+			https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
+				best practices
+			https://github.com/dpstrange/jekyll-bootstrap
+			bootstrap temlate for jekyll
 	Support all editions from one structure:
 		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
 		Variant A:
@@ -116,7 +121,7 @@ mdtools 2.0:
 		- nice CSS
 	Link to Node:
 		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
-	Milestone 4: App with GUI:
+	MVP: App with GUI:
 		As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
 		(people would still require to install MacTex, Jekyll, Pandoc etc., though)
 		- build a gui (from on I already have probably)
@@ -128,7 +133,7 @@ mdtools 2.0:
 		- test if pandoc, latexmk or multimarkdown is installed (is mmd necessary at all??)
 		- 
 		- execute the build
-	Milestone 5: Better Document Structure:
+	MVP: Better Document Structure:
 		Better Document Structure: @estimate(6h)
 			As an author, I want to use identical file names in different folders so that I don't have to use weird workarounds, e.g. when each part starts with an 'overview' .
 			- error is raised if both exist at the same time
