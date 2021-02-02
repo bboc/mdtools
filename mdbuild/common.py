@@ -2,9 +2,10 @@
 
 from __future__ import print_function
 
+from contextlib import contextmanager
 import markdown
 import os
-
+import sys
 import yaml
 
 
@@ -14,7 +15,8 @@ FILENAME_PATTERN = '%s.md'
 
 def read_config_file(filename):
     stream = open(filename, "r")
-    return yaml.load(stream, Loader=yaml.FullLoader)
+    with disable_exception_traceback():
+        return yaml.load(stream, Loader=yaml.FullLoader)
 
 
 def make_pathname(name):
@@ -37,6 +39,23 @@ def increase_headline_level(line):
     return line
 
 
+@contextmanager
+def disable_exception_traceback():
+    """
+    All traceback information is suppressed and only the exception type
+    and value are printed.
+
+    Usage:
+
+    with disable_exception_traceback():
+        raise Exception()
+    """
+    default_value = getattr(sys, "tracebacklimit", 1000)  # `1000` is a Python's default value
+    sys.tracebacklimit = 0
+    yield
+    sys.tracebacklimit = default_value  # revert changes
+
+
 def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
     if commandline_args.no_section_prefix:
         return None
@@ -48,7 +67,6 @@ def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
         return template % dict(chapter=chapter_idx, section=section_idx)
     else:
         return None
-
 
 
 def markdown2html(text):
