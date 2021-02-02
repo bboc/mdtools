@@ -17,19 +17,13 @@ mdtools 2.0:
 			- fix menu items so that teh site works (at least somewhat) @done
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
-			- test menu with static content @done
-			- generate the right content for the menu
-			- put the menu in the right place on the page
-			- add css as SCSS so that changing colors is simple
-			- style the menu so that it looks good
-			- update index page (content see https://trello.com/c/6FLDEzVH/585-website-menu-and-index-page)
-			- change the structure of the practical guide (see: https://docs.google.com/document/d/1vbKueX4wyi1GkO0J_GmGJ1lgmuD4UYJKYhTXulWq4wA/edit#heading=h.lct0ktqk122w)  
-				- add a way for setting a different (translatable title) for the website
-			- add tags for excluding items from menu
-			- css: make headlines a bit smaller
-			- add keyboard nnavigation addon
-			- add a mega menu: 'tools'
-			Links:
+			- commit mdtools 2.0 to master (and add version tag) or else the translators who make their own builds are screwed
+				Maybe later:
+				- add smartmenu keyboard navigation addon
+					see https://www.smartmenus.org/wp-content/cache/all/docs/index.html
+				- add keyboard navigation for next page
+				- add tags for excluding items from menu (why here? might be an addon later!)
+			Links: @done
 				https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
 				seems to be the first thing I should try (use Complete navbar .sm-clean)
 				https://stackoverflow.com/questions/18023493/bootstrap-dropdown-sub-menu-missing
@@ -44,12 +38,19 @@ mdtools 2.0:
 				https://github.com/dpstrange/jekyll-bootstrap
 				bootstrap temlate for jekyll
 		Add the CSF:
-			pass
+			- add the csf
+			- updata changelog
+				- mdtools 2.0
+				- menu
+				- revised structure
+				- added csf
+			- bump version
+			- check ebook and pdf
 		Clean up Code (after the practical guide has been committed to dev branch!!):
 			- todo: look at all TODOs in code
 			- find all config variables used in code and decide about adding a preset value for each
 			- document temp folder, build.sh (to update all relevant files @done
-			- add upadting version template to build.sh
+			- add upadaing version template to build.sh
 			- check that a simplified format for structure (like used in the docs) is still possible
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
