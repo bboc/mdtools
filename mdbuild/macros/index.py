@@ -125,19 +125,27 @@ class MenuMacro(object):
     def render(cls, config, structure, *args, **kwargs):
         if not structure.parts:
             raise Exception("Can't render menu, menu parent has no parts!")
-        return '\n'.join(cls.render_parts(structure, []))
+        try: 
+            noob_menu = config.noob_menu
+        except AttributeError:
+            noob_menu = False
+        return '\n'.join(cls.render_parts(structure, [], noob_menu=noob_menu))
 
     @classmethod
-    def render_parts(cls, node, res):
+    def render_parts(cls, node, res, noob_menu=False):
         for part in node.parts:
             if 'menu-title' in part.metadata:
                 title = part.metadata['menu-title']
             else:
                 title = part.title
-            res.append("""<li><a href="%s.html">%s</a>\n""" % (part.slug, title))
+            item_html = """<li><a href="%s.html">%s</a>\n""" % (part.slug, title)
+            res.append(item_html)
             if part.parts:
                 res.append("<ul>\n")
-                cls.render_parts(part, res)
+                if noob_menu:
+                    # upon popular request: repeat parent inside each submenu
+                    res.append(item_html)
+                cls.render_parts(part, res, noob_menu)
                 res.append("</ul>\n")
             res.append("</li>\n")
         return res
