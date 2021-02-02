@@ -18,26 +18,14 @@ mdtools 2.0:
 		Responsive Website Menu: @estimate(4h)
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
 			- commit mdtools 2.0 to master (and add version tag) or else the translators who make their own builds are screwed
-		Add the CSF:
-			add the csf:
-				- add csf text
-				- split into parts
-				- add illustrations
-				- add new intro text from google doch
-			update changelog:
-				- mdtools 2.0 @done
-				- menu @done
-				- revised structure @done
-				- added csf @done
-			- bump version
-			- check ebook and pdf
-			- add illustrations to illustrations repo
+		Add the CSF @done
 		Clean up Code (after the practical guide has been committed to dev branch!!):
 			- todo: look at all TODOs in code
 			- find all config variables used in code and decide about adding a preset value for each
 			- document temp folder, build.sh (to update all relevant files @done
-			- add upadaing version template to build.sh
+			- add updating version template to build.sh
 			- check that a simplified format for structure (like used in the docs) is still possible
+			- add config variables for adding page navigation and mousetrap integration
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
@@ -88,9 +76,8 @@ mdtools 2.0:
 		- add template for redirection files (including requred JS)
 		- add configurable build step for generating redirection files from redirections.yaml
 	Better User Experience for Website:
-			- add smartmenu keyboard navigation addon
-				see https://www.smartmenus.org/wp-content/cache/all/docs/index.html
-			- add keyboard navigation for next page
+			- add smartmenu keyboard navigation addon @done
+			- add keyboard navigation for next page @done
 			- add tags for excluding items from menu (why here? might be an addon later!)
 		Links: @done
 			https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
@@ -116,7 +103,7 @@ mdtools 2.0:
 				include:editon-A|edition-B
 				sections: …
 	Linkable Glossary:
-		maybe, see github issue
+		Glossary items should instead be rendered as dd tags within a dl (definition list) and they should have anchor links so that one can link such as https://patterns.sociocracy30.org/glossary.html#objection which isn't possible now.
 		- update renderer
 		- nice CSS
 	Link to Node:
