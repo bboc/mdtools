@@ -158,6 +158,7 @@ class ContentNode(object):
 
     @classmethod
     def from_config(cls, data, parent, root, level):
+        logger.debug(data)
         if data.__class__ == dict:
             item = cls(data['id'], parent, root, level)
         else:
