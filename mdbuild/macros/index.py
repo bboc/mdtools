@@ -130,7 +130,11 @@ class MenuMacro(object):
     @classmethod
     def render_parts(cls, node, res):
         for part in node.parts:
-            res.append("""<li><a href="%s.html">%s</a>\n""" % (part.slug, part.title))
+            if 'menu-title' in part.metadata:
+                title = part.metadata['menu-title']
+            else:
+                title = part.title
+            res.append("""<li><a href="%s.html">%s</a>\n""" % (part.slug, title))
             if part.parts:
                 res.append("<ul>\n")
                 cls.render_parts(part, res)

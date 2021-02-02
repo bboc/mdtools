@@ -56,6 +56,7 @@ class ContentNode(object):
         self.config = {}
         self.tags = []
         self.summary = ''
+        self.metadata = {}
 
     def is_root(self):
         return self is self.root
@@ -150,6 +151,8 @@ class ContentNode(object):
             d['tags'] = self.tags
         if self.config:
             d['config'] = repr(self.config)
+        if self.metadata:
+            d['metadata'] = self.metadata
 
         return d
 

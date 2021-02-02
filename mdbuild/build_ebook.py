@@ -32,10 +32,10 @@ class EbookWriter(object):
 
         # set up filters for markdown processor:
         self.filters = [
+            partial(mdp.MetadataPlugin.filter, strip_summary_tags=True),
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
             macros.MacroFilter.filter,
-            partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
             mdp.clean_images,
         ]
         # process glossary links

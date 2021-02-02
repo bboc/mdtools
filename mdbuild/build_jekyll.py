@@ -49,12 +49,12 @@ class JekyllWriter(object):
 
         # set up filters for markdown processor:
         self.filters = [
+            partial(mdp.MetadataPlugin.filter, strip_summary_tags=True),
             mdp.remove_breaks_and_conts,
             partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
             macros.MacroFilter.filter,
             glossary.get_glossary_link_processor('tooltip'),
             mdp.jekyll_front_matter,
-            partial(mdp.summary_tags, mode=mdp.STRIP_MODE),
         ]
 
     def build(self):
