@@ -73,11 +73,7 @@ class EbookWriter(object):
         """
         Append content of one node to target.
         """
-        try:
-            header_offset = config.cfg.header_offset
-        except AttributeError:
-            header_offset = 0
-        header_offset = header_offset + node.level - 1
+        header_offset = config.cfg.header_offset + node.level - 1
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=self.filters)

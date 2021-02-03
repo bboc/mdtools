@@ -125,11 +125,8 @@ class MenuMacro(object):
     def render(cls, config, structure, *args, **kwargs):
         if not structure.parts:
             raise Exception("Can't render menu, menu parent has no parts!")
-        try:
-            noob_menu = config.noob_menu
-        except AttributeError:
-            noob_menu = False
-        return '\n'.join(cls.render_parts(structure, [], noob_menu=noob_menu))
+
+        return '\n'.join(cls.render_parts(structure, [], noob_menu=config.noob_menu))
 
     @classmethod
     def render_parts(cls, node, res, noob_menu=False):

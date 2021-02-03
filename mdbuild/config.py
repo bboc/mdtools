@@ -16,6 +16,8 @@ cfg = {}
 config_system_defaults = {
     "read-next-navigation": False,
     "read-next-shortcuts": False,
+    "noob-menu": False,
+    "header-offset": 0,
 }
 
 
