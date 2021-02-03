@@ -27,8 +27,9 @@ def set_project_config(filename, preset=None):
 
     cfg = ConfigObject(config_system_defaults)
     cfg.update(config_data['defaults'])
-    cfg.update(config_data['presets'][preset])
-    cfg.set('preset', preset)
+    if preset:
+        cfg.update(config_data['presets'][preset])
+        cfg.set('preset', preset)
     logger.debug("-- config: '%s'" % filename)
     logger.debug(cfg)
     globals()['cfg'] = cfg
