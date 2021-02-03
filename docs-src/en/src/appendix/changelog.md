@@ -6,6 +6,7 @@
 -   new config-variables:
     -   read-next-navigation (true | false (default)): add navigation below content pages
     -   read-next-shortcuts ((true | false (default)))
+-   cleaner code   
 
 ### v2.0.0 (2020-02-03)
 
