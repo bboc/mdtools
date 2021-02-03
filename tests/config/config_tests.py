@@ -100,7 +100,8 @@ class TestUpdateConfig(TestConfig):
 
     def setUp(self):
         super(TestUpdateConfig, self).setUp()
-        self.c = ConfigObject(self.cfg['defaults'], self.cfg['presets']['jekyll'])
+        self.c = ConfigObject(self.cfg['defaults'])
+        self.c.update(self.cfg['presets']['jekyll'])
 
     def test_update_scalars(self):
         self.assertEqual(self.c.strucure, 'content/structure-new.yaml')
