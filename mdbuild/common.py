@@ -56,13 +56,8 @@ def disable_exception_traceback():
     sys.tracebacklimit = default_value  # revert changes
 
 
-def make_headline_prefix(commandline_args, config, chapter_idx, section_idx):
-    if commandline_args.no_section_prefix:
-        return None
-    if commandline_args.section_prefix:
-        template = codecs.decode(commandline_args.section_prefix, 'utf-8')
-    else:
-        template = config.get('section-prefix', None)
+def make_headline_prefix(config, chapter_idx, section_idx):
+    template = config.get('section-prefix', None)
     if template:
         return template % dict(chapter=chapter_idx, section=section_idx)
     else:

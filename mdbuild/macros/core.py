@@ -82,7 +82,7 @@ def process_macro(match, ignore_unknown=False):
 
 class MacroFilter(object):
     """A markdown processor for expanding macros."""
-    MACRO_PATTERN = re.compile("\{\{.*?\}\}")
+    MACRO_PATTERN = re.compile(r'\{\{.*?\}\}')
 
     @classmethod
     def filter(cls, lines, ignore_unknown=False):

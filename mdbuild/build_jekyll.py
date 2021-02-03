@@ -130,4 +130,3 @@ class JekyllWriter(object):
 
         if next_item and config.cfg.read_next_shortcuts:
             target.write(MOUSETRAP % next_item.slug)
-

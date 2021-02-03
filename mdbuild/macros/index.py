@@ -5,7 +5,7 @@ A macro that renders indexes.
 
 import logging
 from operator import attrgetter
-
+from textwrap import dedent, indent
 from mdbuild.common import markdown2html
 
 
@@ -95,10 +95,9 @@ class IndexMacro(object):
         res.append("</dl>")
         return '\n'.join(res)
 
-    # TODO: enventually use dedent, but it messes up the diffs while the rewrite is in progress
-    INDEX_ELEMENT_HTML = """
-  <dt><a href="%(path)s.html">%(title)s</a></dt>
-  <dd>%(summary)s</dd>"""
+    INDEX_ELEMENT_HTML = indent(dedent("""
+        <dt><a href="%(path)s.html">%(title)s</a></dt>
+        <dd>%(summary)s</dd>"""), '  ')
 
     @classmethod
     def html_index_element(cls, title, path, summary):

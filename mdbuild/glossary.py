@@ -167,7 +167,7 @@ class GlossaryLinkProcessor(object):
 
     Each subclass renders on specific target format
     """
-    GLOSSARY_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
+    GLOSSARY_LINK_PATTERN = re.compile(r'\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)')
 
     @classmethod
     def get_item_data(cls, match):
