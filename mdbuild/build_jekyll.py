@@ -98,10 +98,7 @@ class JekyllWriter(object):
     def _add_bottom_navigation(self, node, target):
         """Insert navigation for prev/up/next at the bottom of the page.
 
-            e.g. "◀ ▲ ▶ Adapt Patterns To Context"
-        TODO: use config variable to activate this
-        TODO: use another config variable to activate mousetrap keybinding
-
+            e.g. "◀ ▲ ▶ Read next: Adapt Patterns To Context"
         """
         target.write('\n\n<div class="bottom-nav">\n')
 
