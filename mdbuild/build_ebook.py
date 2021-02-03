@@ -25,7 +25,7 @@ class EbookWriter(object):
         """Configure everything for the build."""
 
         # register all macros before processing templates
-        macros.register_macro('full-glossary', partial(glossary.full_glossary_macro, glossary.EbookGlossaryRenderer()))
+        macros.register_macro('full-glossary', partial(glossary.full_glossary_macro, glossary.MarkdownGlossaryRenderer()))
         macros.register_macro('index', macros.IndexMacro.render)
         macros.register_macro('glossary', glossary.glossary_term_macro)
         macros.register_macro('define', glossary.glossary_definition_macro)
