@@ -89,7 +89,7 @@ def increase_all_headline_levels(level_increase, lines):
             yield line
 
 
-IMG_PATTERN = re.compile("^\!\[(?P<caption>.*)\]\((?P<url>.*)\)")
+IMG_PATTERN = re.compile(r'^\!\[(?P<caption>.*)\]\((?P<url>.*)\)')
 DECKSET_IMAGE_COMMANDS = ['inline', 'fit', 'left', 'right', 'original', 'filtered']
 IMG_TEMPLATE = '![%s](%s)'
 
@@ -166,57 +166,8 @@ def jekyll_front_matter(lines, params=None):
         yield line
 
 
-BEGIN_SUMMARY = "<summary>"
-END_SUMMARY = "</summary>"
-
-
-def extract_summary(summary_db, name, lines):
-    """
-    Extracty summaries and add to summary_db, strip ** summary tags.
-
-    Must come after replacing glossary entries so that the text is already expanded.
-
-    TODO: is this still required??
-    """
-    for line in lines:
-        if line.strip() == BEGIN_SUMMARY:
-            line = next(lines)
-            while line.strip() != END_SUMMARY:
-                # remove bold around summary if present
-                if line.startswith("**"):
-                    sline = line.strip()[2:-2]
-                else:
-                    sline = line
-                summary_db[name].append(sline)
-                yield line
-                line = next(lines)
-        else:
-            yield line
-
-
-STRIP_MODE = 'strip summary tags'
-
-
-def summary_tags(lines, mode=STRIP_MODE):
-    """
-    Strip or translate summary tags:
-    mode=None or mode=strip
-
-    TODO: is this still required??
-    """
-    for line in lines:
-        if line.strip() == BEGIN_SUMMARY:
-            if mode == STRIP_MODE:
-                pass
-        elif line.strip() == END_SUMMARY:
-            if mode == STRIP_MODE:
-                pass
-        else:
-            yield line
-
-
 def unescape_macros(lines):
-    """
+    r"""
     Unescape macros in templates.
 
     Jekyll variables also use two curly braces, so if a template uses
@@ -227,8 +178,8 @@ def unescape_macros(lines):
     variable.
     """
     for line in lines:
-        line = line.replace('\{', '{')
-        line = line.replace('\}', '}')
+        line = line.replace(r'\{', '{')
+        line = line.replace(r'\}', '}')
         yield line
 
 
@@ -238,7 +189,10 @@ class MetadataPlugin(object):
     metadata = None
     summary_lines = None
 
-    METADATA_PATTERN = re.compile("\[\:(?P<key>.*?)\]: # \"(?P<value>.*?)\"")
+    METADATA_PATTERN = re.compile(r'\[\:(?P<key>.*?)\]: # \"(?P<value>.*?)\"')
+
+    BEGIN_SUMMARY = "<summary>"
+    END_SUMMARY = "</summary>"
 
     @classmethod
     def header_filter(cls, line, after_metadata=False):
@@ -284,7 +238,7 @@ class MetadataPlugin(object):
 
         Transition to standard filter after end of summary.
         """
-        if line.strip() == END_SUMMARY:
+        if line.strip() == cls.END_SUMMARY:
             return line, cls.standard_filter
         else:
             # remove bold around summary if present
@@ -304,7 +258,7 @@ class MetadataPlugin(object):
 
         Transition to summary filter on encountering summary tag.
         """
-        if line.strip() == BEGIN_SUMMARY:
+        if line.strip() == cls.BEGIN_SUMMARY:
             return line, cls.summary_filter
         else:
             return line, cls.standard_filter
@@ -345,10 +299,11 @@ class MetadataPlugin(object):
             if res is not None:
                 if not strip_summary_tags:
                     yield res
-                elif res.strip() not in (BEGIN_SUMMARY, END_SUMMARY):
+                elif res.strip() not in (cls.BEGIN_SUMMARY, cls.END_SUMMARY):
                     yield res
 
-SECTION_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(section:(?P<section>[^)]*)\)")
+
+SECTION_LINK_PATTERN = re.compile(r'\[(?P<title>[^\]]*)\]\(section:(?P<section>[^)]*)\)')
 SECTION_LINK_TITLE_ONLY = "_%(title)s_"
 SECTION_LINK_TO_HMTL = "[%(title)s](%(section)s.html)"
 SECTION_LINK_TO_SLIDE = "_%(title)s_"
@@ -382,14 +337,15 @@ def remove_breaks_and_conts(lines):
         yield line
 
 
-TRANSLATION_MARKER = re.compile('\$\{_\("(?P<text>.*?)"\)\}')
-PARAMETER_MARKER = re.compile('\$\{(?P<name>.*?)\}')
+TRANSLATION_MARKER = re.compile(r'\$\{_\("(?P<text>.*?)"\)\}')
+PARAMETER_MARKER = re.compile(r'\$\{(?P<name>.*?)\}')
 
 
 # TODO: rename to inject_variables_and_translations
 # TODO: remove passing of config
 def template(config, lines):
-    """Insert translations und config parameters marked in the text like
+    """
+    Insert translations und config parameters marked in the text like
     ${_("a string to translate")} or ${my_parameter}.
     """
 
