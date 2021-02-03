@@ -92,7 +92,8 @@ class JekyllWriter(object):
 
                 processor.add_filter(partial(mdp.write, target))
                 processor.process()
-                self._add_bottom_navigation(node, target)
+                if config.cfg.read_next_navigation:
+                    self._add_bottom_navigation(node, target)
 
     def _add_bottom_navigation(self, node, target):
         """Insert navigation for prev/up/next at the bottom of the page.
@@ -130,6 +131,6 @@ class JekyllWriter(object):
         target.write(' '.join(nav))
         target.write("\n</div>\n")
 
-        if next_item:
+        if next_item and config.cfg.read_next_shortcuts:
             target.write(MOUSETRAP % next_item.slug)
 
