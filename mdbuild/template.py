@@ -71,8 +71,7 @@ def _processed_template(mode, src, dest):
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
             processor = mdp.MarkdownProcessor(source, filters=[
-
-                partial(mdp.template, config.cfg.variables),
+                mdp.inject_variables_and_translations,
                 partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
                 partial(macros.MacroFilter.filter),
                 mdp.unescape_macros,
@@ -91,7 +90,7 @@ def _default_template(src, dest):
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
             processor = mdp.MarkdownProcessor(source, filters=[
-                partial(mdp.template, config.cfg.variables),
+                mdp.inject_variables_and_translations,
                 partial(mdp.write, target),
             ])
             processor.process()

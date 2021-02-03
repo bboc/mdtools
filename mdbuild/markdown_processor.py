@@ -341,9 +341,7 @@ TRANSLATION_MARKER = re.compile(r'\$\{_\("(?P<text>.*?)"\)\}')
 PARAMETER_MARKER = re.compile(r'\$\{(?P<name>.*?)\}')
 
 
-# TODO: rename to inject_variables_and_translations
-# TODO: remove passing of config
-def template(config, lines):
+def inject_variables_and_translations(lines):
     """
     Insert translations und config parameters marked in the text like
     ${_("a string to translate")} or ${my_parameter}.
@@ -356,7 +354,7 @@ def template(config, lines):
     def insert_parameter(match):
         name = match.group('name')
         try:
-            return getattr(config, name)
+            return getattr(config.cfg.variables, name)
         except AttributeError:
             logger.error("Unknown config variable '%s" % name)
             return '${%s}' % name
