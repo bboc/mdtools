@@ -15,29 +15,28 @@ mdtools 2.0:
 			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
 			Can't be released without a new menu for the website, because new content will not be visible @priority
 			- fix menu items so that teh site works (at least somewhat) @done
-		Responsive Website Menu: @estimate(4h)
+		Responsive Website Menu: @done
 			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
-			- commit mdtools 2.0 to master (and add version tag) or else the translators who make their own builds are screwed
-		Add the CSF @done
 		Clean up Code (after the practical guide has been committed to dev branch!!):
-			- todo: look at all TODOs in code
-			- find all config variables used in code and decide about adding a preset value for each
+			- todo: look at all TODOs in code @done
+			- find all config variables used in code and decide about adding a preset value for each @done
 			- document temp folder, build.sh (to update all relevant files @done
 			- add updating version template to build.sh
 			- check that a simplified format for structure (like used in the docs) is still possible
-			- add config variables for adding page navigation and mousetrap integration
+			- add config variables for adding page navigation and mousetrap integration @done
 		Release of the Practical Guide: @estimate(4h)
 			This release removes dependency of translation to structure.yaml.
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
-			This release affects crowdin! @priority
+			this release requires moving many files in Crowdin by hand!!! @priority
 			
-			- publish the English version of the practical guide with this version of mdtools
-			- integrate the Common Sense Framework
+			- ❗️backup all files in crowdin! @done
+			- publish the English version of the practical guide with this version of mdtools @done
 			- update French version
 			- update German version
 			- update Hebrew version??
 			- update Dutch version
-			
+			- manually move files in crowdin @done
+			- reactivate and dry-run crowdin-upload
 	MVP 2: Responsive Pattern Map:
 		Macro Support: @estimate(30min)
 			- variables:
@@ -59,16 +58,7 @@ mdtools 2.0:
 			- add css for pattern map
 			- add texts to localization.pot if required 
 		Release the practical guide: @estimate(2h)
-			this release requires moving many files in Crowdin by hand!!! @priority
-			Other languages can be updated as soon as the new templates (and updates to localization.pot) is translated
-			- ❗️backup all files in crowdin!
-			- manually move files in crowdin
-			- reactivate and dry-run crowdin-upload
-			- publish the English version of the practical guide with this version of mdtools
-			- update French version
-			- update German version
-			- update Hebrew version??
-			- update Dutch version
+			
 	Redirections: @estimate(6h)
 		As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
 		can simply be released when ready
