@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import html
 import logging
 from operator import itemgetter
 import re
@@ -184,14 +185,14 @@ class GlossaryLinkRenderer(object):
     @classmethod
     def additional_item_processing(cls, data):
         """Override for additional processing for each glossary item."""
-        pass
+        return data
 
     @classmethod
     def replace_callback(cls, match):
         """Replace each match of the regex."""
         data = cls.get_item_data(match)
         # do some additional stuff beyond replacing the glossary link inline:
-        cls.additional_item_processing(data)
+        data = cls.additional_item_processing(data)
         return cls.INLINE_TEMPLATE % data
 
     @classmethod
@@ -225,6 +226,12 @@ class GlossaryLinkPlain(GlossaryLinkRenderer):
 class GlossaryLinkTooltip(GlossaryLinkRenderer):
     INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
 
+    @classmethod
+    def additional_item_processing(cls, item_data):
+        # buffer the explanation
+        item_data['description'] = html.escape(item_data['description'])
+        return item_data
+
 
 class GlossaryLinkUnderline(GlossaryLinkRenderer):
     """Underline all glossary links."""
@@ -241,6 +248,7 @@ class GlossaryLinkFootnote(GlossaryLinkRenderer):
     def additional_item_processing(cls, item_data):
         # buffer the explanation
         cls.buffer[item_data['term']] = cls.FOOTNOTE_TEXT_TEMPLATE % item_data
+        return item_data
 
     @classmethod
     def glossary_post_processing(cls, target):

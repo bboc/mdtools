@@ -7,6 +7,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import codecs
+import html
 from functools import partial
 import os
 
@@ -38,8 +39,8 @@ Mousetrap.bind('g n', function() {
 
 def nav_el(title, path, alt_title):
     """Create one navigation element."""
-    title = common.escape_html_delimiters(title)
-    alt_title = common.escape_html_delimiters(alt_title)
+    title = html.escape(title)
+    alt_title = html.escape(alt_title)
     return NAVIGATION % locals()
 
 
