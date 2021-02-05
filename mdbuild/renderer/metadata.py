@@ -22,7 +22,7 @@ class MetadataFilter(object):
     END_SUMMARY = "</summary>"
 
     @classmethod
-    def header_filter(cls, line, after_metadata=False):
+    def _header_filter(cls, line, after_metadata=False):
         """
         Read metadata up to (and including) first header.
 
@@ -36,7 +36,7 @@ class MetadataFilter(object):
             key = match.groupdict()['key']
             value = match.groupdict()['value']
             cls.metadata[key] = value
-            return None, cls.header_filter
+            return None, cls._header_filter
 
         elif line.strip().startswith('#'):
             # process header
@@ -46,27 +46,27 @@ class MetadataFilter(object):
             except AttributeError:
                 logger.warning("title not set")
                 cls.title = ''
-            return line, cls.standard_filter
+            return line, cls._standard_filter
 
         elif line.strip() == '':
             # process empty line
             if after_metadata:
-                return line, cls.standard_filter
+                return line, cls._standard_filter
             else:
                 # ignore one blank line
-                return None, partial(cls.header_filter, after_metadata=True)
+                return None, partial(cls._header_filter, after_metadata=True)
         else:
             raise Exception('Metadata must be followed by an empty line!')
 
     @classmethod
-    def summary_filter(cls, line):
+    def _summary_filter(cls, line):
         """
         Read the summary and handle </summary>.
 
         Transition to standard filter after end of summary.
         """
         if line.strip() == cls.END_SUMMARY:
-            return line, cls.standard_filter
+            return line, cls._standard_filter
         else:
             # remove bold around summary if present
             if line.startswith("**") or line.startswith("__"):
@@ -76,19 +76,19 @@ class MetadataFilter(object):
             cls.summary_lines.append(sline)
             cls.summary = '\n'.join(cls.summary_lines)
 
-            return line, cls.summary_filter
+            return line, cls._summary_filter
 
     @classmethod
-    def standard_filter(cls, line):
+    def _standard_filter(cls, line):
         """
         Read and return all other input
 
         Transition to summary filter on encountering summary tag.
         """
         if line.strip() == cls.BEGIN_SUMMARY:
-            return line, cls.summary_filter
+            return line, cls._summary_filter
         else:
-            return line, cls.standard_filter
+            return line, cls._standard_filter
 
     @classmethod
     def filter(cls, lines, strip_summary_tags=False):
@@ -119,7 +119,7 @@ class MetadataFilter(object):
         cls.summary_lines = []
         cls.metadata = {}
 
-        filter_function = cls.header_filter
+        filter_function = cls._header_filter
         for line in lines:
             res, filter_function = filter_function(line)
 
