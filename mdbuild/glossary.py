@@ -55,7 +55,7 @@ def _expand_term(term, key, pattern):
     try:
         return pattern % glossary['terms'][term][key]
     except KeyError:
-        logger.error("can't find '%s' for glossary entry '%s'" (key, term))
+        logger.error("can't find '%s' for glossary entry '%s'" % (key, term))
         raise
 
 
@@ -161,9 +161,9 @@ def get_glossary_link_processor(style):
         return GlossaryLinkMagic.replace_glossary_references
 
 
-class GlossaryLinkProcessor(object):
+class GlossaryLinkRenderer(object):
     """
-    Markdown processor for finding and rendering glossary links.
+    Filter for the renderer that finds and renders glossary links.
 
     Each subclass renders on specific target format
     """
@@ -207,7 +207,7 @@ class GlossaryLinkProcessor(object):
         pass
 
 
-class GlossaryLinkMagic(GlossaryLinkProcessor):
+class GlossaryLinkMagic(GlossaryLinkRenderer):
     """
     Use the config parameter glossary_link_template
     as a template for replacing glossary links.
@@ -217,21 +217,21 @@ class GlossaryLinkMagic(GlossaryLinkProcessor):
     INLINE_TEMPLATE = ''
 
 
-class GlossaryLinkPlain(GlossaryLinkProcessor):
+class GlossaryLinkPlain(GlossaryLinkRenderer):
     """Remove all glossary links (replace with link title)."""
     INLINE_TEMPLATE = """%(title)s"""
 
 
-class GlossaryLinkTooltip(GlossaryLinkProcessor):
+class GlossaryLinkTooltip(GlossaryLinkRenderer):
     INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
 
 
-class GlossaryLinkUnderline(GlossaryLinkProcessor):
+class GlossaryLinkUnderline(GlossaryLinkRenderer):
     """Underline all glossary links."""
     INLINE_TEMPLATE = """`\\underline{%(title)s}`{=latex}"""
 
 
-class GlossaryLinkFootnote(GlossaryLinkProcessor):
+class GlossaryLinkFootnote(GlossaryLinkRenderer):
 
     INLINE_TEMPLATE = """%(title)s[^%(term)s]"""
     FOOTNOTE_TEXT_TEMPLATE = """[^%(term)s]: %(name)s: %(description)s"""

@@ -7,10 +7,10 @@ from functools import partial
 import logging
 import os
 
-from . import markdown_processor as mdp
 from .common import read_config_file, FILENAME_PATTERN
 from . import glossary
 from . import macros
+from .renderer import Renderer, MetadataFilter
 
 logger = logging.getLogger(__name__)
 
@@ -185,15 +185,15 @@ class ContentNode(object):
         if not os.path.exists(self.source_path):
             raise Exception("ERROR: source_path %s doesn't exist)" % self.path)
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
-            processor = mdp.MarkdownProcessor(source, filters=[
+            renderer = Renderer(source, filters=[
                 partial(macros.MacroFilter.filter, ignore_unknown=True),
-                mdp.MetadataPlugin.filter
+                MetadataFilter.filter,
             ])
-            processor.process()
-            logger.debug("node title: '%s'" % mdp.MetadataPlugin.title)
-            self.title = mdp.MetadataPlugin.title
-            self.summary = mdp.MetadataPlugin.summary
-            self.metadata = mdp.MetadataPlugin.metadata
+            renderer.render()
+            logger.debug("node title: '%s'" % MetadataFilter.title)
+            self.title = MetadataFilter.title
+            self.summary = MetadataFilter.summary
+            self.metadata = MetadataFilter.metadata
 
     def find(self, slug):
         """Find slug in this subtree"""

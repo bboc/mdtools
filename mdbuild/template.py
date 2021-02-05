@@ -12,7 +12,7 @@ import sys
 from . import config
 from . import glossary
 from . import macros
-from . import markdown_processor as mdp
+from .renderer import Renderer, filters
 
 logger = logging.getLogger(__name__)
 
@@ -70,18 +70,18 @@ def _processed_template(mode, src, dest):
 
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
-            processor = mdp.MarkdownProcessor(source, filters=[
-                mdp.inject_variables_and_translations,
-                partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
+            renderer = Renderer(source, filters=[
+                filters.inject_variables_and_translations,
+                partial(filters.convert_section_links, 'html'),
                 partial(macros.MacroFilter.filter),
-                mdp.unescape_macros,
+                filters.unescape_macros,
                 # TODO: this is not always the right thing, but glossary entries in templates are pretty rare
                 glossary.get_glossary_link_processor('tooltip'),
             ])
             if mode == 'markdown':
-                processor.add_filter(mdp.jekyll_front_matter)
-            processor.add_filter(partial(mdp.write, target))
-            processor.process()
+                renderer.add_filter(filters.jekyll_front_matter)
+            renderer.add_filter(partial(filters.write, target))
+            renderer.render()
 
 
 def _default_template(src, dest):
@@ -89,8 +89,8 @@ def _default_template(src, dest):
 
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
-            processor = mdp.MarkdownProcessor(source, filters=[
-                mdp.inject_variables_and_translations,
-                partial(mdp.write, target),
+            renderer = Renderer(source, filters=[
+                filters.inject_variables_and_translations,
+                partial(filters.write, target),
             ])
-            processor.process()
+            renderer.render()

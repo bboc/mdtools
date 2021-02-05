@@ -63,7 +63,7 @@ class DecksetWriter(object):
         name = '%s.md' % name
         with codecs.open(os.path.join(self.source_folder, name), 'r', 'utf-8') as source:
             processor = mdp.MarkdownProcessor(source, filters=[
-                partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
+                partial(mdp.convert_section_links, 'title'),
                 partial(mdp.insert_glossary, self.glossary_renderer),
                 partial(mdp.write, self.target),
             ])
