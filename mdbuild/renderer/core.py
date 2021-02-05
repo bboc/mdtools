@@ -15,21 +15,21 @@ from .translate import translate as _
 logger = logging.getLogger(__name__)
 
 
-class MarkdownProcessor(object):
+class Renderer(object):
     """
-    Process markdown through a series of filters cascaded into a pipeline.
+    Process text files through a series of filters cascaded into a pipeline.
 
     Usage:
 
-    processor = MarkdownProcessor(source_file, filters = [
+    renderer = Renderer(source_file, filters = [
         # add filter functions in the order you want them to run
         partial(headline_prefix, prefix),
         partial(inject_glossary, glossary),
     )]
     # add another filter if you forgot one:
-    processor.add_filter(partial(write,target))
+    renderer.add_filter(partial(write,target))
     # apply all filters to stream:
-    processor.process()
+    renderer.render()
     """
 
     def __init__(self, input, filters=None):
@@ -42,7 +42,7 @@ class MarkdownProcessor(object):
         """Add a filter to the pipeline."""
         self.pipeline = new_filter(self.pipeline)
 
-    def process(self):
+    def render(self):
         """Process the stream."""
         for line in self.pipeline:
             pass
