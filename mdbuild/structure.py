@@ -10,7 +10,7 @@ import os
 from .common import read_config_file, FILENAME_PATTERN
 from . import glossary
 from . import macros
-from .renderer import Renderer, MetadataFilter
+from .renderer import Renderer, filters
 
 logger = logging.getLogger(__name__)
 
@@ -187,13 +187,13 @@ class ContentNode(object):
         with codecs.open(self.source_path, 'r', 'utf-8') as source:
             renderer = Renderer(source, filters=[
                 partial(macros.MacroFilter.filter, ignore_unknown=True),
-                MetadataFilter.filter,
+                filters.MetadataFilter.filter,
             ])
             renderer.render()
-            logger.debug("node title: '%s'" % MetadataFilter.title)
-            self.title = MetadataFilter.title
-            self.summary = MetadataFilter.summary
-            self.metadata = MetadataFilter.metadata
+            logger.debug("node title: '%s'" % filters.MetadataFilter.title)
+            self.title = filters.MetadataFilter.title
+            self.summary = filters.MetadataFilter.summary
+            self.metadata = filters.MetadataFilter.metadata
 
     def find(self, slug):
         """Find slug in this subtree"""

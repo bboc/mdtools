@@ -71,6 +71,7 @@ def _processed_template(mode, src, dest):
     with codecs.open(src, 'r', 'utf-8') as source:
         with codecs.open(dest, 'w+', 'utf-8') as target:
             renderer = Renderer(source, filters=[
+                filters.SkipOnlyFilter.filter,
                 filters.inject_variables_and_translations,
                 partial(filters.convert_section_links, 'html'),
                 partial(macros.MacroFilter.filter),

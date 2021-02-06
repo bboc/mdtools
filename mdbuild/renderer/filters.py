@@ -9,6 +9,10 @@ from mdbuild.translate import translate as _
 
 from .common import HEADLINE_PATTERN
 
+# make other filters from this package available here:
+from .skiponly import SkipOnlyFilter
+from .metadata import MetadataFilter
+
 logger = logging.getLogger(__name__)
 
 
