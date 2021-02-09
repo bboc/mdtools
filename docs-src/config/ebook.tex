@@ -1,22 +1,22 @@
 \documentclass[a5paper]{scrreprt}
+\usepackage[american]{babel}
 \usepackage{ebook-style}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 
-
-\begin{document}
-	\title{${_("mdtools Documentation")}}
-	\author{Bernhard Bockelbrink}
-	\date{${version}}
-	\maketitle
+\title{${_("mdtools Documentation")}}
+\author{Bernhard Bockelbrink}
+\date{${version}}
+\titlepic{\includegraphics[width=6cm]{./img/placeholder.png}}
 	
+\begin{document}
+	\maketitle
+	% different title for toc
+	\renewcommand{\contentsname}{${_("Contents")}}
 	\pagenumbering{arabic}
 	% limit toc to sections
-	\setcounter{tocdepth}{0}
+	\setcounter{tocdepth}{1}
 	\tableofcontents
 	% reset counter for list of figures
+    \include{ebook-compiled}
 	\setcounter{tocdepth}{1}
-	%\listoffigures
-    
-    \include{tmp-ebook-compiled}
-\end {document}
+	\listoffigures
+\end{document}
