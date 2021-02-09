@@ -1,51 +1,19 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from __future__ import absolute_import
-
-from functools import partial
 import logging
 import re
+import sys
 
-from .common import SLIDE_MARKERS
-from . import config
-from .translate import translate as _
+from mdbuild.common import SLIDE_MARKERS
+from mdbuild import config
+from mdbuild.translate import translate as _
+
+from .common import HEADLINE_PATTERN
+
+# make other filters from this package available here:
+from .skiponly import SkipOnlyFilter
+from .metadata import MetadataFilter
 
 logger = logging.getLogger(__name__)
-
-
-class MarkdownProcessor(object):
-    """
-    Process markdown through a series of filters cascaded into a pipeline.
-
-    Usage:
-
-    processor = MarkdownProcessor(source_file, filters = [
-        # add filter functions in the order you want them to run
-        partial(headline_prefix, prefix),
-        partial(inject_glossary, glossary),
-    )]
-    # add another filter if you forgot one:
-    processor.add_filter(partial(write,target))
-    # apply all filters to stream:
-    processor.process()
-    """
-
-    def __init__(self, input, filters=None):
-        self.pipeline = input
-        if filters:
-            for f in filters:
-                self.pipeline = f(self.pipeline)
-
-    def add_filter(self, new_filter):
-        """Add a filter to the pipeline."""
-        self.pipeline = new_filter(self.pipeline)
-
-    def process(self):
-        """Process the stream."""
-        for line in self.pipeline:
-            pass
 
 
 def dummy_filter(lines):
@@ -132,7 +100,6 @@ def clean_images_old(lines):
             yield line
 
 
-HEADLINE_PATTERN = re.compile("#{1,7} (?P<title>.*)")
 FRONT_MATTER_TITLE = "title: \"%s\"\n"
 FRONT_MATTER_SEPARATOR = "---\n"
 
@@ -183,134 +150,23 @@ def unescape_macros(lines):
         yield line
 
 
-class MetadataPlugin(object):
-    title = None
-    summary = None
-    metadata = None
-    summary_lines = None
-
-    METADATA_PATTERN = re.compile(r'\[\:(?P<key>.*?)\]: # \"(?P<value>.*?)\"')
-
-    BEGIN_SUMMARY = "<summary>"
-    END_SUMMARY = "</summary>"
-
-    @classmethod
-    def header_filter(cls, line, after_metadata=False):
-        """
-        Read metadata up to (and including) first header.
-
-        Metadata must be followed by a blank line!
-
-        Transition to normal filter after headline.
-        """
-        if cls.METADATA_PATTERN.match(line.strip()) is not None:
-            # process metadata
-            match = cls.METADATA_PATTERN.match(line.strip())
-            key = match.groupdict()['key']
-            value = match.groupdict()['value']
-            cls.metadata[key] = value
-            return None, cls.header_filter
-
-        elif line.strip().startswith('#'):
-            # process header
-            match = HEADLINE_PATTERN.search(line)
-            try:
-                cls.title = match.group('title')
-            except AttributeError:
-                logger.warning("title not set")
-                cls.title = ''
-            return line, cls.standard_filter
-
-        elif line.strip() == '':
-            # process empty line
-            if after_metadata:
-                return line, cls.standard_filter
-            else:
-                # ignore one blank line
-                return None, partial(cls.header_filter, after_metadata=True)
-        else:
-            raise Exception('Metadata must be followed by an empty line!')
-
-    @classmethod
-    def summary_filter(cls, line):
-        """
-        Read the summary and handle </summary>.
-
-        Transition to standard filter after end of summary.
-        """
-        if line.strip() == cls.END_SUMMARY:
-            return line, cls.standard_filter
-        else:
-            # remove bold around summary if present
-            if line.startswith("**") or line.startswith("__"):
-                sline = line.strip()[2:-2]
-            else:
-                sline = line
-            cls.summary_lines.append(sline)
-            cls.summary = '\n'.join(cls.summary_lines)
-
-            return line, cls.summary_filter
-
-    @classmethod
-    def standard_filter(cls, line):
-        """
-        Read and return all other input
-
-        Transition to summary filter on encountering summary tag.
-        """
-        if line.strip() == cls.BEGIN_SUMMARY:
-            return line, cls.summary_filter
-        else:
-            return line, cls.standard_filter
-
-    @classmethod
-    def filter(cls, lines, strip_summary_tags=False):
-        """
-        Extract title, summary and other metadata.
-
-        Metadata is stripped from the file so that this filter can be used to
-        feed standard markdown to other filters down the line.
-
-        Must come after replacing glossary entries so that the text in the summaries
-        is already expanded.
-
-        A metadata block must start at the top of the page, and is optionally followed
-        by a blank line.
-
-        [:author]: # "JohnDoe"
-
-        see this question on stackoverflow for a discussion of metadata formats:
-
-        https://stackoverflow.com/questions/44215896/markdown-metadata-format#44222826
-
-        TODO: figure out if an object-based (not class-based) approach is a cleaner
-            solution here?
-        """
-        # Initialize all class variables
-        cls.title = None
-        cls.summary = None
-        cls.summary_lines = []
-        cls.metadata = {}
-
-        filter_function = cls.header_filter
-        for line in lines:
-            res, filter_function = filter_function(line)
-
-            if res is not None:
-                if not strip_summary_tags:
-                    yield res
-                elif res.strip() not in (cls.BEGIN_SUMMARY, cls.END_SUMMARY):
-                    yield res
-
-
 SECTION_LINK_PATTERN = re.compile(r'\[(?P<title>[^\]]*)\]\(section:(?P<section>[^)]*)\)')
-SECTION_LINK_TITLE_ONLY = "_%(title)s_"
-SECTION_LINK_TO_HMTL = "[%(title)s](%(section)s.html)"
-SECTION_LINK_TO_SLIDE = "_%(title)s_"
+
+SECTION_LINK_TEMPLATES = {
+    'title': "_%(title)s_",
+    'html': "[%(title)s](%(section)s.html)",
+    'slides': "_%(title)s_"
+}
 
 
-def convert_section_links(template, lines):
+def convert_section_links(style, lines):
     """Convert section links for various output formats."""
+    try:
+        template = SECTION_LINK_TEMPLATES[style]
+    except KeyError:
+        logger.error('unknown section link style "%s"' % style)
+        sys.exit(1)
+
     def link_replace(match):
         """Replace link with template."""
         data = {

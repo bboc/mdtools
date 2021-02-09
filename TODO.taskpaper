@@ -4,40 +4,41 @@ mdtools 2.0:
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
 	
-	MVP 1: New Structure, Menu and CSF:
-		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
-		This release affects crowdin! @priority
-		Preparation:
-			- backup all files from crowdin
-			- deactivate crowdin upload @done
-		New Project Structure: @estimate(2d) @done
-			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
-			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
-			Can't be released without a new menu for the website, because new content will not be visible @priority
-			- fix menu items so that teh site works (at least somewhat) @done
-		Responsive Website Menu: @done
-			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
-		Clean up Code (after the practical guide has been committed to dev branch!!):
-			- todo: look at all TODOs in code @done
-			- find all config variables used in code and decide about adding a preset value for each @done
-			- document temp folder, build.sh (to update all relevant files @done
-			- add updating version template to build.sh
-			- check that a simplified format for structure (like used in the docs) is still possible
-			- add config variables for adding page navigation and mousetrap integration @done
-		Release of the Practical Guide: @estimate(4h)
-			This release removes dependency of translation to structure.yaml.
-			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
-			this release requires moving many files in Crowdin by hand!!! @priority
-			
-			- ❗️backup all files in crowdin! @done
-			- publish the English version of the practical guide with this version of mdtools @done
-			- update French version
-			- update German version
-			- update Hebrew version??
-			- update Dutch version
-			- manually move files in crowdin @done
-			- reactivate and dry-run crowdin-upload
-	MVP 2: Responsive Pattern Map:
+	- BUG: escape \" in gloosary tooltips!!!
+	Update Language versions to mdtools 2.x:
+		- update German version
+		- update Hebrew version??
+		- update Dutch version
+		- update swedish version
+	Show/hide parts of content files dependent on format, preset and edition: @done
+		As an author I want to be able to show parts of a file only for specific formats, editions or presets, so my project is easier to maintain.
+		- move markdown_processor to renderer package @done
+		- add cfg.editions with default='standard' @done
+		- add <skip formats="" editions="" presets=""> which excludes content only for those formats etc. @done
+		- add <only formats="" editions="" presets=""> which includes content only for those formats etc. @done
+		- add documentation nodes for those tags @done
+	Support all editions from one structure:
+		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
+		If information about inclusion and exclusion is stored in structure (and not in the content file itself) the info is visible in one place. Keeping this info in a separate array, not in tags, allows for a simpler design
+		Variant A:
+			add tags to each section: exclude:editon-A|edition-B include:editon-A|edition-B
+			add as literal to section
+				id: foobart
+				exclude:editon-A|edition-B 
+				include:editon-A|edition-B
+				sections: …
+	Simplified Structure:
+		Check that a simplified format for structure (like used in the docs) is still possible
+		- test building docs
+		- find a way to make it work
+		- get the Deckset builder to work 
+	Port Deckset renderer to mdtools 2.0:
+		- support simple document structure!
+	Port revealjs renderer to mdtools 2.0:
+		pass
+	Update documentation and Tests:
+		pass
+	MVP: Responsive Pattern Map:
 		Macro Support: @estimate(30min)
 			- variables:
 					green: #FF0000
@@ -65,6 +66,7 @@ mdtools 2.0:
 		- create first version of redirections.yaml file from structure.yaml
 		- add template for redirection files (including requred JS)
 		- add configurable build step for generating redirection files from redirections.yaml
+		- add search
 	Better User Experience for Website:
 			- add smartmenu keyboard navigation addon @done
 			- add keyboard navigation for next page @done
@@ -83,19 +85,6 @@ mdtools 2.0:
 				best practices
 			https://github.com/dpstrange/jekyll-bootstrap
 			bootstrap temlate for jekyll
-	Support all editions from one structure:
-		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
-		Variant A:
-			add tags to each section: exclude:editon-A|edition-B include:editon-A|edition-B
-			add as literal to section
-				id: foobart
-				exclude:editon-A|edition-B 
-				include:editon-A|edition-B
-				sections: …
-	Linkable Glossary:
-		Glossary items should instead be rendered as dd tags within a dl (definition list) and they should have anchor links so that one can link such as https://patterns.sociocracy30.org/glossary.html#objection which isn't possible now.
-		- update renderer
-		- nice CSS
 	Link to Node:
 		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
 	MVP: App with GUI:
@@ -117,12 +106,11 @@ mdtools 2.0:
 			- website is published in folders now
 			- all indexes and menus are still working
 			- update redirections as necessary
-			
-		Release: @estimate(2h)
-			this release might require moving some files in Crowdin!!! @priority
-			- backup all files in crowdin!
-			- manually move files in crowdin!!!
-			- release
+			Release: @estimate(2h)
+				this release might require moving some files in Crowdin!!! @priority
+				- backup all files in crowdin!
+				- manually move files in crowdin!!!
+				- release
 		
 	Sometimes:
 		Add separate template command: @estimate(2h)
@@ -133,7 +121,6 @@ mdtools 2.0:
 		Better glossary and links support for Latex (and other formats): @estimate(4h)
 			Make handling glossary and section links more flexible to enable output in PDF
 			most of the code is already there, requires some tweaking though.
-			
 			- add markdown rendering for emphasis and strong in glossary text
 			- render glossary terms as footnotes for LaTeX
 			- render section links as clickable links in LaTeX (like in the index)
@@ -153,12 +140,21 @@ mdtools 2.0:
 					underlines with ulem: http://texdoc.net/texmf-dist/doc/generic/ulem/ulem.pdf
 				undeline in Latex: https://alexwlchan.net/2017/10/latex-underlines/
 			- try https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#glossaries
-		Port Deckset renderer to mdtools 2.0:
-			- support simple document structure!
-		Port revealjs renderer to mdtools 2.0:
-			pass
-		Update documentation and Tests:
-			pass
+Done:
+	MVP 1: New Structure, Menu and CSF: @done
+		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
+		This release affects crowdin! @priority
+		New Project Structure: @estimate(2d) @done
+			As author, I want a more flexible and consistent document structure so that I am not limited to a fixed three-part structure (Introduction, Chapters, Appendix)
+			Constraint: each section still requires a unique id (filename name) as we don't have folders in the first release @priority
+			Can't be released without a new menu for the website, because new content will not be visible @priority
+		Responsive Website Menu: @done
+			As a website visitor I want a responsive menu that gives me access to all content, so that I can find what I want.
+		Release of the Practical Guide: @done
+			This release removes dependency of translation to structure.yaml.
+			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
+	Linkable Glossary: @done
+		Glossary items should instead be rendered as dd tags within a dl (definition list) and they should have anchor links so that one can link such as https://patterns.sociocracy30.org/glossary.html#objection which isn't possible now.
 
 processing slides:
 	set up basic test for all important formats (gold master): @1h

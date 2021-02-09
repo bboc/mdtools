@@ -18,6 +18,7 @@ config_system_defaults = {
     "read-next-shortcuts": False,
     "noob-menu": False,
     "header-offset": 0,
+    "edition": 'standard',
 }
 
 

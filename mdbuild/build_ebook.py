@@ -11,7 +11,7 @@ from functools import partial
 from . import config
 from . import glossary
 from . import macros
-from . import markdown_processor as mdp
+from .renderer import Renderer, filters
 from . import structure
 from . import template
 
@@ -30,13 +30,14 @@ class EbookWriter(object):
         macros.register_macro('glossary', glossary.glossary_term_macro)
         macros.register_macro('define', glossary.glossary_definition_macro)
 
-        # set up filters for markdown processor:
+        # set up filters for renderer:
         self.filters = [
-            partial(mdp.MetadataPlugin.filter, strip_summary_tags=True),
-            mdp.remove_breaks_and_conts,
-            partial(mdp.convert_section_links, mdp.SECTION_LINK_TITLE_ONLY),
+            partial(filters.MetadataFilter.filter, strip_summary_tags=True),
+            filters.remove_breaks_and_conts,
+            filters.SkipOnlyFilter.filter,
+            partial(filters.convert_section_links, 'title'),
             macros.MacroFilter.filter,
-            mdp.clean_images,
+            filters.clean_images,
         ]
         # process glossary links
         if config.cfg.target_format == 'html':
@@ -76,11 +77,11 @@ class EbookWriter(object):
         header_offset = config.cfg.header_offset + node.level - 1
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
-            processor = mdp.MarkdownProcessor(source, filters=self.filters)
+            renderer = Renderer(source, filters=self.filters)
 
             # processor.add_filter(partial(mdp.prefix_headline, headline_prefix))
-            processor.add_filter(partial(mdp.increase_all_headline_levels, header_offset))
-            processor.add_filter(partial(mdp.write, target))
+            renderer.add_filter(partial(filters.increase_all_headline_levels, header_offset))
+            renderer.add_filter(partial(filters.write, target))
 
-            processor.process()
+            renderer.render()
         target.write("\n\n")

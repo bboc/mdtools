@@ -74,9 +74,15 @@ class IndexMacro(object):
             else:  # markdown
                 return cls.render_markdown(nodes_to_show, cls.MD_SUMMARY_TEMPLATE)
         else:  # list format
-            return cls.render_markdown(nodes_to_show, cls.MD_LIST_TEMPLATE)
+            if format in ('latex', 'epub'):
+                # TODO: links should be rendered as section links (at least for latex and epub)
+                #    and the link renderer should pick the appropriate format!!
+                return cls.render_markdown(nodes_to_show, cls.LATEX_LIST_TEMPLATE)
+            else:
+                return cls.render_markdown(nodes_to_show, cls.MD_LIST_TEMPLATE)
 
     LATEX_SUMMARY_TEMPLATE = "**%(title)s:** %(summary)s\n\n"
+    LATEX_LIST_TEMPLATE = "- %(title)s\n"
     MD_LIST_TEMPLATE = "- [%(title)s](%(slug)s.html)\n"
     MD_SUMMARY_TEMPLATE = "**[%(title)s](%(slug)s.html)**\n\n%(summary)s\n\n"
 
