@@ -8,6 +8,7 @@
     -   read-next-shortcuts ((true | false (default)))
 -   cleaner code
 -   support markup for including or excluding content dependent on format, preset or cfg.edition
+-   suppport content  blocks to be included in specific formats, presets or editions only
 
 ### v2.0.0 (2020-02-03)
 
