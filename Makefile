@@ -1,20 +1,76 @@
-ROOT=docs-src
-CONFIG=$(ROOT)/en/structure-new.yaml
-GLOSSARY=$(ROOT)/en/glossary.yaml
+##### the first part of the makefile handles building documentation #########
 
-TMPFOLDER=tmp
-
-LOC=$(ROOT)/en/localization.po
-PRJ=$(ROOT)/config/project.yaml
-MKTPL=mdslides template
+TMP=tmp
+PROJECT=doc-src/config/project.yaml
 
 # get language specific parameters
-include $(ROOT)/config/make-conf
+include doc-src/config/local-conf
 
-define update-make-conf
-# update the make conf file from translations
-$(MKTPL) $(ROOT)/templates/make-conf $(ROOT)/config/make-conf $(LOC) $(PRJ)
-endef
+site:
+	# build jekyll site
+	mdbuild jekyll $(PROJECT) -vv
+	mdbuild all-in-one-jekyll-page $(PROJECT) -vv
+	cd docs;jekyll build
+
+debug:
+	# build with debug output (for quickly testing changes to structure.yaml or project.yaml)
+	mdbuild all-in-one-jekyll-page $(PROJECT) -vvvv
+
+epub:
+	# render an ebook as epub
+	echo $(TARGETFILE)
+	mdbuild epub $(PROJECT) -vv
+	cd $(TMP); pandoc epub-compiled.md -f markdown -t epub3 --toc --toc-depth=3 -s -o ../$(TARGETFILE).epub
+
+docx:
+	# render an ebook as epub
+	echo $(TARGETFILE)
+	mdbuild epub $(PROJECT) -vv
+	cd $(TMP); pandoc epub-compiled.md -f markdown -t docx --toc --toc-depth=3 -s -o ../$(TARGETFILE).docx
+
+
+ebook:
+	# render an ebook as pdf (via LaTEX)
+	mdbuild ebook $(PROJECT) -vv
+	
+	cd $(TMP); multimarkdown --to=latex --output=ebook-compiled.tex ebook-compiled.md
+	cd $(TMP); latexmk -pdf -xelatex -silent ebook.tex 
+
+	cd $(TMP); mv ebook.pdf ../$(TARGETFILE).pdf
+	
+	# clean up
+	cd $(TMP); latexmk -C
+
+
+clean:
+	# clean all generated content
+	-rm -r docs/img
+	-rm -r docs/_site
+	-rm docs/*.md
+	# take no risk here!
+	-rm -r tmp
+
+setup:
+	# prepare temp folders and jekyll site
+	echo "this might produce error output if folders already exist"
+	-mkdir -p $(TMP)
+	-mkdir docs/_site
+
+	# copy images to temp folder
+ifneq ("$(wildcard $(TMP)/img)","")
+	# take no risk here!
+	rm -r $(TMP)/img
+endif
+	cp -r docs-src/img $(TMP)/img
+
+	# clean up and copy images do to docs folder
+ifneq ("$(wildcard docs/img)","")
+	rm -r docs/img
+endif
+	cp -r img docs/img
+
+
+######Commands for development of mdtools ######################
 
 init:
 	pip install -r requirements.txt
@@ -26,30 +82,3 @@ test:
 dev:
 	python setup.py develop
 
-revealjs:
-	$(update-make-conf)
-
-	$(MKTPL) $(ROOT)/templates/revealjs-template.html $(TMPFOLDER)/revealjs-template.html $(LOC) $(PRJ)
-
-	mdslides compile $(CONFIG) $(ROOT)/en/src $(TMPFOLDER) --chapter-title=text --glossary=$(GLOSSARY) --section-prefix="$(SECTIONPREFIX)"
-	mdslides build revealjs $(CONFIG) $(TMPFOLDER) docs/slides.html --template=$(TMPFOLDER)/revealjs-template.html  --glossary=$(GLOSSARY) --glossary-items=8
-
-site:
-	# build jekyll site
-	$(update-make-conf)
-
-	# prepare templates
-	$(MKTPL) $(ROOT)/templates/docs/_layouts/default.html docs/_layouts/default.html $(LOC) $(PRJ)
-	$(MKTPL) $(ROOT)/templates/docs/_config.yml docs/_config.yml $(LOC) $(PRJ)
-	#$(MKTPL) $(ROOT)/templates/docs/CNAME docs/CNAME $(LOC) $(PRJ)
-	$(MKTPL) $(ROOT)/en/website/_includes/footer.html docs/_includes/footer.html $(LOC) $(PRJ)
-	cp $(ROOT)/en/website/_includes/header.html docs/_includes/header.html
-
-
-ifneq ("$(wildcard docs/img)","")
-	rm -r docs/img
-endif
-	# cp -r $(ROOT)/img docs/img
-
-	mdslides build jekyll $(CONFIG) $(ROOT)/en/src docs/ --glossary=$(GLOSSARY) --template=$(ROOT)/en/website/_templates/index.md --section-index-template=$(ROOT)/en/website/_templates/pattern-index.md --introduction-template=$(ROOT)/en/website/_templates/introduction.md
-	cd docs;jekyll build
