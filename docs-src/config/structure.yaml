@@ -1,0 +1,38 @@
+config:
+  title: title
+  end: SKIP
+
+parts:
+  - id: introduction
+    parts:
+      - overview
+      - usecases
+  - id: formats
+    parts:
+      - deckset
+      - jekyll
+  - id: features
+    parts:
+      - glossary-entries
+      - section links
+      - macros
+      - id: chapter headers
+        tags: [obsolete]      
+      - id: index files
+        tags: [obsolete]
+  - id: data-structure
+    parts:
+      - templates
+  - id: commands
+      - makefile-and-temp-folder
+      - mdbuild
+      - mdslides
+      - mdimg
+  - id: translation
+    parts:
+      - translating templates
+  -id appendix:
+   parts:
+    - glossary
+    - changelog
+    - license
