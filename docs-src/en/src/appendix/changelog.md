@@ -1,8 +1,18 @@
 ## Changelog
 
-### January 2021
+### v2.0.1
 
--   new version: mdtools 2.0
+-   glossaries can now be rendered as definition lists (css-class: glossary)
+-   new config-variables:
+    -   read-next-navigation (true | false (default)): add navigation below content pages
+    -   read-next-shortcuts ((true | false (default)))
+-   cleaner code
+-   support markup for including or excluding content dependent on format, preset or cfg.edition
+-   suppport content  blocks to be included in specific formats, presets or editions only
+
+### v2.0.0 (2020-02-03)
+
+-   new version: mdtools 2.0.0
 -   more flexible content structure that supports any number of parts and chapters, to just introcution, content and appendix.
 -   configuration-as-code
     -   removed lots of dependencies on the idiosyncracies of the S3 practical guide in favor of a more flexible configuration-as-code approach

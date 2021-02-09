@@ -17,7 +17,7 @@ from .build_ebook import EbookWriter
 from . import config
 from .structure import set_structure
 from .glossary import set_glossary
-from . import template
+from .template import template
 from . import translate
 
 logger = logging.getLogger(__name__)
@@ -110,7 +110,6 @@ def logging_setup(args):
     logging.getLogger('mdbuild.macros.core').addHandler(logging.NullHandler())
 
 
-
 def main_build():
     parser = argparse.ArgumentParser(
         description='A commandline tools for publishing various document formats (Jekyll, LaTeX, ePub etc.) from a single markdown source.',
@@ -145,7 +144,7 @@ def main_template():
     parser.add_argument('mode', choices=['copy', 'markdown', 'default'],
                         default='default',
                         help="Output format (deckset | ebook | jekyll | revealjs | wordpress)")
-    parser.add_argument('preset',
+    parser.add_argument('--preset',
                         help="The preset (defined in the project configuration file) to use.")
     parser.add_argument('project', help='the configuration file for the project (yaml)')
 
@@ -155,4 +154,4 @@ def main_template():
 
     setup(args)
 
-    template(args.mode, args.source, args.destination)
+    template(args.mode, args.source, args.target)

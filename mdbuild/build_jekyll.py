@@ -7,6 +7,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import codecs
+import html
 from functools import partial
 import os
 
@@ -14,7 +15,7 @@ from . import common
 from . import config
 from . import glossary
 from . import macros
-from . import markdown_processor as mdp
+from .renderer import Renderer, filters
 from . import structure
 from . import template
 from .translate import translate as _
@@ -38,8 +39,8 @@ Mousetrap.bind('g n', function() {
 
 def nav_el(title, path, alt_title):
     """Create one navigation element."""
-    title = common.escape_html_delimiters(title)
-    alt_title = common.escape_html_delimiters(alt_title)
+    title = html.escape(title)
+    alt_title = html.escape(alt_title)
     return NAVIGATION % locals()
 
 
@@ -57,14 +58,15 @@ class JekyllWriter(object):
         macros.register_macro('define', glossary.glossary_definition_macro)
         macros.register_macro('html-menu', macros.MenuMacro.render)
 
-        # set up filters for markdown processor:
+        # set up filters for renderer:
         self.filters = [
-            partial(mdp.MetadataPlugin.filter, strip_summary_tags=True),
-            mdp.remove_breaks_and_conts,
-            partial(mdp.convert_section_links, mdp.SECTION_LINK_TO_HMTL),
+            partial(filters.MetadataFilter.filter, strip_summary_tags=True),
+            filters.remove_breaks_and_conts,
+            filters.SkipOnlyFilter.filter,
+            partial(filters.convert_section_links, 'html'),
             macros.MacroFilter.filter,
             glossary.get_glossary_link_processor('tooltip'),
-            mdp.jekyll_front_matter,
+            filters.jekyll_front_matter,
         ]
 
     def build(self):
@@ -88,19 +90,17 @@ class JekyllWriter(object):
 
         with codecs.open(node.source_path, 'r', 'utf-8') as source:
             with codecs.open(target_path, 'w+', 'utf-8') as target:
-                processor = mdp.MarkdownProcessor(source, filters=self.filters)
+                renderer = Renderer(source, filters=self.filters)
 
-                processor.add_filter(partial(mdp.write, target))
-                processor.process()
-                self._add_bottom_navigation(node, target)
+                renderer.add_filter(partial(filters.write, target))
+                renderer.render()
+                if config.cfg.read_next_navigation:
+                    self._add_bottom_navigation(node, target)
 
     def _add_bottom_navigation(self, node, target):
         """Insert navigation for prev/up/next at the bottom of the page.
 
-            e.g. "◀ ▲ ▶ Adapt Patterns To Context"
-        TODO: use config variable to activate this
-        TODO: use another config variable to activate mousetrap keybinding
-
+            e.g. "◀ ▲ ▶ Read next: Adapt Patterns To Context"
         """
         target.write('\n\n<div class="bottom-nav">\n')
 
@@ -130,6 +130,5 @@ class JekyllWriter(object):
         target.write(' '.join(nav))
         target.write("\n</div>\n")
 
-        if next_item:
+        if next_item and config.cfg.read_next_shortcuts:
             target.write(MOUSETRAP % next_item.slug)
-

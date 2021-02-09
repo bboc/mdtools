@@ -5,7 +5,7 @@ A macro that renders indexes.
 
 import logging
 from operator import attrgetter
-
+from textwrap import dedent, indent
 from mdbuild.common import markdown2html
 
 
@@ -74,9 +74,15 @@ class IndexMacro(object):
             else:  # markdown
                 return cls.render_markdown(nodes_to_show, cls.MD_SUMMARY_TEMPLATE)
         else:  # list format
-            return cls.render_markdown(nodes_to_show, cls.MD_LIST_TEMPLATE)
+            if format in ('latex', 'epub'):
+                # TODO: links should be rendered as section links (at least for latex and epub)
+                #    and the link renderer should pick the appropriate format!!
+                return cls.render_markdown(nodes_to_show, cls.LATEX_LIST_TEMPLATE)
+            else:
+                return cls.render_markdown(nodes_to_show, cls.MD_LIST_TEMPLATE)
 
     LATEX_SUMMARY_TEMPLATE = "**%(title)s:** %(summary)s\n\n"
+    LATEX_LIST_TEMPLATE = "- %(title)s\n"
     MD_LIST_TEMPLATE = "- [%(title)s](%(slug)s.html)\n"
     MD_SUMMARY_TEMPLATE = "**[%(title)s](%(slug)s.html)**\n\n%(summary)s\n\n"
 
@@ -95,10 +101,9 @@ class IndexMacro(object):
         res.append("</dl>")
         return '\n'.join(res)
 
-    # TODO: enventually use dedent, but it messes up the diffs while the rewrite is in progress
-    INDEX_ELEMENT_HTML = """
-  <dt><a href="%(path)s.html">%(title)s</a></dt>
-  <dd>%(summary)s</dd>"""
+    INDEX_ELEMENT_HTML = indent(dedent("""
+        <dt><a href="%(path)s.html">%(title)s</a></dt>
+        <dd>%(summary)s</dd>"""), '  ')
 
     @classmethod
     def html_index_element(cls, title, path, summary):
@@ -125,11 +130,8 @@ class MenuMacro(object):
     def render(cls, config, structure, *args, **kwargs):
         if not structure.parts:
             raise Exception("Can't render menu, menu parent has no parts!")
-        try:
-            noob_menu = config.noob_menu
-        except AttributeError:
-            noob_menu = False
-        return '\n'.join(cls.render_parts(structure, [], noob_menu=noob_menu))
+
+        return '\n'.join(cls.render_parts(structure, [], noob_menu=config.noob_menu))
 
     @classmethod
     def render_parts(cls, node, res, noob_menu=False):

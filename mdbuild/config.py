@@ -13,11 +13,24 @@ logger = logging.getLogger(__name__)
 cfg = {}
 
 
+config_system_defaults = {
+    "read-next-navigation": False,
+    "read-next-shortcuts": False,
+    "noob-menu": False,
+    "header-offset": 0,
+    "edition": 'standard',
+}
+
+
 def set_project_config(filename, preset=None):
     """Get a config object for the selected preset."""
     config_data = read_config_file(filename)
-    cfg = ConfigObject(config_data['defaults'], config_data['presets'][preset])
-    cfg.set('preset', preset)
+
+    cfg = ConfigObject(config_system_defaults)
+    cfg.update(config_data['defaults'])
+    if preset:
+        cfg.update(config_data['presets'][preset])
+        cfg.set('preset', preset)
     logger.debug("-- config: '%s'" % filename)
     logger.debug(cfg)
     globals()['cfg'] = cfg
@@ -25,11 +38,9 @@ def set_project_config(filename, preset=None):
 
 class ConfigObject(object):
 
-    def __init__(self, default_config_data, preset_data=None):
-        if default_config_data:
-            self._build_structure(default_config_data)
-        if preset_data:
-            self._update(preset_data)
+    def __init__(self, config_data=None):
+        if config_data:
+            self._build_structure(config_data)
 
     def _build_structure(self, data):
         for key, value in data.items():
@@ -43,7 +54,7 @@ class ConfigObject(object):
 
     @classmethod
     def build_list(cls, list_data):
-        """Build nested list that contains content objects for all dictionaries"""
+        """Build nested list that contains config objects for all dictionaries"""
         result = []
         for item in list_data:
             if item.__class__ == list:
@@ -58,14 +69,14 @@ class ConfigObject(object):
         name = name.replace('-', '_')
         self.__dict__[name] = value
 
-    def _update(self, data):
+    def update(self, data):
         """Update from data structure"""
         for key, value in data.items():
             key = key.replace('-', '_')
             if value.__class__ == dict:
                 # dictionary exists
                 if hasattr(self, key):
-                    self.__dict__[key]._update(value)
+                    self.__dict__[key].update(value)
                 else:
                     self.__dict__[key] = ConfigObject(value)
             elif value.__class__ == list:

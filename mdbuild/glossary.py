@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import html
 import logging
 from operator import itemgetter
 import re
@@ -11,8 +12,6 @@ from . import config
 
 logger = logging.getLogger(__name__)
 
-GLOSSARY_MARKER = '{{insert-full-glossary}}'
-
 # The actual glossary
 glossary = {}
 
@@ -20,14 +19,16 @@ glossary = {}
 def set_glossary(filename):
     """Read glossary from file if name is given, otherwise return None."""
     if filename:
-        globals()['glossary'] = read_config_file(filename)
+        g = read_config_file(filename)
+        # add the glossary entrie's id to its dictionary (for use in templates)
+        for term in g['terms']:
+            g['terms'][term]['id'] = term
+        globals()['glossary'] = g
 
 
 def full_glossary_macro(renderer, config, structure):
     """
     Insert full glossary in alphabetical order.
-
-    TODO: this should be format aware....
     """
 
     glossary_contents = []
@@ -55,12 +56,29 @@ def _expand_term(term, key, pattern):
     try:
         return pattern % glossary['terms'][term][key]
     except KeyError:
-        logger.error("can't find '%s' for glossary entry '%s'" (key, term))
+        logger.error("can't find '%s' for glossary entry '%s'" % (key, term))
         raise
 
 
 class GlossaryRenderer(object):
-    """Base class for rendering a full glossary. Subclasses mostly define class variables."""
+    """
+    Base class for rendering a full glossary. If items_per_page is set,
+    the glossary spans multiple pages (useful for slide decks).
+
+    Subclasses mostly define:
+
+    cls.ENTRY_TEMPLATE: a template for each entry
+    cls.HEADER_TEMPLATE: template for the page header (default: None).
+    cls.LIST_PREFIX and cls.LIST_SUFFIX: wrap the list of entries (per page)
+       in tags (e.g. <dl>…</dl>) (default: None)
+    cls.PAGE_BREAK: page breaks (for multi-page glossaries, e.g. in slide decks),
+        page breaks are only emitted when a header template is set.
+
+    """
+    HEADER_TEMPLATE = None  # default: no header
+    PAGE_BREAK = ''  # requires HEADER_TEMPLATE
+    LIST_PREFIX = None  # emitted before the list of entries
+    LIST_SUFFIX = None  # emitted after the list of entries
 
     def __init__(self, items_per_page=None):
         if not glossary:
@@ -71,10 +89,14 @@ class GlossaryRenderer(object):
 
     def iterate_elements(self):
         self.emit_header()
+        if self.LIST_PREFIX:
+            self.emitter(self.LIST_PREFIX)
         for idx, item in enumerate(sorted(self.glossary['terms'].values(), key=itemgetter('name'))):
             if self.items_per_page and not (idx + 1) % self.items_per_page:
                 self.emit_header(True)
             self.emit_entry(item)
+        if self.LIST_SUFFIX:
+            self.emitter(self.LIST_SUFFIX)
 
     def render(self, emitter):
         if not self.glossary:
@@ -83,7 +105,7 @@ class GlossaryRenderer(object):
         self.iterate_elements()
 
     def emit_entry(self, item):
-        self.emitter(self.TEMPLATE % item)
+        self.emitter(self.ENTRY_TEMPLATE % item)
 
     def emit_header(self, continued=False):
 
@@ -98,44 +120,30 @@ class GlossaryRenderer(object):
 
 class DecksetGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s:** %(glossary)s"
+    ENTRY_TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
     HEADER_TEMPLATE = '# %s %s\n\n'
     PAGE_BREAK = '\n\n---\n\n'
 
 
-class WordpressGlossaryRenderer(GlossaryRenderer):
-
-    TEMPLATE = "**%(name)s:** %(glossary)s\n"
-    HEADER_TEMPLATE = '\n# %s %s\n\n\n'
-    PAGE_BREAK = '\n\n---\n\n'
-
-    def __init__(self, glossary_path):
-        # no section breaks needed in glossary items!
-        # a glossary with more than 9999 items is an abomination
-        super(WordpressGlossaryRenderer, self).__init__(glossary_path, 9999)
-
-
-class HtmlGlossaryRenderer(GlossaryRenderer):
+class RevealjsGlossaryRenderer(GlossaryRenderer):
     # TODO: this produces weird markup in reveal.js, see tests
-    TEMPLATE = "**%(name)s:** %(glossary)s"
+    ENTRY_TEMPLATE = "**%(name)s:** %(glossary)s"
     HEADER_TEMPLATE = '\n# %s %s\n\n\n'
     PAGE_BREAK = '\n\n</section><section>\n'
 
 
 class JekyllGlossaryRenderer(GlossaryRenderer):
-
-    TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
+    """Render glossary as <dd> within a <dl>."""
     # HEADER_TEMPLATE = '---\ntitle: %s %s\n---\n\n'
-    HEADER_TEMPLATE = None
-    PAGE_BREAK = ''
+    LIST_PREFIX = '<dl class="glossary">\n\n'
+    ENTRY_TEMPLATE = '<dt id="entry-%(id)s">%(name)s</dt>\n<dd>%(glossary)s</dd>\n\n'
+    LIST_SUFFIX = '</dl>\n\n'
 
 
-class EbookGlossaryRenderer(GlossaryRenderer):
+class MarkdownGlossaryRenderer(GlossaryRenderer):
 
-    TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
-    # HEADER_TEMPLATE = '\n## %s %s\n\n'
-    HEADER_TEMPLATE = None
-    PAGE_BREAK = ''
+    ENTRY_TEMPLATE = "**%(name)s:** %(glossary)s\n\n"
+    # HEADER_TEMPLATE = '\n# %s %s\n\n'
 
 
 def get_glossary_link_processor(style):
@@ -154,13 +162,13 @@ def get_glossary_link_processor(style):
         return GlossaryLinkMagic.replace_glossary_references
 
 
-class GlossaryLinkProcessor(object):
+class GlossaryLinkRenderer(object):
     """
-    Markdown processor for finding and rendering glossary links. 
+    Filter for the renderer that finds and renders glossary links.
 
     Each subclass renders on specific target format
     """
-    GLOSSARY_LINK_PATTERN = re.compile("\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)")
+    GLOSSARY_LINK_PATTERN = re.compile(r'\[(?P<title>[^\]]*)\]\(glossary:(?P<glossary_term>[^)]*)\)')
 
     @classmethod
     def get_item_data(cls, match):
@@ -177,14 +185,14 @@ class GlossaryLinkProcessor(object):
     @classmethod
     def additional_item_processing(cls, data):
         """Override for additional processing for each glossary item."""
-        pass
+        return data
 
     @classmethod
     def replace_callback(cls, match):
         """Replace each match of the regex."""
         data = cls.get_item_data(match)
         # do some additional stuff beyond replacing the glossary link inline:
-        cls.additional_item_processing(data)
+        data = cls.additional_item_processing(data)
         return cls.INLINE_TEMPLATE % data
 
     @classmethod
@@ -200,7 +208,7 @@ class GlossaryLinkProcessor(object):
         pass
 
 
-class GlossaryLinkMagic(GlossaryLinkProcessor):
+class GlossaryLinkMagic(GlossaryLinkRenderer):
     """
     Use the config parameter glossary_link_template
     as a template for replacing glossary links.
@@ -210,21 +218,27 @@ class GlossaryLinkMagic(GlossaryLinkProcessor):
     INLINE_TEMPLATE = ''
 
 
-class GlossaryLinkPlain(GlossaryLinkProcessor):
+class GlossaryLinkPlain(GlossaryLinkRenderer):
     """Remove all glossary links (replace with link title)."""
     INLINE_TEMPLATE = """%(title)s"""
 
 
-class GlossaryLinkTooltip(GlossaryLinkProcessor):
+class GlossaryLinkTooltip(GlossaryLinkRenderer):
     INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
 
+    @classmethod
+    def additional_item_processing(cls, item_data):
+        # buffer the explanation
+        item_data['description'] = html.escape(item_data['description'])
+        return item_data
 
-class GlossaryLinkUnderline(GlossaryLinkProcessor):
+
+class GlossaryLinkUnderline(GlossaryLinkRenderer):
     """Underline all glossary links."""
     INLINE_TEMPLATE = """`\\underline{%(title)s}`{=latex}"""
 
 
-class GlossaryLinkFootnote(GlossaryLinkProcessor):
+class GlossaryLinkFootnote(GlossaryLinkRenderer):
 
     INLINE_TEMPLATE = """%(title)s[^%(term)s]"""
     FOOTNOTE_TEXT_TEMPLATE = """[^%(term)s]: %(name)s: %(description)s"""
@@ -234,6 +248,7 @@ class GlossaryLinkFootnote(GlossaryLinkProcessor):
     def additional_item_processing(cls, item_data):
         # buffer the explanation
         cls.buffer[item_data['term']] = cls.FOOTNOTE_TEXT_TEMPLATE % item_data
+        return item_data
 
     @classmethod
     def glossary_post_processing(cls, target):
