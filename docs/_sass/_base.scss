@@ -58,6 +58,8 @@ figure > img {
 
 figcaption {
     font-size: $small-font-size;
+    font-style: italic;
+    text-align:center;
 }
 
 
@@ -122,6 +124,13 @@ blockquote {
     }
 }
 
+/**
+ * summary
+ */
+dd {
+    padding-left: $spacing-unit / 2;
+    padding-bottom: $spacing-unit / 2;
+}
 
 
 /**

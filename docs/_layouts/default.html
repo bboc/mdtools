@@ -3,18 +3,15 @@
 
   {% include head.html %}
 
-  <body>
-
-    {% include header.html %}
-
-    <div class="page-content">
-      <div class="wrapper" markdown="1">
-        {{ content }}
+  <body onload="setupAnnotations();">
+    <div class="wrapper" markdown="1">
+      {% include header.html %}
+      <div class="page-content">
+          {{ content }}
       </div>
+      {% include footer.html %}
+      {% include smartmenu.html %}
+      {% include keyboard-nav.html %}
     </div>
-
-    {% include footer.html %}
-
   </body>
-
 </html>
