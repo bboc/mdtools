@@ -67,7 +67,7 @@ endif
 ifneq ("$(wildcard docs/img)","")
 	rm -r docs/img
 endif
-	cp -r img docs/img
+	cp -r docs-src/img docs/img
 
 
 # #####Commands for development of mdtools ######################
