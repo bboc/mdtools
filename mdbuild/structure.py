@@ -181,15 +181,14 @@ class ContentNode(object):
         logger.debug(data)
         if data.__class__ == dict:
             item = cls(data['id'], parent, root, level)
+            if 'tags' in data:
+                item.tags = data['tags']
+            if 'config' in data:
+                item.config = data['config']
+            if 'parts' in data:
+                item.parts = [ContentNode.from_config(part, item, parent, level + 1) for part in data['parts']]
         else:
             item = cls(data, parent, root, level)
-
-        if 'tags' in data:
-            item.tags = data['tags']
-        if 'config' in data:
-            item.config = data['config']
-        if 'parts' in data:
-            item.parts = [ContentNode.from_config(part, item, parent, level + 1) for part in data['parts']]
 
         return item
 
