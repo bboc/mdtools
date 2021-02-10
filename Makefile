@@ -1,10 +1,10 @@
-##### the first part of the makefile handles building documentation #########
+# #### the first part of the makefile handles building documentation #########
 
 TMP=tmp
-PROJECT=doc-src/config/project.yaml
+PROJECT=docs-src/config/project.yaml
 
 # get language specific parameters
-include doc-src/config/local-conf
+include docs-src/config/local-conf
 
 site:
 	# build jekyll site
@@ -70,7 +70,7 @@ endif
 	cp -r img docs/img
 
 
-######Commands for development of mdtools ######################
+# #####Commands for development of mdtools ######################
 
 init:
 	pip install -r requirements.txt
