@@ -30,9 +30,9 @@ parts:
       - mdimg
   - id: translation
     parts:
-      - translating templates
-  -id appendix:
-   parts:
+      - translating-templates
+  - id: appendix
+    parts:
     - glossary
     - changelog
     - license

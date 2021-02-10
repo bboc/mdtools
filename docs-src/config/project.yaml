@@ -10,13 +10,13 @@ defaults:
   # File name used for build targets
   target_filename: "mdtools-docs"
 
-  source: content/src
-  structure: config/structure.yaml
+  source: docs-src/content/src
+  structure: docs-src/config/structure.yaml
   # That must be .po for translations, and .pot for the source language!
-  localization: content/localization.pot
+  localization: docs-src/content/localization.pot
 
   # glossary: yaml file with glossary terms
-  glossary: content/glossary.yaml
+  glossary: docs-src/content/glossary.yaml
   # glossary-items: number of glossary items per page (used for deckset and revealjs)
   glossary-items: 20
   # glossary-style: plain:glossary style for ebook builder (plain(default)|footnotes|underline)
@@ -53,30 +53,30 @@ presets:
 
     templates:
       # main website index.html, 404 and map
-      - source: content/website/_templates/index.html
+      - source: docs-src/content/website/_templates/index.html
         destination: docs/index.html
         mode: markdown
-      - source: content/website/_templates/404.md
+      - source: docs-src/content/website/_templates/404.md
         destination: docs/404.md
         mode: copy
-      - source: templates/website/pattern-map.html
+      - source: docs-src/templates/website/pattern-map.html
         destination: docs/_includes/pattern-map.html
       - source: templates/website/map.md
         destination: docs/map.md
         mode: copy
       # layouts for website
-      - source: templates/website/_layouts/default.html
+      - source: docs-src/templates/website/_layouts/default.html
         destination: docs/_layouts/default.html
-      - source: templates/website/_layouts/plain.html
+      - source: docs-src/templates/website/_layouts/plain.html
         destination: docs/_layouts/plain.html
       # includes for website (header contains {{menu}})
-      - source: content/website/_includes/footer.html
+      - source: docs-src/content/website/_includes/footer.html
         destination: docs/_includes/footer.html
-      - source: content/website/_includes/header.html
+      - source: docs-src/content/website/_includes/header.html
         destination: docs/_includes/header.html
         mode: html
       # other website config files
-      - source: templates/website/_config.yml
+      - source: docs-src/templates/website/_config.yml
         destination: docs/_config.yml
       # - source: templates/website/CNAME
       #   destination: docs/CNAME
@@ -84,7 +84,7 @@ presets:
   all-in-one-jekyll-page:
     # a single-page-version for the website
     renderer: ebook
-    template: templates/website/all-in-one-page.md
+    template: docs-src/templates/website/all-in-one-page.md
     target: docs/all.md
     target-format: html
     header-offset: 1
@@ -93,9 +93,9 @@ presets:
     renderer: ebook
     target: tmp/epub-compiled.md
     target-format: epub
-    template: templates/epub-header.md
+    template: docs-src/templates/epub-header.md
     templates:
-        - source: templates/epub.css
+        - source: docs-src/templates/epub.css
           destination: tmp/epub.css
 
   ebook:
@@ -106,9 +106,9 @@ presets:
     template: ""
     # copy md and LaTeX templates
     templates:
-      - source: config/ebook.tex
+      - source: docs-src/config/ebook.tex
         destination: tmp/ebook.tex
-      - source: config/ebook-style.sty
+      - source: docs-src/config/ebook-style.sty
         destination: tmp/ebook-style.sty
 
   revealjs:
