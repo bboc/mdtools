@@ -7,8 +7,9 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import codecs
-import html
 from functools import partial
+import logging
+import html
 import os
 
 from . import common
@@ -20,6 +21,8 @@ from . import structure
 from . import template
 from .translate import translate as _
 
+
+logger = logging.getLogger(__name__)
 
 PREV = '◀'
 UP = '▲'
@@ -80,6 +83,7 @@ class JekyllWriter(object):
         # make content pages
         current_node = structure.structure.parts[0]
         while current_node:
+            logger.debug('node: "%s"' % current_node.slug)
             self._make_content_page(current_node)
             current_node = current_node.successor
 
