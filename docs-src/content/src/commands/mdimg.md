@@ -1,4 +1,4 @@
-## mdimg
+# mdimg
 
 
 `mdimg` brings two tools that are helpful when maintaining a large set of illustrations used in a large number of markdown file: 

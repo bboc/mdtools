@@ -59,16 +59,16 @@ presets:
       - source: docs-src/content/website/_templates/404.md
         destination: docs/404.md
         mode: copy
-      - source: docs-src/templates/website/pattern-map.html
-        destination: docs/_includes/pattern-map.html
-      - source: templates/website/map.md
-        destination: docs/map.md
-        mode: copy
+      # - source: docs-src/templates/website/pattern-map.html
+      #   destination: docs/_includes/pattern-map.html
+      # - source: templates/website/map.md
+      #   destination: docs/map.md
+      #   mode: copy
       # layouts for website
       - source: docs-src/templates/website/_layouts/default.html
         destination: docs/_layouts/default.html
-      - source: docs-src/templates/website/_layouts/plain.html
-        destination: docs/_layouts/plain.html
+      # - source: docs-src/templates/website/_layouts/plain.html
+      #   destination: docs/_layouts/plain.html
       # includes for website (header contains {{menu}})
       - source: docs-src/content/website/_includes/footer.html
         destination: docs/_includes/footer.html

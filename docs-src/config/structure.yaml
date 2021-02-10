@@ -5,7 +5,6 @@ config:
 parts:
   - id: introduction
     parts:
-      - overview
       - usecases
   - id: formats
     parts:
@@ -14,16 +13,17 @@ parts:
   - id: features
     parts:
       - glossary-entries
-      - section links
+      - section-links
       - macros
-      - id: chapter headers
+      - id: chapter-headers
         tags: [obsolete]      
-      - id: index files
+      - id: index-files
         tags: [obsolete]
   - id: data-structure
     parts:
       - templates
   - id: commands
+    parts:
       - makefile-and-temp-folder
       - mdbuild
       - mdslides
@@ -35,4 +35,5 @@ parts:
     parts:
     - glossary
     - changelog
+    - site-index
     - license

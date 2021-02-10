@@ -35,7 +35,6 @@ Simply add the commandline option `--glossary-style` for rendering glossary link
 
 ## Glossary Item Style (ebook only)
 
-Any other string passed to `--glossary-style` will be used a a template for replacing the glossary link. Make sure to escape backticks and slashes accordingly, e.g. ``--glossary-style="\`\\underline{{%(title)s}}\`{=latex}"``
 
 Variables in the template are:
 
