@@ -21,6 +21,8 @@ parts:
         tags: [obsolete]
   - id: data-structure
     parts:
+      - structure-definition
+      - configuration
       - templates
   - id: commands
     parts:
