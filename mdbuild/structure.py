@@ -7,7 +7,7 @@ from functools import partial
 import logging
 import os
 
-from .common import read_config_file, FILENAME_PATTERN
+from .common import read_config_file, FILENAME_PATTERN, disable_exception_traceback
 from . import glossary
 from . import macros
 from .renderer import Renderer, filters
@@ -75,10 +75,30 @@ class ContentNode(object):
 
     @property
     def source_path(self):
-        """Return the actual source path for the content file."""
+        """
+        Return the actual source path for the content file.
+
+        - <path>.md
+        - <path>/index.md
+        - <path>/<slug>.md
+        """
         source_path = self.md_filename(self.path)
-        if self.parts and not os.path.exists(source_path):
-            source_path = self.md_filename(os.path.join(self.path, 'index'))
+        if os.path.exists(source_path):
+            return source_path
+        elif self.parts:
+            for source_path in [
+                self.md_filename(os.path.join(self.path, 'index')),
+                self.md_filename(os.path.join(self.path, self.slug)),
+                self.md_filename(os.path.join(self.path, '_'.join((self.slug, 'index'))))
+            ]:
+                if os.path.exists(source_path):
+                    return source_path
+            with disable_exception_traceback():
+                raise Exception('Source file "%s" not found' % source_path)
+        else:
+            with disable_exception_traceback():
+                raise Exception('Source file "%s" not found' % source_path)
+
         return source_path
 
     @property
