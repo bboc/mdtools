@@ -1,14 +1,16 @@
 ## Changelog
 
-### v2.0.1
+### v2.0.1 (2020-02-11)
 
--   glossaries can now be rendered as definition lists (css-class: glossary)
--   new config-variables:
+-   fixed several bugs and glitches
+-   documentation is building again (but not all new features are documented)
+-   added Deckset renderer
+-   added new glossary format for HTML: definition lists (css-class: glossary)
+-   added new config-variables:
     -   read-next-navigation (true | false (default)): add navigation below content pages
     -   read-next-shortcuts ((true | false (default)))
+-   added support for included/skipping content blocks in specific formats, presets or editions
 -   cleaner code
--   support markup for including or excluding content dependent on format, preset or cfg.edition
--   suppport content  blocks to be included in specific formats, presets or editions only
 
 ### v2.0.0 (2020-02-03)
 
