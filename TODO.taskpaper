@@ -1,22 +1,25 @@
-mdtools 2.0:
-	User Stories and acceptace criteria for mdtools 2.0. 
-	see ./proposal-for-mdtools-2.0.md for details
+mdtools 2.x:
+	see ./proposal-for-mdtools-2.0.md for details (mostly outdated now...)
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
 	
-	- BUG: escape \" in gloosary tooltips!!!
 	Update Language versions to mdtools 2.x:
 		- update German version
 		- update Hebrew version??
 		- update Dutch version
-		- update swedish version
-	Show/hide parts of content files dependent on format, preset and edition: @done
-		As an author I want to be able to show parts of a file only for specific formats, editions or presets, so my project is easier to maintain.
-		- move markdown_processor to renderer package @done
-		- add cfg.editions with default='standard' @done
-		- add <skip formats="" editions="" presets=""> which excludes content only for those formats etc. @done
-		- add <only formats="" editions="" presets=""> which includes content only for those formats etc. @done
-		- add documentation nodes for those tags @done
+		- update swedish version @done
+	Update documentation:
+		- list all macros
+		- list markup (including escapung/unescaping \{\{ \}\}
+		- list all filters for the renderer
+		- list all glossary renderers (for items and for the full glossary is described) 
+		- list relevant config variables are described
+		- remove obsolete documents
+		- add a page for each renderer
+		- set up a separate example project for deckset renderer 
+	Index document can be empty:
+		Asa an author I want to have a directory without an index document, so that I have more flexibility for arranging content into different editions. 
+		- what about headline levels? Trade-off might be that those would need to be manually aligned?
 	Support all editions from one structure:
 		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
 		If information about inclusion and exclusion is stored in structure (and not in the content file itself) the info is visible in one place. Keeping this info in a separate array, not in tags, allows for a simpler design
@@ -27,17 +30,11 @@ mdtools 2.0:
 				exclude:editon-A|edition-B 
 				include:editon-A|edition-B
 				sections: …
-	Simplified Structure:
-		Check that a simplified format for structure (like used in the docs) is still possible
-		- test building docs
-		- find a way to make it work
-		- get the Deckset builder to work 
-	Port Deckset renderer to mdtools 2.0:
-		- support simple document structure!
 	Port revealjs renderer to mdtools 2.0:
 		pass
-	Update documentation and Tests:
-		pass
+	Fix testsuite:
+		- ensure that all existing tests are running
+		- check that all main features are not only explained but also used in the documentation so that the documentation serves as a test suite
 	MVP: Responsive Pattern Map:
 		Macro Support: @estimate(30min)
 			- variables:
@@ -67,15 +64,12 @@ mdtools 2.0:
 		- add template for redirection files (including requred JS)
 		- add configurable build step for generating redirection files from redirections.yaml
 		- add search
-	Better User Experience for Website:
-			- add smartmenu keyboard navigation addon @done
-			- add keyboard navigation for next page @done
-			- add tags for excluding items from menu (why here? might be an addon later!)
-		Links: @done
-			https://www.smartmenus.org/download/ on github: https://github.com/vadikom/smartmenus
-			seems to be the first thing I should try (use Complete navbar .sm-clean)
-			https://stackoverflow.com/questions/18023493/bootstrap-dropdown-sub-menu-missing
-			nested menu with bootstrap 4 (code and explanation)
+	Link to Node:
+		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
+	Convert Layout to bootstrap:
+		- add bootstrap 
+		- setup smartmenus to work with bootstrap
+		Links:
 			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
 				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
 			https://getbootstrap.com - the bootstrap site
@@ -85,34 +79,32 @@ mdtools 2.0:
 				best practices
 			https://github.com/dpstrange/jekyll-bootstrap
 			bootstrap temlate for jekyll
-	Link to Node:
-		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
-	MVP: App with GUI:
-		As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
-		(people would still require to install MacTex, Jekyll, Pandoc etc., though)
-		- build a gui (from on I already have probably)
-			- select project file
-			- select a preset
-			-- run | quit
-			- log level
-			- log output
-		- test if pandoc, latexmk or multimarkdown is installed (is mmd necessary at all??)
-		- 
-		- execute the build
-	MVP: Better Document Structure:
-		Better Document Structure: @estimate(6h)
-			As an author, I want to use identical file names in different folders so that I don't have to use weird workarounds, e.g. when each part starts with an 'overview' .
-			- error is raised if both exist at the same time
-			- website is published in folders now
-			- all indexes and menus are still working
-			- update redirections as necessary
-			Release: @estimate(2h)
-				this release might require moving some files in Crowdin!!! @priority
-				- backup all files in crowdin!
-				- manually move files in crowdin!!!
-				- release
-		
 	Sometimes:
+		MVP: App with GUI:
+			As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
+			(people would still require to install MacTex, Jekyll, Pandoc etc., though)
+			- build a gui (from on I already have probably)
+				- select project file
+				- select a preset
+				-- run | quit
+				- log level
+				- log output
+			- test if pandoc, latexmk or multimarkdown is installed (is mmd necessary at all??)
+			- 
+			- execute the build
+		MVP: Better Document Structure:
+			Better Document Structure: @estimate(6h)
+				As an author, I want to use identical file names in different folders so that I don't have to use weird workarounds, e.g. when each part starts with an 'overview' .
+				- error is raised if both exist at the same time
+				- website is published in folders now
+				- all indexes and menus are still working
+				- update redirections as necessary
+				Release: @estimate(2h)
+					this release might require moving some files in Crowdin!!! @priority
+					- backup all files in crowdin!
+					- manually move files in crowdin!!!
+					- release
+			
 		Add separate template command: @estimate(2h)
 			cmd_template is working with new config format 
 			requires some thought, because of new config format, running it with full config is a lot of hassle,
@@ -155,6 +147,34 @@ Done:
 			As soon as all new templates are translated, other language versions can be updated, too, the CSF will then be added as an update as soon as it has been translated.
 	Linkable Glossary: @done
 		Glossary items should instead be rendered as dd tags within a dl (definition list) and they should have anchor links so that one can link such as https://patterns.sociocracy30.org/glossary.html#objection which isn't possible now.
+	Show/hide parts of content files dependent on format, preset and edition: @done
+		As an author I want to be able to show parts of a file only for specific formats, editions or presets, so my project is easier to maintain.
+	Simplified Structure (won't do): @done
+		Check that a simplified format for structure (like used in the docs) is still possible
+		
+		It doesn't appear to be possible. Converting a project to the new structure is simple and well worth the effort.
+	Better User Experience for Website: @done
+			- add smartmenu keyboard navigation addon @done
+			- add keyboard navigation for next page @done
+	Update documentation: @done
+		Showcase features and document usage of mdtools in a documentation that is created with mdtools
+		…
+		- copy all necessary stuff (including the makefile) from S3 repo @done
+		- setup project yaml from S3 practical guide @done
+		- convert filesystem structure @done
+		- copy all files from docs folder @done
+		- conver structure.yaml @done
+		- integrate makefile @done
+		- convert all templates @done
+		- convert .tex @done
+		- convert project.yaml @done
+		- convert _config.yml @done
+		- convert epub header @done
+		- ensure everything inside content/website is updated @done
+		- @done
+		- attempt quickfix of deckset renderer jsut for fun @done
+		- move documentation from /doc-src/en to .content @done
+	Port Deckset renderer to mdtools 2.0: @done
 
 processing slides:
 	set up basic test for all important formats (gold master): @1h
@@ -190,6 +210,3 @@ mdimg:
 				/slides/
 					/de/…
 					/en/…
-documentation/showcase:
-	Showcase features and document usage of mdtools in a documentation that is created with mdtools
-	…
