@@ -50,7 +50,6 @@ class EbookWriter(object):
         """
         Add all documents into one target file.
         """
-
         self.configure()
 
         # process templates _after_ registering macros!

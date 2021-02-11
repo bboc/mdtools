@@ -14,6 +14,7 @@ import argparse
 
 from .build_jekyll import JekyllWriter
 from .build_ebook import EbookWriter
+from .build_deckset_slides import DecksetWriter
 from . import config
 from .structure import set_structure
 from .glossary import set_glossary
@@ -49,9 +50,8 @@ def build(args):
         sys.exit(1)
         # build_reveal_slides()
     elif config.cfg.renderer == 'deckset':
-        logger.error("Deckset writer not ported to 2.0")
-        sys.exit(1)
-        # build_deckset_slides()
+        r = DecksetWriter()
+        r.build()
     elif config.cfg.renderer == 'wordpress':
         logger.error("Wordpress writer not ported to 2.0")
         sys.exit(1)

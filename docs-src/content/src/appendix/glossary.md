@@ -1,0 +1,3 @@
+# Glossary
+
+{{full-glossary}}

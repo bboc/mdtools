@@ -1,0 +1,12 @@
+<script type="text/javascript" src="menu/jquery.smartmenus.min.js"></script>
+<script type="text/javascript" src="menu/jquery.smartmenus.keyboard.min.js"></script>
+
+<script type="text/javascript">
+  $(function() {
+    $('#main-menu').smartmenus({
+      subMenusSubOffsetX: 6,
+      subMenusSubOffsetY: -8
+    });
+    $('#main-menu').smartmenus('keyboardSetHotkey', 77, 'shiftKey');
+  });
+</script>

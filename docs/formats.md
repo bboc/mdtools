@@ -13,12 +13,15 @@ _mdslides_ can render the output in various formats:
 
 
 
-  <dt><a href="deckset.html">Deckset</a></dt>
-  <dd></dd>
-
-  <dt><a href="jekyll.html">Jekyll</a></dt>
-  <dd></dd>
+<div class="bottom-nav">
+<a href="usecases.html" title="Back to: Usecases">◀</a> <a href="deckset.html" title="">▶ Read next: Deckset</a>
+</div>
 
 
-[&#9654; Deckset](deckset.html)<br/>[&#9664; Translating Templates](translating-templates.html)
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'deckset.html';
+    return false;
+});
+</script>
 

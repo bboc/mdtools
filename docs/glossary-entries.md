@@ -35,7 +35,6 @@ Simply add the commandline option `--glossary-style` for rendering glossary link
 
 ## Glossary Item Style (ebook only)
 
-Any other string passed to `--glossary-style` will be used a a template for replacing the glossary link. Make sure to escape backticks and slashes accordingly, e.g. ``--glossary-style="\`\\underline{{%(title)s}}\`{=latex}"``
 
 Variables in the template are:
 
@@ -45,5 +44,15 @@ Variables in the template are:
 - **description**: the description of the glossary term
 
 
-[&#9654; Section Links](section-links.html)<br/>[&#9650; Features](features.html)
+<div class="bottom-nav">
+<a href="features.html" title="Up: Features">▲</a> <a href="section-links.html" title="">▶ Read next: Section Links</a>
+</div>
+
+
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'section-links.html';
+    return false;
+});
+</script>
 

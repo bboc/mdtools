@@ -3,7 +3,7 @@
  */
 .site-header {
     border-top: 5px solid $grey-color-dark;
-    border-bottom: 1px solid $grey-color-light;
+    border-bottom: 2px solid $grey-color-light;
     min-height: 56px;
 
     // Positioning context for the mobile navigation icon
@@ -13,7 +13,6 @@
 .site-title {
     font-size: 26px;
     font-weight: 300;
-    line-height: 56px;
     letter-spacing: -1px;
     margin-bottom: 0;
     //float: left;
@@ -22,6 +21,24 @@
     &:visited {
         color: $grey-color-dark;
     }
+}
+
+.header-wrapper {
+    @extend %clearfix;
+}
+.header-col {
+    margin-bottom: $spacing-unit / 2;
+    padding-left: $spacing-unit / 2;
+    margin-top: $spacing-unit / 2;
+}
+
+.header-title {
+    float: left;
+}
+
+.header-icons {
+    float: right;
+    text-align: right;
 }
 
 .site-nav {
@@ -98,8 +115,10 @@
  * Site footer
  */
 .site-footer {
-    border-top: 1px solid $grey-color-light;
+    border-top: 2px solid $grey-color-light;
     padding: $spacing-unit 0;
+    font-size: $small-font-size;
+    color: $grey-color;
 }
 
 .footer-heading {
@@ -127,18 +146,14 @@
 }
 
 .footer-col-1 {
-    width: -webkit-calc(35% - (#{$spacing-unit} / 2));
-    width:         calc(35% - (#{$spacing-unit} / 2));
+    width: -webkit-calc(68% - (#{$spacing-unit} / 2));
+    width:         calc(68% - (#{$spacing-unit} / 2));
 }
 
 .footer-col-2 {
-    width: -webkit-calc(20% - (#{$spacing-unit} / 2));
-    width:         calc(20% - (#{$spacing-unit} / 2));
-}
-
-.footer-col-3 {
-    width: -webkit-calc(45% - (#{$spacing-unit} / 2));
-    width:         calc(45% - (#{$spacing-unit} / 2));
+    width: -webkit-calc(30% - (#{$spacing-unit} / 2));
+    width:         calc(30% - (#{$spacing-unit} / 2));
+    text-align: right;
 }
 
 @include media-query($on-laptop) {
@@ -146,11 +161,6 @@
     .footer-col-2 {
         width: -webkit-calc(50% - (#{$spacing-unit} / 2));
         width:         calc(50% - (#{$spacing-unit} / 2));
-    }
-
-    .footer-col-3 {
-        width: -webkit-calc(100% - (#{$spacing-unit} / 2));
-        width:         calc(100% - (#{$spacing-unit} / 2));
     }
 }
 
@@ -169,6 +179,8 @@
  */
 .page-content {
     padding: $spacing-unit 0;
+    display: block;
+    overflow: hidden;
 }
 
 .page-heading {
@@ -193,8 +205,14 @@
     display: block;
     font-size: 24px;
 }
+.bottom-nav {
+    padding-top: $spacing-unit;
+    font-size: $small-font-size;
+}
 
-
+dl.glossary dt {
+    font-weight: 700;
+}
 
 /**
  * Posts
@@ -204,12 +222,12 @@
 }
 
 .post-title {
-    font-size: 42px;
+    font-size: 36px;
     letter-spacing: -1px;
     line-height: 1;
 
     @include media-query($on-laptop) {
-        font-size: 36px;
+        font-size: 34px;
     }
 }
 
@@ -217,7 +235,7 @@
     margin-bottom: $spacing-unit;
 
     h2 {
-        font-size: 32px;
+        font-size: 30px;
 
         @include media-query($on-laptop) {
             font-size: 28px;
@@ -225,10 +243,10 @@
     }
 
     h3 {
-        font-size: 26px;
+        font-size: 25px;
 
         @include media-query($on-laptop) {
-            font-size: 22px;
+            font-size: 23px;
         }
     }
 
@@ -237,6 +255,13 @@
 
         @include media-query($on-laptop) {
             font-size: 18px;
+        }
+    }
+    h5 {
+        font-size: 18px;
+
+        @include media-query($on-laptop) {
+            font-size: 16px;
         }
     }
 }
