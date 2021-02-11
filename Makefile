@@ -32,7 +32,7 @@ docx:
 ebook:
 	# render an ebook as pdf (via LaTEX)
 	mdbuild ebook $(PROJECT) -vv
-	
+
 	cd $(TMP); multimarkdown --to=latex --output=ebook-compiled.tex ebook-compiled.md
 	cd $(TMP); latexmk -pdf -xelatex -silent ebook.tex 
 
@@ -41,6 +41,8 @@ ebook:
 	# clean up
 	cd $(TMP); latexmk -C
 
+deckset:
+	mdbuild deckset $(PROJECT) -vv
 
 clean:
 	# clean all generated content

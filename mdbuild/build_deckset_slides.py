@@ -1,6 +1,7 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Compile all files into one file so that they can be rendered to LaTEX and ePub.
+Build the a slide deck in Deckset format.
 """
 from __future__ import print_function
 from __future__ import absolute_import
@@ -15,9 +16,13 @@ from .renderer import Renderer, filters
 from . import structure
 from . import template
 
+from .glossary import DecksetGlossaryRenderer
 
-class EbookWriter(object):
 
+class DecksetWriter(object):
+    """
+    Render source to one single deckset file.
+    """
     def __init__(self):
         pass
 
@@ -25,7 +30,8 @@ class EbookWriter(object):
         """Configure everything for the build."""
 
         # register all macros before processing templates
-        macros.register_macro('full-glossary', partial(glossary.full_glossary_macro, glossary.MarkdownGlossaryRenderer()))
+        macros.register_macro('full-glossary', partial(glossary.full_glossary_macro,
+                                                       glossary.DecksetGlossaryRenderer(config.cfg.glossary_items_per_page)))
         macros.register_macro('index', macros.IndexMacro.render)
         macros.register_macro('glossary', glossary.glossary_term_macro)
         macros.register_macro('define', glossary.glossary_definition_macro)
@@ -33,7 +39,6 @@ class EbookWriter(object):
         # set up filters for renderer:
         self.filters = [
             partial(filters.MetadataFilter.filter, strip_summary_tags=True),
-            filters.remove_breaks_and_conts,
             filters.SkipOnlyFilter.filter,
             partial(filters.convert_section_links, 'title'),
             macros.MacroFilter.filter,
@@ -83,4 +88,4 @@ class EbookWriter(object):
             renderer.add_filter(partial(filters.write, target))
 
             renderer.render()
-        target.write("\n\n")
+        target.write('\n\n---\n\n')
