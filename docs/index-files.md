@@ -5,5 +5,15 @@ title: "Index Files"
 
 {>>TODO: explain automatic transfusion of chapter index files <<}
 
-[&#9654; Data Structure](data-structure.html)<br/>[&#9664; Chapter Headers](chapter-headers.html)<br/>[&#9650; Features](features.html)
+<div class="bottom-nav">
+<a href="chapter-headers.html" title="Back to: Chapter Headers">◀</a> <a href="features.html" title="Up: Features">▲</a> <a href="data-structure.html" title="">▶ Read next: Data Structure</a>
+</div>
+
+
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'data-structure.html';
+    return false;
+});
+</script>
 
