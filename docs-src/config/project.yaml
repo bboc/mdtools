@@ -2,7 +2,7 @@ defaults:
   # these are available for substitution in templates
   variables:
     # Version of the practical guide (added to all releases)
-    version: "v2021-02-10"
+    version: "v2021-02-11"
     # Language and text direction for Jekyll site and epub
     html-language: "en"
     html-dir: "ltr"
@@ -110,6 +110,15 @@ presets:
         destination: tmp/ebook.tex
       - source: docs-src/config/ebook-style.sty
         destination: tmp/ebook-style.sty
+
+  deckset:
+    renderer: deckset
+    target-format: markdown
+    target: tmp/deckset.md
+    glossary-items-per-page: 30
+    # template is empty on purpose, because it is not required
+    template: docs-src/templates/deckset-template.md
+
 
   revealjs:
     renderer: revealjs
