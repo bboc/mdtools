@@ -3,12 +3,16 @@ title: "Commands"
 ---
 
 
-  <dt><a href="mdslides.html">Mdslides</a></dt>
-  <dd></dd>
 
-  <dt><a href="mdimg.html">Mdimg</a></dt>
-  <dd></dd>
+<div class="bottom-nav">
+<a href="templates.html" title="Back to: Templates">◀</a> <a href="makefile-and-temp-folder.html" title="">▶ Read next: Makefile and Tempfolder</a>
+</div>
 
 
-[&#9654; Mdslides](mdslides.html)<br/>[&#9664; Templates](templates.html)
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'makefile-and-temp-folder.html';
+    return false;
+});
+</script>
 

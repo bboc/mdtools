@@ -18,5 +18,15 @@ Usage: see `mdimg -h`
 
 
 
-[&#9654; Translation](translation.html)<br/>[&#9664; Mdslides](mdslides.html)<br/>[&#9650; Commands](commands.html)
+<div class="bottom-nav">
+<a href="mdslides.html" title="Back to: mdslides">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="translation.html" title="">▶ Read next: Translation</a>
+</div>
+
+
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'translation.html';
+    return false;
+});
+</script>
 

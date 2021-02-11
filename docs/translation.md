@@ -7,9 +7,15 @@ It is very simple to translate a _mdtools_ project into another language, as all
 
 Simply drop the translated content into a new project, and you're ready to go.
 
-  <dt><a href="translating-templates.html">Translating Templates</a></dt>
-  <dd></dd>
+<div class="bottom-nav">
+<a href="mdimg.html" title="Back to: mdimg">◀</a> <a href="translating-templates.html" title="">▶ Read next: Translating Templates</a>
+</div>
 
 
-[&#9654; Translating Templates](translating-templates.html)<br/>[&#9664; Mdimg](mdimg.html)
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'translating-templates.html';
+    return false;
+});
+</script>
 

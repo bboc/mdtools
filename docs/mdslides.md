@@ -3,6 +3,9 @@ title: "mdslides"
 ---
 
 
+
+**Note: this command is currently deactivated!!!
+
 `mdslides` brings several commands for
 
 * `compile` creates one Markdown file per chapter
@@ -14,5 +17,15 @@ title: "mdslides"
 
 
 
-[&#9654; Mdimg](mdimg.html)<br/>[&#9650; Commands](commands.html)
+<div class="bottom-nav">
+<a href="mdbuild.html" title="Back to: mdbuild">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="mdimg.html" title="">▶ Read next: mdimg</a>
+</div>
+
+
+<script type="text/javascript">
+Mousetrap.bind('g n', function() {
+    window.location.href = 'mdimg.html';
+    return false;
+});
+</script>
 
