@@ -2,7 +2,27 @@ mdtools 2.x:
 	see ./proposal-for-mdtools-2.0.md for details (mostly outdated now...)
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
-	
+		
+	- BUG: section links could be lowercased before rendering!
+	sync glossary with crowdin:
+		https://realpython.com/api-integration-in-python/ 
+		look at realpython 1/2 pdf
+		use rest3client to abstract crowdin API https://pypi.org/project/rest3client/#description
+		- get api token from crowdin.yaml
+		- ensure glossary in crowdin is set up do distinguish between the followingentry types:
+			- patterns
+			- previous pattern names
+			- pattern category
+			- "synced" glossary entries
+			- other stuff (probably best that this category has no markers)
+		- sync patterns
+			- ensure all current patterns are present, add those that are missing
+			- ensure all everything else marked as pattern is now marked as obsolete
+		- sync pattern category names
+		- sync glossary entries 
+			- ensure everythinh in glossary.yaml is present, update to the latest description (mark those that are no longer in glossary.yaml as obsolete)
+			- test by copying the current glossary to a new project
+			- after running once, clean glossary 
 	Update Language versions to mdtools 2.x:
 		- update German version
 		- update Hebrew version??
@@ -60,6 +80,8 @@ mdtools 2.x:
 	Redirections: @estimate(6h)
 		As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
 		can simply be released when ready
+		Also I might want to move my site to a new github page and set up a 404 page that redirects all requests?
+		https://stackoverflow.com/questions/503093/how-do-i-redirect-to-another-webpage
 		- create first version of redirections.yaml file from structure.yaml
 		- add template for redirection files (including requred JS)
 		- add configurable build step for generating redirection files from redirections.yaml
