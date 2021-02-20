@@ -48,9 +48,8 @@ def build(args):
         e = EbookWriter()
         e.build()
     elif config.cfg.renderer == 'revealjs':
-        cw = RevealJSBuilder(args.config, args.source, args.glossary, args.glossary_items)
-        rw = RevealJsWriter(args.target, args.template, cw)
-        rw.build()
+        rw = RevealJsWriter()
+        rw.build(RevealJSBuilder())
     elif config.cfg.renderer == 'deckset':
         r = DecksetWriter()
         r.build()
@@ -152,3 +151,23 @@ def main_template():
     setup(args)
 
     template(args.mode, args.source, args.target)
+
+def main_convert():
+    """
+    Convert decset to revealjs.
+
+    TODO: fix this
+    """
+    parser = argparse.ArgumentParser(
+        description='Convert Deckset slides to reveal.js',
+        fromfile_prefix_chars='@'
+    )
+    parser.add_argument('--verbose', '-v', action='count', default=0)
+    parser.add_argument('source', help='Source presentation.')
+    parser.add_argument('target', help='Target file.')
+    parser.add_argument('template', help='The template to use')
+    args = parser.parse_args()
+
+    cw = RevealJsHtmlConverter(args.source)
+    rw = RevealJsWriter(args.target, args.template, cw)
+    rw.build()

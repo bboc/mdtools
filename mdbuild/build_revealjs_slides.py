@@ -10,6 +10,7 @@ import os
 
 from .common import md_filename
 
+from . import config
 from . import glossary
 from .revealjs_converter import RevealJsHtmlConverter
 
@@ -19,17 +20,15 @@ class RevealJsWriter(object):
 
     CONTENT_MARKER = "<!-- INSERT-CONTENT -->"
 
-    def __init__(self, target_path, template_path, content_writer):
-        self.target_path = target_path
-        self.template_path = template_path
-        self.content_writer = content_writer
+    def __init__(self):
+        pass
 
-    def build(self):
-        with codecs.open(self.target_path, 'w+', 'utf-8') as self.target:
-            with codecs.open(self.template_path, 'r', 'utf-8') as self.template:
+    def build(self, content_writer):
+        with codecs.open(config.cfg.target, 'w+', 'utf-8') as self.target:
+            with codecs.open(config.cfg.template, 'r', 'utf-8') as self.template:
 
                 self.copy_template_header()
-                self.content_writer.write(self.target)
+                content_writer.write(self.target)
                 self.copy_template_footer()
 
     def copy_template_header(self):
@@ -44,11 +43,10 @@ class RevealJsWriter(object):
             self.target.write(line)
 
 
-class RevealJSBuilder(object):
+class RevealJSBuilderOld(object):
     """Convert title, front-matter, chapters, appendix and end to HTML and write to target."""
 
-    def __init__(self, config, source, glossary_path, glossary_items):
-        self.config = get_config(config)
+    def __init__(self):
         self.source_folder = source
         self.glossary_renderer = HtmlGlossaryRenderer(glossary_path, glossary_items)
 

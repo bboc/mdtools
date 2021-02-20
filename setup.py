@@ -36,7 +36,7 @@ setup(
             'mddiff = diff:main',
             # TODO: fix commands and activate
             # 'mdskeleton = mdbuild.build.sekeleton:main',
-            # 'mdconvert = revealjs_converter:main',
+            # 'mdconvert = mdbuild.main:main_convert',
         ],
     }
 

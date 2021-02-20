@@ -16,21 +16,6 @@ from .common import LineWriter, increase_headline_level, markdown2html, SLIDE_MA
 from . import glossary
 
 
-def main():
-
-    parser = argparse.ArgumentParser(
-        description='Convert Deckset slides to reveal.js',
-        fromfile_prefix_chars='@'
-    )
-    parser.add_argument('--verbose', '-v', action='count', default=0)
-    parser.add_argument('source', help='Source presentation.')
-    parser.add_argument('target', help='Target file.')
-    parser.add_argument('template', help='The template to use')
-    args = parser.parse_args()
-
-    cw = RevealJsHtmlConverter(args.source)
-    rw = RevealJsWriter(args.target, args.template, cw)
-    rw.build()
 
 
 class RevealJSMarkdownConverter(object):
@@ -85,7 +70,9 @@ class RevealJSMarkdownConverter(object):
 
 
 class RevealJsHtmlConverter(object):
-
+    """
+    Convert one decset file to revealjs.
+    """
     def __init__(self, source_path, glossary_renderer):
         self.source_path = source_path
         self.glossary_renderer = glossary_renderer

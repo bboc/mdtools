@@ -16,8 +16,6 @@ from .renderer import Renderer, filters
 from . import structure
 from . import template
 
-from .glossary import DecksetGlossaryRenderer
-
 
 class DecksetWriter(object):
     """
