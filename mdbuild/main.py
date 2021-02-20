@@ -15,7 +15,7 @@ import argparse
 from .build_deckset_slides import DecksetWriter
 from .build_ebook import EbookWriter
 from .build_jekyll import JekyllWriter
-from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
+from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder, RevealJsHtmlConverter
 
 from . import config
 from .structure import set_structure
@@ -151,6 +151,7 @@ def main_template():
     setup(args)
 
     template(args.mode, args.source, args.target)
+
 
 def main_convert():
     """

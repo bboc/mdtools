@@ -1,101 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-Convert a file in deckset format to a reveal.js presentation (html).
 
-TODO: fix this
-"""
 from __future__ import absolute_import
 
-import argparse
-import codecs
 import re
 from string import Template
 
-from .common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
-from . import glossary
-
-
-
-
-class RevealJSMarkdownConverter(object):
-    """
-    Convert Deckset Markdown to Reveal.js Markdown slides.
-
-    Untested. Has known issues with image placement and other things.
-    Might still be helpful sometime because the new converter can only output HTML.
-    """
-    SLIDE_START = """
-    <section data-markdown>
-        <script type="text/template">
-    """
-
-    SLIDE_END = """
-        </script>
-    </section>
-    """
-
-    IMG_TEMPLATE = '![](%s)'
-    IMG_PATTERN = re.compile("\!\[(.*)\]\((.*)\)")
-    FLOATING_IMAGE = Template(
-        """<img class="float-right" src="$url" width="50%" />""")
-
-    def convert_to_reveal(self, source, target):
-        lw = LineWriter(target, source.newlines)
-        for line in source:
-            L = line.strip()
-            if not L:
-                lw.mark_empty_line()
-            elif L in SLIDE_MARKERS:
-                lw.write(self.SLIDE_END)
-                lw.write(self.SLIDE_START)
-                # omit line, do not change empty line marker!
-                pass
-            elif L.startswith('##'):
-                lw.write(increase_headline_level(L))
-            elif line.lstrip().startswith("!["):
-                # fix image
-                m = self.IMG_PATTERN.match(L)
-                lw.write(self.convert_image(m.group(1), m.group(2)))
-            else:
-                lw.write(line)
-
-    def convert_image(self, format, img_url):
-        """Replace floating images with img tag, pass all others."""
-        format = format.lower()
-        if 'right' in format:
-            return self.FLOATING_IMAGE.substitute(url=img_url)
-        else:
-            return '![](%s)' % img_url
-
-
-class RevealJsHtmlConverter(object):
-    """
-    Convert one decset file to revealjs.
-    """
-    def __init__(self, source_path, glossary_renderer):
-        self.source_path = source_path
-        self.glossary_renderer = glossary_renderer
-
-    def write(self, target):
-        # target.write('<section>')
-        with codecs.open(self.source_path, 'r', 'utf-8') as source:
-            while True:
-                slide = Slide(self.glossary_renderer)
-                try:
-                    slide.read(source)
-                except Slide.EndOfFile:
-                    break
-                finally:
-                    slide.render(target)
-        # target.write('</section>')
+from .common import markdown2html, SLIDE_MARKERS
 
 
 class Slide(object):
 
     IMG_TEMPLATE = '![](%s)'
-    IMG_PATTERN = re.compile("\!\[(?P<format>.*)\]\((?P<url>.*)\)")
-    HEADLINE_PATTERN = re.compile("^(?P<level>#+)(?: ?(?:\[fit\])? ?)(?P<text>.*)$")
+    IMG_PATTERN = re.compile(r"\!\[(?P<format>.*)\]\((?P<url>.*)\)")
+    HEADLINE_PATTERN = re.compile(r"^(?P<level>#+)(?: ?(?:\[fit\])? ?)(?P<text>.*)$")
     HEADLINE = Template("$level $text\n")
     FLOATING_IMAGE = Template(
         """<div class="float-right"><img src="$url" /></div>\n\n""")

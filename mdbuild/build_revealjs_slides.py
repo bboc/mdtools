@@ -7,16 +7,17 @@ from __future__ import absolute_import
 
 import codecs
 import os
+import re
+from string import Template
 
-from .common import md_filename
 
+from .common import md_filename, LineWriter, increase_headline_level, SLIDE_MARKERS
 from . import config
-from . import glossary
-from .revealjs_converter import RevealJsHtmlConverter
+from .slides import Slide
 
 
 class RevealJsWriter(object):
-    """Inject output of content_writer into a template."""
+    """Inject output of a content_writer into a template."""
 
     CONTENT_MARKER = "<!-- INSERT-CONTENT -->"
 
@@ -76,3 +77,78 @@ class RevealJSBuilderOld(object):
         c = RevealJsHtmlConverter(os.path.join(self.source_folder, filename), self.glossary_renderer)
         c.write(self.target)
         self._end_section()
+
+
+class RevealJsHtmlConverter(object):
+    """
+    Convert one decset file to revealjs. used by revealjs converter and
+    revealjs builder!
+    """
+    def __init__(self, source_path, glossary_renderer):
+        self.source_path = source_path
+        self.glossary_renderer = glossary_renderer
+
+    def write(self, target):
+        # target.write('<section>')
+        with codecs.open(self.source_path, 'r', 'utf-8') as source:
+            while True:
+                slide = Slide(self.glossary_renderer)
+                try:
+                    slide.read(source)
+                except Slide.EndOfFile:
+                    break
+                finally:
+                    slide.render(target)
+        # target.write('</section>')
+
+
+class RevealJSMarkdownConverter(object):
+    """
+    Convert Deckset Markdown to Reveal.js Markdown slides.
+
+    Untested. Has known issues with image placement and other things.
+    Might still be helpful sometime because the new converter can only output HTML.
+    """
+    SLIDE_START = """
+    <section data-markdown>
+        <script type="text/template">
+    """
+
+    SLIDE_END = """
+        </script>
+    </section>
+    """
+
+    IMG_TEMPLATE = '![](%s)'
+    IMG_PATTERN = re.compile(r"\!\[(.*)\]\((.*)\)")
+    FLOATING_IMAGE = Template(
+        """<img class="float-right" src="$url" width="50%" />""")
+
+    def convert_to_reveal(self, source, target):
+        lw = LineWriter(target, source.newlines)
+        for line in source:
+            L = line.strip()
+            if not L:
+                lw.mark_empty_line()
+            elif L in SLIDE_MARKERS:
+                lw.write(self.SLIDE_END)
+                lw.write(self.SLIDE_START)
+                # omit line, do not change empty line marker!
+                pass
+            elif L.startswith('##'):
+                lw.write(increase_headline_level(L))
+            elif line.lstrip().startswith("!["):
+                # fix image
+                m = self.IMG_PATTERN.match(L)
+                lw.write(self.convert_image(m.group(1), m.group(2)))
+            else:
+                lw.write(line)
+
+    def convert_image(self, format, img_url):
+        """Replace floating images with img tag, pass all others."""
+        format = format.lower()
+        if 'right' in format:
+            return self.FLOATING_IMAGE.substitute(url=img_url)
+        else:
+            return '![](%s)' % img_url
+
