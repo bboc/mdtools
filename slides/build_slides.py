@@ -14,17 +14,10 @@ import re
 from shutil import copyfile
 
 from .common import create_directory, md_filename
-from . import translate
 
-from .build_deckset_slides import DecksetWriter
 from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
 from .build_web_content import cmd_convert_to_web
 from .revealjs_converter import RevealJsHtmlConverter
-
-TMP_FOLDER = 'tmp-groups'
-
-# TODO: this needs to go somewhere else
-translate.read_translation_memory('content/localization.po')
 
 
 def cmd_convert_slides(args):
@@ -34,19 +27,6 @@ def cmd_convert_slides(args):
     rw = RevealJsWriter(args.target, args.template, cw)
     rw.build()
 
-
-def cmd_compile_slides(args):
-    """Compile slides from sources into one file per chapter."""
-    c = SectionCompiler(args)
-    c.compile_content()
-
-
-def build_deckset_slides(args):
-    """Create a source file for a deckset presentation."""
-    r = DecksetWriter(args)
-    r.build()
-
-
 def build_reveal_slides(args):
     """
     Build reveal.js presentation. <target> is a file inside the reveal.js folder,
@@ -55,10 +35,6 @@ def build_reveal_slides(args):
     cw = RevealJSBuilder(args.config, args.source, args.glossary, args.glossary_items)
     rw = RevealJsWriter(args.target, args.template, cw)
     rw.build()
-
-
-def build_wordpress(args):
-    cmd_convert_to_web(args)
 
 
 def cmd_create_source_files_for_slides(args):

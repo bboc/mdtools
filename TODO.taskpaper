@@ -55,7 +55,7 @@ mdtools 2.x:
 		At the moment, there are 2 distinct functions, both should be preserved.
 			render source as deckset
 			convert markdown to deckset
-		- remove init in slides, obsolete commands, index and build_web_content
+		- remove init in slides, obsolete commands, index and build_web_content @done
 		- add new command stub for converting (also to setup.py)
 		- move files to new location
 		- find out how both functions interact with each other and update todo list
