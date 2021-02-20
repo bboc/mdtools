@@ -3,7 +3,7 @@ mdtools 2.x:
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
 		
-	- BUG: section links could be lowercased before rendering!
+	- section links could be lowercased before rendering???
 	sync glossary with crowdin:
 		https://realpython.com/api-integration-in-python/ 
 		look at realpython 1/2 pdf
@@ -29,6 +29,7 @@ mdtools 2.x:
 		- update Dutch version
 		- update swedish version @done
 	Update documentation:
+		- move all info from ./slides/slides.md to the documentation tree
 		- list all macros
 		- list markup (including escapung/unescaping \{\{ \}\}
 		- list all filters for the renderer
@@ -51,7 +52,15 @@ mdtools 2.x:
 				include:editon-A|edition-B
 				sections: …
 	Port revealjs renderer to mdtools 2.0:
-		pass
+		At the moment, there are 2 distinct functions, both should be preserved.
+			render source as deckset
+			convert markdown to deckset
+		- remove init in slides, obsolete commands, index and build_web_content
+		- add new command stub for converting (also to setup.py)
+		- move files to new location
+		- find out how both functions interact with each other and update todo list
+		- test realjs converter with output of deckset renderer 
+		- then convert revealjs renderer
 	Fix testsuite:
 		- ensure that all existing tests are running
 		- check that all main features are not only explained but also used in the documentation so that the documentation serves as a test suite
