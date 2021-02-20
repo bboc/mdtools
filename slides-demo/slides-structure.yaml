@@ -1,0 +1,15 @@
+config:
+  title: title
+  end: SKIP
+
+parts:
+  - id: title
+  - id: chapter-1
+    parts:
+      - ch1-1
+      - ch1-2
+  - id: chapter-2
+    parts:
+      - ch2-1
+      - ch2-2
+

@@ -119,8 +119,28 @@ presets:
     # template is empty on purpose, because it is not required
     template: docs-src/templates/deckset-template.md
 
+  deckset-demo:
+    renderer: deckset
+    target-format: markdown
+    
+    structure: slides-demo/slides-structure.yaml
+    source: slides-demo
+    target: tmp/deckset-demo.md
+    glossary-items-per-page: 30
+    # template is empty on purpose, because it is not required
+    template: docs-src/templates/deckset-template.md
 
-  revealjs:
+
+  revealjs-demo:
     renderer: revealjs
-    # reveal.js config option for RTL languages
+    target-format: html
+
+    source: slides-demo
+    structure: slides-demo/slides-structure.yaml
+
+    target: docs/slides.html
+    template: docs-src/templates/revealjs-template.html
+    
     revealjs-rtl: "false"
+    # reveal.js config option for RTL languages
+    header-offset: 1
