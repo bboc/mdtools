@@ -12,9 +12,8 @@ import codecs
 import re
 from string import Template
 
-from .build_revealjs_slides import RevealJsWriter
 from .common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
-from .glossary import GLOSSARY_MARKER
+from . import glossary
 
 
 def main():

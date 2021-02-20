@@ -44,6 +44,12 @@ ebook:
 deckset:
 	mdbuild deckset $(PROJECT) -vv
 
+deckset-demo:
+	mdbuild deckset-demo $(PROJECT) -vv
+
+revealjs-demo:
+	mdbuild revealjs-demo $(PROJECT) -vv
+
 clean:
 	# clean all generated content
 	-rm -r docs/img

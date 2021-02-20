@@ -10,7 +10,7 @@ import os
 
 from .common import md_filename
 
-from .glossary import HtmlGlossaryRenderer
+from . import glossary
 from .revealjs_converter import RevealJsHtmlConverter
 
 
