@@ -52,10 +52,6 @@ def build(args):
     elif config.cfg.renderer == 'deckset':
         r = DecksetWriter()
         r.build()
-    elif config.cfg.renderer == 'wordpress':
-        logger.error("Wordpress writer not ported to 2.0")
-        sys.exit(1)
-        # build_wordpress()
     else:
         logger.error("unknown renderer '%s' " % config.cfg.format)
         sys.exit(1)
