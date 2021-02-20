@@ -8,41 +8,26 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import absolute_import
 
+import argparse
 import codecs
 import os
-import re
-from shutil import copyfile
 
 from .common import create_directory, md_filename
 
-from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
-from .build_web_content import cmd_convert_to_web
-from .revealjs_converter import RevealJsHtmlConverter
-
-
-
 
 def main():
-    # TODO: update parser 
-    sp = subparsers.add_parser('skeleton',
-                               help="Create skeleton directories and files for slides.")
-    sp.add_argument('config', help='yaml file with presentation structure')
-    sp.add_argument('target', help='Target directory for skeleton files.')
-    sp.set_defaults(func=cmd_create_source_files_for_slides)
+    parser = argparse.ArgumentParser(
+        description='Create skeleton directories and files for a new project.',
+        fromfile_prefix_chars='@'
+    )
 
+    parser.add_argument('--verbose', '-v', action='count', default=0)
+    parser.add_argument('structure', help='yaml file with presentation structure')
+    parser.add_argument('target', help='Target directory for skeleton files.')
+    parser.set_defaults(func=cmd_create_source_files_for_slides)
 
-
-
-
-
-def build_reveal_slides(args):
-    """
-    Build reveal.js presentation. <target> is a file inside the reveal.js folder,
-    template.html is expected in the same folder.
-    """
-    cw = RevealJSBuilder(args.config, args.source, args.glossary, args.glossary_items)
-    rw = RevealJsWriter(args.target, args.template, cw)
-    rw.build()
+    args = parser.parse_args()
+    cmd_create_source_files_for_slides(args)
 
 
 def cmd_create_source_files_for_slides(args):

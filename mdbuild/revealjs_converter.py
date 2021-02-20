@@ -1,31 +1,33 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Convert slides(s) in Deckset Markdown to reveal.js slides.
+Convert a file in deckset format to a reveal.js presentation (html).
 
 TODO: fix this
 """
 from __future__ import absolute_import
+
+import argparse
 import codecs
 import re
 from string import Template
 
+from .build_revealjs_slides import RevealJsWriter
 from .common import LineWriter, increase_headline_level, markdown2html, SLIDE_MARKERS
 from .glossary import GLOSSARY_MARKER
 
 
 def main():
-    # TODO make parser work again
-    sp = subparsers.add_parser('convert',
-                               help="Convert slides to reveal.js")
-    sp.add_argument('source', help='Source presentation.')
-    sp.add_argument('target', help='Target file (for reveal.js and deckset) or folder (for wordpress).')
-    sp.add_argument('template', help='The template to use')
-    sp.set_defaults(func=cmd_convert_slides)
 
-
-def cmd_convert_slides(args):
-    """Convert a file in deckset format to a reveal.js presentation (html)."""
+    parser = argparse.ArgumentParser(
+        description='Convert Deckset slides to reveal.js',
+        fromfile_prefix_chars='@'
+    )
+    parser.add_argument('--verbose', '-v', action='count', default=0)
+    parser.add_argument('source', help='Source presentation.')
+    parser.add_argument('target', help='Target file.')
+    parser.add_argument('template', help='The template to use')
+    args = parser.parse_args()
 
     cw = RevealJsHtmlConverter(args.source)
     rw = RevealJsWriter(args.target, args.template, cw)

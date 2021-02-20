@@ -12,9 +12,11 @@ import logging
 import sys
 import argparse
 
-from .build_jekyll import JekyllWriter
-from .build_ebook import EbookWriter
 from .build_deckset_slides import DecksetWriter
+from .build_ebook import EbookWriter
+from .build_jekyll import JekyllWriter
+from .build_revealjs_slides import RevealJsWriter, RevealJSBuilder
+
 from . import config
 from .structure import set_structure
 from .glossary import set_glossary
@@ -46,9 +48,9 @@ def build(args):
         e = EbookWriter()
         e.build()
     elif config.cfg.renderer == 'revealjs':
-        logger.error("revealjs writer not ported to 2.0")
-        sys.exit(1)
-        # build_reveal_slides()
+        cw = RevealJSBuilder(args.config, args.source, args.glossary, args.glossary_items)
+        rw = RevealJsWriter(args.target, args.template, cw)
+        rw.build()
     elif config.cfg.renderer == 'deckset':
         r = DecksetWriter()
         r.build()
@@ -131,7 +133,6 @@ def main_template():
     - therefore preset should be optional
     - to make use of project structure, structure needs to be globally accessible.
     """
-    # TODO: test command
     parser = argparse.ArgumentParser(
         description="Inject translations (and optionally parameters from a config) into a template file.",
         fromfile_prefix_chars='@'
