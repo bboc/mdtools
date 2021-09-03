@@ -10,7 +10,6 @@ import os
 import re
 from string import Template
 
-
 from .common import md_filename, LineWriter, increase_headline_level, SLIDE_MARKERS
 from . import config
 from .slides import Slide
@@ -43,6 +42,10 @@ class RevealJsWriter(object):
         for line in self.template:
             self.target.write(line)
 
+
+class RevealJSBuilder(object):
+    pass
+    
 
 class RevealJSBuilderOld(object):
     """Convert title, front-matter, chapters, appendix and end to HTML and write to target."""
@@ -151,4 +154,3 @@ class RevealJSMarkdownConverter(object):
             return self.FLOATING_IMAGE.substitute(url=img_url)
         else:
             return '![](%s)' % img_url
-
