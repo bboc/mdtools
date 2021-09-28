@@ -1,6 +1,12 @@
 ## Changelog
 
-### v2.0.1 (2020-02-11)
+### v2.0.2 (2021-02-11)
+
+-   fixed page navigation
+-   different rendering of tooltips
+
+
+### v2.0.1 (2021-02-11)
 
 -   fixed several bugs and glitches
 -   documentation is building again (but not all new features are documented)
@@ -12,7 +18,7 @@
 -   added support for included/skipping content blocks in specific formats, presets or editions
 -   cleaner code
 
-### v2.0.0 (2020-02-03)
+### v2.0.0 (2021-02-03)
 
 -   new version: mdtools 2.0.0
 -   more flexible content structure that supports any number of parts and chapters, to just introcution, content and appendix.
