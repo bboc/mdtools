@@ -1,6 +1,6 @@
 ## Changelog
 
-### v2.0.2 (2021-02-11)
+### v2.0.2 (2021-09-28)
 
 -   fixed page navigation
 -   different rendering of tooltips
