@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 PREV = '◀'
 UP = '▲'
 NEXT = '▶'
-NAVIGATION = "<a href=\"%(path)s.html\" title=\"%(alt_title)s\">%(title)s</a>"
+NAVIGATION = "<a href=\"%(path)s.html\" title=\"%(link_title)s\">%(link_text)s</a>"
 MOUSETRAP = """
 
 <script type="text/javascript">
@@ -40,10 +40,10 @@ Mousetrap.bind('g n', function() {
 """
 
 
-def nav_el(title, path, alt_title):
+def nav_el(link_text, path, link_title):
     """Create one navigation element."""
-    title = html.escape(title)
-    alt_title = html.escape(alt_title)
+    link_text = html.escape(link_text)
+    link_title = html.escape(link_title)
     return NAVIGATION % locals()
 
 
@@ -118,18 +118,22 @@ class JekyllWriter(object):
 
         # Skip previous if it is the parent item
         if previous_item and previous_item is not parent_item:
-            nav.append(nav_el(PREV, previous_item.slug,
-                       ' '.join((_('Back to:'), previous_item.title))))
+            nav.append(nav_el(PREV,
+                              previous_item.slug,
+                              ' '.join((_('Back to:'), previous_item.title))))
 
         # up: parent
         if not node.parent.is_root():
-            nav.append(nav_el(UP, node.parent.slug,
-                       ' '.join((_('Up:'), node.parent.title))))
+            nav.append(nav_el(UP,
+                              node.parent.slug,
+                              ' '.join((_('Up:'), node.parent.title))))
 
         next_item = node.successor
         if next_item:
-            nav.append(nav_el(' '.join((NEXT, _('Read next:'), next_item.title)),
-                       next_item.slug, ''))
+            title = ' '.join((_('Read next:'), next_item.title))
+            nav.append(nav_el(' '.join((NEXT, title)),
+                              next_item.slug,
+                              title))
 
         target.write(' '.join(nav))
         target.write("\n</div>\n")
