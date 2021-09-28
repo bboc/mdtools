@@ -7,7 +7,7 @@ import logging
 from operator import itemgetter
 import re
 
-from .common import read_config_file
+from .common import read_config_file, markdown2html
 from . import config
 
 logger = logging.getLogger(__name__)
@@ -105,7 +105,10 @@ class GlossaryRenderer(object):
         self.iterate_elements()
 
     def emit_entry(self, item):
-        self.emitter(self.ENTRY_TEMPLATE % item)
+        self.emitter(self.ENTRY_TEMPLATE % self.format_item(item))
+
+    def format_item(self, item):
+        return item
 
     def emit_header(self, continued=False):
 
@@ -138,6 +141,13 @@ class JekyllGlossaryRenderer(GlossaryRenderer):
     LIST_PREFIX = '<dl class="glossary">\n\n'
     ENTRY_TEMPLATE = '<dt id="entry-%(id)s">%(name)s</dt>\n<dd>%(glossary)s</dd>\n\n'
     LIST_SUFFIX = '</dl>\n\n'
+
+    def format_item(self, item):
+        html = markdown2html(item['glossary'])
+        if html.startswith('<p>'):
+            html = html[3:-4]
+        item['glossary'] = html
+        return item
 
 
 class MarkdownGlossaryRenderer(GlossaryRenderer):
@@ -224,7 +234,8 @@ class GlossaryLinkPlain(GlossaryLinkRenderer):
 
 
 class GlossaryLinkTooltip(GlossaryLinkRenderer):
-    INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
+    # INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
+    INLINE_TEMPLATE = """<a href="#" title="%(name)s: %(description)s">%(title)s</a>"""
 
     @classmethod
     def additional_item_processing(cls, item_data):
