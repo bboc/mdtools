@@ -235,7 +235,7 @@ class GlossaryLinkPlain(GlossaryLinkRenderer):
 
 class GlossaryLinkTooltip(GlossaryLinkRenderer):
     # INLINE_TEMPLATE = """<dfn data-info="%(name)s: %(description)s">%(title)s</dfn>"""
-    INLINE_TEMPLATE = """<a href="#" title="%(name)s: %(description)s">%(title)s</a>"""
+    INLINE_TEMPLATE = """<a href="#" class="tooltip" title="%(name)s: %(description)s">%(title)s</a>"""
 
     @classmethod
     def additional_item_processing(cls, item_data):
