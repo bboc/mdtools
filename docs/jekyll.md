@@ -7,7 +7,7 @@ Jekyll is a static website generator, also which is used for creating github pag
 
 
 <div class="bottom-nav">
-<a href="deckset.html" title="Back to: Deckset">◀</a> <a href="formats.html" title="Up: Formats">▲</a> <a href="features.html" title="">▶ Read next: Features</a>
+<a href="deckset.html" title="Back to: Deckset">◀</a> <a href="formats.html" title="Up: Formats">▲</a> <a href="features.html" title="Read next: Features">▶ Read next: Features</a>
 </div>
 
 

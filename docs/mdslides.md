@@ -18,7 +18,7 @@ title: "mdslides"
 
 
 <div class="bottom-nav">
-<a href="mdbuild.html" title="Back to: mdbuild">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="mdimg.html" title="">▶ Read next: mdimg</a>
+<a href="mdbuild.html" title="Back to: mdbuild">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="mdimg.html" title="Read next: mdimg">▶ Read next: mdimg</a>
 </div>
 
 

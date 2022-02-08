@@ -48,7 +48,7 @@ mdtools expects the glossary in a YAML-file, and can do a few tricks with it:
 
 - insert glossary explanations or definitions into the text using _&#0123;&#0123;glossary:glossary-term&#0125;&#0125;_ or _&#0123;&#0123;define:glossary-term&#0125;&#0125;_
 - render a full glossary using _&#0123;&#0123;insert-full-glossary&#0125;&#0125;_
-- add an explanation for a <dfn data-info="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</dfn> term as an overlay (in html output) using _&#0091;glossary&#0093;&#0040;glossary:glossary&#0041;_
+- add an explanation for a <a href="#" class="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> term as an overlay (in html output) using _&#0091;glossary&#0093;&#0040;glossary:glossary&#0041;_
 
 
 #### Glossary Format:
@@ -95,7 +95,7 @@ A macro ("macroinstruction") is a programmable pattern which translates a certai
 
 Macros can be registered to certain renderers, and can take parameters that control how they are expanded.
 
-All macros look like this:_&#0123;&#0123;name:parameters&#0125;&#0125;_ 
+All macros look like this: _&#0123;&#0123;name:parameters&#0125;&#0125;_ 
 
 Makros may take parameters. Two parameters are processed before the macro is executed:
 
@@ -190,6 +190,72 @@ TODO: describe config format
 
 {>>TODO:  <<} 
 
+## Indexes
+
+The _index macro_ can render parts of the structure as an index, like this:
+
+(the index below ins rendered via &#0123;&#0123;index:root=indexes,sort=title,style=list&#0125;&#0125;)
+
+- [A searchable index](index-demo-searchable.html)
+- [Index demo: Summaries](index-demo-summary.html)
+- [The Index Macro](index-macro.html)
+
+
+
+
+### The Index Macro
+
+<summary>An explanation of the various parameters of the index macro</summary>
+
+_&#0123;&#0123;index:root=node_name,tag=value,style=value,sort=value,only=value&#0125;&#0125;_ 
+
+Render a subset of the structure as index. 
+
+Parameters:
+
+-   root: (optional) only show children of one specific node in the index
+-   tag: filter index for nodes with a specific tag (filter is applied after root!)
+-   style: how the index will look:
+    - summary: one entry per paragraph: title and summary
+    - list: a list with one entry per item
+-   only: jekyll
+-   sort: sort index by node attribute, e.g. title 
+- force_format: force a specific format (e.g. plain)
+
+
+
+### Index demo: Summaries
+
+<summary>This page demonstrates a simple index with summaries</summary>
+
+_mdtools_ picks up the contents of the &lt;summary&gt;-tag for each page, therefore the index macro can output summaries like so:
+
+&#0123;&#0123;index:root=indexes,sort=title,style=summary&#0125;&#0125;
+
+<dl>
+
+  <dt><a href="index-demo-searchable.html">A searchable index</a></dt>
+  <dd></dd>
+
+  <dt><a href="index-demo-summary.html">Index demo: Summaries</a></dt>
+  <dd></dd>
+
+  <dt><a href="index-macro.html">The Index Macro</a></dt>
+  <dd></dd>
+</dl>
+
+
+### A searchable index
+
+<summary>This page demonstrates a searchable index.</summary>
+
+This obviously doesn't make sense in an ebook.
+
+&#0123;&#0123;sort=title,style=searchable,only=jekyll&#0125;&#0125;
+
+
+
+
 ## Commands
 
 
@@ -275,7 +341,18 @@ If templates contain translatable content, simply store them inside the content 
 
 #### Changelog
 
-##### v2.0.1 (2020-02-11)
+##### v2.0.3 (2022-02-xx)
+
+-   Searchable index creation
+-   integration of Bootstrap 4
+
+##### v2.0.2 (2021-09-28)
+
+-   fixed page navigation
+-   different rendering of tooltips
+
+
+##### v2.0.1 (2021-02-11)
 
 -   fixed several bugs and glitches
 -   documentation is building again (but not all new features are documented)
@@ -287,7 +364,7 @@ If templates contain translatable content, simply store them inside the content 
 -   added support for included/skipping content blocks in specific formats, presets or editions
 -   cleaner code
 
-##### v2.0.0 (2020-02-03)
+##### v2.0.0 (2021-02-03)
 
 -   new version: mdtools 2.0.0
 -   more flexible content structure that supports any number of parts and chapters, to just introcution, content and appendix.
@@ -350,6 +427,9 @@ If templates contain translatable content, simply store them inside the content 
   <dd></dd>
 
   <dt><a href="formats.html">Formats</a></dt>
+  <dd></dd>
+
+  <dt><a href="indexes.html">Indexes</a></dt>
   <dd></dd>
 
   <dt><a href="translation.html">Translation</a></dt>

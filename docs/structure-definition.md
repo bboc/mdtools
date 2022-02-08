@@ -49,7 +49,7 @@ Pick a style that makes sense for your usecase.
 
 
 <div class="bottom-nav">
-<a href="data-structure.html" title="Up: Data Structure">▲</a> <a href="configuration.html" title="">▶ Read next: Configuration</a>
+<a href="data-structure.html" title="Up: Data Structure">▲</a> <a href="configuration.html" title="Read next: Configuration">▶ Read next: Configuration</a>
 </div>
 
 

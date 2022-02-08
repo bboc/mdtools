@@ -8,7 +8,7 @@ _mdslides_ expects your content in specific directories, and relies on a set of 
 
 
 <div class="bottom-nav">
-<a href="index-files.html" title="Back to: Index Files">◀</a> <a href="structure-definition.html" title="">▶ Read next: Defining the Project Structure</a>
+<a href="index-files.html" title="Back to: Index Files">◀</a> <a href="structure-definition.html" title="Read next: Defining the Project Structure">▶ Read next: Defining the Project Structure</a>
 </div>
 
 

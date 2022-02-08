@@ -19,7 +19,7 @@ Usage: see `mdimg -h`
 
 
 <div class="bottom-nav">
-<a href="mdslides.html" title="Back to: mdslides">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="translation.html" title="">▶ Read next: Translation</a>
+<a href="mdslides.html" title="Back to: mdslides">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="translation.html" title="Read next: Translation">▶ Read next: Translation</a>
 </div>
 
 

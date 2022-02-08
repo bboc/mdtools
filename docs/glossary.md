@@ -18,7 +18,7 @@ title: "Glossary"
 
 
 <div class="bottom-nav">
-<a href="appendix.html" title="Up: Appendix">▲</a> <a href="changelog.html" title="">▶ Read next: Changelog</a>
+<a href="appendix.html" title="Up: Appendix">▲</a> <a href="changelog.html" title="Read next: Changelog">▶ Read next: Changelog</a>
 </div>
 
 

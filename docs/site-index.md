@@ -20,6 +20,9 @@ title: "Alphabetical List Of All Pages"
   <dt><a href="formats.html">Formats</a></dt>
   <dd></dd>
 
+  <dt><a href="indexes.html">Indexes</a></dt>
+  <dd></dd>
+
   <dt><a href="translation.html">Translation</a></dt>
   <dd></dd>
 
@@ -29,7 +32,7 @@ title: "Alphabetical List Of All Pages"
 
 
 <div class="bottom-nav">
-<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="license.html" title="">▶ Read next: License</a>
+<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="license.html" title="Read next: License">▶ Read next: License</a>
 </div>
 
 

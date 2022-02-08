@@ -8,7 +8,7 @@ _mdtools_ is a set of command line tools written in Python that to render markdo
 You can read this documentation as a [slide deck](https://bboc.github.io/mdtools/slides.html) or as a [website]()
 
 <div class="bottom-nav">
-<a href="usecases.html" title="">▶ Read next: Usecases</a>
+<a href="usecases.html" title="Read next: Usecases">▶ Read next: Usecases</a>
 </div>
 
 

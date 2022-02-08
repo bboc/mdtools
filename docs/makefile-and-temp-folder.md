@@ -17,7 +17,7 @@ Then you can run `make <format>` to test one specific format, and `source build.
 
 
 <div class="bottom-nav">
-<a href="commands.html" title="Up: Commands">▲</a> <a href="mdbuild.html" title="">▶ Read next: mdbuild</a>
+<a href="commands.html" title="Up: Commands">▲</a> <a href="mdbuild.html" title="Read next: mdbuild">▶ Read next: mdbuild</a>
 </div>
 
 

@@ -10,7 +10,7 @@ I also use it for all my slide for trainings, workshops and conferences, some [e
 
 
 <div class="bottom-nav">
-<a href="introduction.html" title="Up: What is this?">▲</a> <a href="formats.html" title="">▶ Read next: Formats</a>
+<a href="introduction.html" title="Up: What is this?">▲</a> <a href="formats.html" title="Read next: Formats">▶ Read next: Formats</a>
 </div>
 
 

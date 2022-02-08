@@ -14,7 +14,7 @@ _mdslides_ can render the output in various formats:
 
 
 <div class="bottom-nav">
-<a href="usecases.html" title="Back to: Usecases">◀</a> <a href="deckset.html" title="">▶ Read next: Deckset</a>
+<a href="usecases.html" title="Back to: Usecases">◀</a> <a href="deckset.html" title="Read next: Deckset">▶ Read next: Deckset</a>
 </div>
 
 
