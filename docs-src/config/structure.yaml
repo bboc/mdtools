@@ -24,6 +24,11 @@ parts:
       - structure-definition
       - configuration
       - templates
+  - id: indexes
+    parts:
+      - index-macro
+      - index-demo-summary
+      - index-demo-searchable
   - id: commands
     parts:
       - makefile-and-temp-folder

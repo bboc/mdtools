@@ -100,6 +100,9 @@ mdtools 2.x:
 	Convert Layout to bootstrap:
 		- add bootstrap 
 		- setup smartmenus to work with bootstrap
+		- switch to popper.js for tooltips: https://popper.js.org/
+		- use beootstrap4 first because that works with jQuery and smartmenus, then see about bootstrap5
+			- smartmenus 4 bootstrap component: https://vadikom.github.io/smartmenus/src/demo/bootstrap-4-navbar.html
 		Links:
 			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
 				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)

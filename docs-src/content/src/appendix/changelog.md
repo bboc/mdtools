@@ -1,5 +1,10 @@
 ## Changelog
 
+### v2.0.3 (2022-02-xx)
+
+-   Searchable index creation
+-   integration of Bootstrap 4
+
 ### v2.0.2 (2021-09-28)
 
 -   fixed page navigation

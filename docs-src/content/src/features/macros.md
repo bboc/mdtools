@@ -4,7 +4,7 @@ A macro ("macroinstruction") is a programmable pattern which translates a certai
 
 Macros can be registered to certain renderers, and can take parameters that control how they are expanded.
 
-All macros look like this:_&#0123;&#0123;name:parameters&#0125;&#0125;_ 
+All macros look like this: _&#0123;&#0123;name:parameters&#0125;&#0125;_ 
 
 Makros may take parameters. Two parameters are processed before the macro is executed:
 
