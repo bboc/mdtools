@@ -6,4 +6,4 @@ _mdtools_ picks up the contents of the &lt;summary&gt;-tag for each page, theref
 
 &#0123;&#0123;index:root=indexes,sort=title,style=summary&#0125;&#0125;
 
-{{index:root=indexes,sort=title,style=summary}}
+{{index:root=macros,sort=title,style=summary}}

@@ -1,6 +1,6 @@
 # The Index Macro
 
-<summary>An explanation of the various parameters of the index macro</summary>
+<summary>The _index macro_ can render parts of the structure as an index in various styles and formats.</summary>
 
 _&#0123;&#0123;index:root=node_name,tag=value,style=value,sort=value,only=value&#0125;&#0125;_ 
 

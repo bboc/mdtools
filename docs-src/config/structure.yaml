@@ -14,7 +14,6 @@ parts:
     parts:
       - glossary-entries
       - section-links
-      - macros
       - id: chapter-headers
         tags: [obsolete]      
       - id: index-files
@@ -24,11 +23,12 @@ parts:
       - structure-definition
       - configuration
       - templates
-  - id: indexes
+  - id: macros
     parts:
       - index-macro
       - index-demo-summary
       - index-demo-searchable
+      - menu-macro
   - id: commands
     parts:
       - makefile-and-temp-folder
