@@ -8,13 +8,13 @@ You can link to another section, e.g. the [section about the glossary](glossary.
 Section links will be replaced with a link suitable for the output format, for some formats, which do not support link targets, it makes sense to render them only as text (e.g. in a Deckset slide deck)
 
 <div class="bottom-nav">
-<a href="glossary-entries.html" title="Back to: Glossary">◀</a> <a href="features.html" title="Up: Features">▲</a> <a href="macros.html" title="Read next: Macros">▶ Read next: Macros</a>
+<a href="glossary-entries.html" title="Back to: Glossary">◀</a> <a href="features.html" title="Up: Features">▲</a> <a href="chapter-headers.html" title="Read next: Chapter Headers">▶ Read next: Chapter Headers</a>
 </div>
 
 
 <script type="text/javascript">
 Mousetrap.bind('g n', function() {
-    window.location.href = 'macros.html';
+    window.location.href = 'chapter-headers.html';
     return false;
 });
 </script>

@@ -20,7 +20,7 @@ title: "Alphabetical List Of All Pages"
   <dt><a href="formats.html">Formats</a></dt>
   <dd></dd>
 
-  <dt><a href="indexes.html">Indexes</a></dt>
+  <dt><a href="macros.html">Macros</a></dt>
   <dd></dd>
 
   <dt><a href="translation.html">Translation</a></dt>

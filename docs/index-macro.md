@@ -3,7 +3,7 @@ title: "The Index Macro"
 ---
 
 
-<summary>An explanation of the various parameters of the index macro</summary>
+<summary>The _index macro_ can render parts of the structure as an index in various styles and formats.</summary>
 
 _&#0123;&#0123;index:root=node_name,tag=value,style=value,sort=value,only=value&#0125;&#0125;_ 
 
@@ -23,7 +23,7 @@ Parameters:
 
 
 <div class="bottom-nav">
-<a href="indexes.html" title="Up: Indexes">▲</a> <a href="index-demo-summary.html" title="Read next: Index demo: Summaries">▶ Read next: Index demo: Summaries</a>
+<a href="macros.html" title="Up: Macros">▲</a> <a href="index-demo-summary.html" title="Read next: Index demo: Summaries">▶ Read next: Index demo: Summaries</a>
 </div>
 
 

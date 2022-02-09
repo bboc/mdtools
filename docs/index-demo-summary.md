@@ -19,11 +19,14 @@ _mdtools_ picks up the contents of the &lt;summary&gt;-tag for each page, theref
 
   <dt><a href="index-macro.html">The Index Macro</a></dt>
   <dd></dd>
+
+  <dt><a href="menu-macro.html">The Menu Macro</a></dt>
+  <dd></dd>
 </dl>
 
 
 <div class="bottom-nav">
-<a href="index-macro.html" title="Back to: The Index Macro">◀</a> <a href="indexes.html" title="Up: Indexes">▲</a> <a href="index-demo-searchable.html" title="Read next: A searchable index">▶ Read next: A searchable index</a>
+<a href="index-macro.html" title="Back to: The Index Macro">◀</a> <a href="macros.html" title="Up: Macros">▲</a> <a href="index-demo-searchable.html" title="Read next: A searchable index">▶ Read next: A searchable index</a>
 </div>
 
 
