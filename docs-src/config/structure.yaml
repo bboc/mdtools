@@ -35,6 +35,10 @@ parts:
       - mdbuild
       - mdslides
       - mdimg
+  - id: styles-and-assets
+    parts:
+      - jekyll-builds
+      - reveal.js-builds
   - id: translation
     parts:
       - translating-templates
