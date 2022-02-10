@@ -4,6 +4,8 @@ mdtools 2.x:
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
 		
 	- section links could be lowercased before rendering???
+	- check out how Javascript Tutorial handles translations of illustrations, they solve the exact same problem we do 
+		https://github.com/javascript-tutorial/server
 	sync glossary with crowdin:
 		https://realpython.com/api-integration-in-python/ 
 		look at realpython 1/2 pdf
@@ -39,7 +41,7 @@ mdtools 2.x:
 		- add a page for each renderer
 		- set up a separate example project for deckset renderer 
 	Index document can be empty:
-		Asa an author I want to have a directory without an index document, so that I have more flexibility for arranging content into different editions. 
+		As an author I want to have a directory without an index document, so that I have more flexibility for arranging content into different editions. 
 		- what about headline levels? Trade-off might be that those would need to be manually aligned?
 	Support all editions from one structure:
 		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
@@ -98,17 +100,50 @@ mdtools 2.x:
 	Link to Node:
 		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
 	Convert Layout to bootstrap:
-		- add bootstrap 
-		- setup smartmenus to work with bootstrap
-		- switch to popper.js for tooltips: https://popper.js.org/
-		- use beootstrap4 first because that works with jQuery and smartmenus, then see about bootstrap5
-			- smartmenus 4 bootstrap component: https://vadikom.github.io/smartmenus/src/demo/bootstrap-4-navbar.html
+		use beootstrap 4 first because that works with jQuery and smartmenus, then see about bootstrap5 (which *should* also work)
+		The Basics:
+		- add bootstrap 4.5.x (css and media query, css below the site)
+			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
+		- switch to popper.js for tooltips: 
+			https://popper.js.org/
+			probably needs new styles
+		- setup smartmenus to work with bootstrap (pugin)
+			smartmenus 4 bootstrap component: https://vadikom.github.io/smartmenus/src/demo/bootstrap-4-navbar.html
+			Botstrap 4.5 docs: https://getbootstrap.com/docs/4.5/getting-started/introduction/
+		- add <link rel="prev"|"next">? to header?
+		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
+			Menu on the left border of screen, 
+			contenct centered and a little wider
+			lightboxes for illustriations on desktop so that they don't mess up the pages
+			simple nav buttons < > around content or below on mobile
+			- decide about information we keep in footer, where would that go?
+			Menu:
+				menu on the left side of screen, with a slightly grey background, and a scrollbar 
+			search-bar for patterns will come on top above the menu
+			menu div gets a scrollbar
+			add note: "published with mdtools"
+		- content is centered, but with maximum size
+		- add lightboxes make sure illustrations don't look like shit because long things are stretched ultrawide
+			e.g. https://mdbootstrap.com/docs/b4/jquery/javascript/lightbox/ deactivates on mobile automatically, that's nice
+		- cleaner navigation:
+			- add < and > as navigation buttons (large, grey, mouseover) for next/prev (e.g. with fa-angle-right / -left, or simply &lt;/&gt;)
+			- to the sides left / right or below the content for mobile
+			- map left and right arrow keys to browse quickly through the pages
+		Cooler website (maybe later):
+			- search for patterns
+			- theme picker (text size, white, sepia, dark theme) via session storage: https://javascript.info/localstorage
+			- responsible map overlay... 
+			- keep menu open
+			- look at https://javascript.info/websocket: has nice info boxes and a great searchable tutorial map 
 		Links:
+			matrial design for botstrap: https://mdbootstrap.com/
+			Intro to bootstrap 4 (free): https://www.geeksforgeeks.org/bootstrap-4-introduction/
 			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
 				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
 			https://getbootstrap.com - the bootstrap site
 			https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
 				explanation of html/css for responsive menus (nav element and media queries)
+			pdf about bootstrap 4: https://bootstrapcreative.com/shop/bootstrap-quick-start/
 			https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
 				best practices
 			https://github.com/dpstrange/jekyll-bootstrap
