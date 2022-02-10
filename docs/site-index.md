@@ -23,6 +23,9 @@ title: "Alphabetical List Of All Pages"
   <dt><a href="macros.html">Macros</a></dt>
   <dd></dd>
 
+  <dt><a href="styles-and-assets.html">Styles and Other Assets</a></dt>
+  <dd></dd>
+
   <dt><a href="translation.html">Translation</a></dt>
   <dd></dd>
 

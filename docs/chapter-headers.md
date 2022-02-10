@@ -6,7 +6,7 @@ title: "Chapter Headers"
 {>>TODO: insert section about chapter headers <<}
 
 <div class="bottom-nav">
-<a href="macros.html" title="Back to: Macros">◀</a> <a href="features.html" title="Up: Features">▲</a> <a href="index-files.html" title="Read next: Index Files">▶ Read next: Index Files</a>
+<a href="section-links.html" title="Back to: Section Links">◀</a> <a href="features.html" title="Up: Features">▲</a> <a href="index-files.html" title="Read next: Index Files">▶ Read next: Index Files</a>
 </div>
 
 

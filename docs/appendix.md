@@ -5,7 +5,7 @@ title: "Appendix"
 
 
 <div class="bottom-nav">
-<a href="translating-templates.html" title="Back to: Translating Templates">◀</a> <a href="glossary.html" title="">▶ Read next: Glossary</a>
+<a href="translating-templates.html" title="Back to: Translating Templates">◀</a> <a href="glossary.html" title="Read next: Glossary">▶ Read next: Glossary</a>
 </div>
 
 

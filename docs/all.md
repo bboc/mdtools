@@ -89,36 +89,6 @@ You can link to another section, e.g. the _section about the glossary_ using a s
 
 Section links will be replaced with a link suitable for the output format, for some formats, which do not support link targets, it makes sense to render them only as text (e.g. in a Deckset slide deck)
 
-#### Macros
-
-A macro ("macroinstruction") is a programmable pattern which translates a certain sequence of input into a preset sequence of output.
-
-Macros can be registered to certain renderers, and can take parameters that control how they are expanded.
-
-All macros look like this: _&#0123;&#0123;name:parameters&#0125;&#0125;_ 
-
-Makros may take parameters. Two parameters are processed before the macro is executed:
-
-- **only**: macro is executed _only_ for the specified preset(s)
-- **skip**: macro is _skipped_ for the specified preset(s)
-
-Presets are separated wiht '|'
-
-Examples:
-
-   &#0123;&#0123;index:ignore=jekyll|all-in-one&#0125;&#0125;_
-   &#0123;&#0123;index:only=jekyll&#0125;&#0125;_
-
-##### Custom Macros
-
-Creating custom macros is easy, they only need to provide a render method:
-
-    def render_my_macro(config, structure, *args, **kwargs):
-        return "macros will be replaced with this text"
-
-
-Macros have access to the project configuration and to the content structure, so that they can create indexes and links, and are able to react on configuration parameters.
-
 #### Chapter Headers
 
 {>>TODO: insert section about chapter headers <<}
@@ -190,22 +160,50 @@ TODO: describe config format
 
 {>>TODO:  <<} 
 
-## Indexes
+### Macros
 
-The _index macro_ can render parts of the structure as an index, like this:
+A macro ("macroinstruction") is a programmable pattern which translates a certain sequence of input into a preset sequence of output.
 
-(the index below ins rendered via &#0123;&#0123;index:root=indexes,sort=title,style=list&#0125;&#0125;)
+Macros can be registered to certain renderers, and can take parameters that control how they are expanded.
+
+All macros look like this: _&#0123;&#0123;name:parameters&#0125;&#0125;_ 
+
+Makros may take parameters. Two parameters are processed before the macro is executed:
+
+- **only**: macro is executed _only_ for the specified preset(s)
+- **skip**: macro is _skipped_ for the specified preset(s)
+
+Presets are separated with '|'
+
+Examples:
+
+   &#0123;&#0123;index:ignore=jekyll|all-in-one&#0125;&#0125;_
+   &#0123;&#0123;index:only=jekyll&#0125;&#0125;_
+
+#### Custom Macros
+
+Creating custom macros is easy, they only need to provide a render method:
+
+    def render_my_macro(config, structure, *args, **kwargs):
+        return "macros will be replaced with this text"
+
+
+Macros have access to the project configuration and to the content structure, so that they can create indexes and links, and are able to react on configuration parameters.
+
+
+Example: the index below is rendered via &#0123;&#0123;index:root=indexes,sort=title,style=list&#0125;&#0125;)
 
 - [A searchable index](index-demo-searchable.html)
 - [Index demo: Summaries](index-demo-summary.html)
 - [The Index Macro](index-macro.html)
+- [The Menu Macro](menu-macro.html)
 
 
 
 
 ### The Index Macro
 
-<summary>An explanation of the various parameters of the index macro</summary>
+<summary>The _index macro_ can render parts of the structure as an index in various styles and formats.</summary>
 
 _&#0123;&#0123;index:root=node_name,tag=value,style=value,sort=value,only=value&#0125;&#0125;_ 
 
@@ -242,6 +240,9 @@ _mdtools_ picks up the contents of the &lt;summary&gt;-tag for each page, theref
 
   <dt><a href="index-macro.html">The Index Macro</a></dt>
   <dd></dd>
+
+  <dt><a href="menu-macro.html">The Menu Macro</a></dt>
+  <dd></dd>
 </dl>
 
 
@@ -254,6 +255,15 @@ This obviously doesn't make sense in an ebook.
 &#0123;&#0123;sort=title,style=searchable,only=jekyll&#0125;&#0125;
 
 
+
+
+### The Menu Macro
+
+… renders HTML for [SmartMenus for jQuery](https://www.smartmenus.org/)
+
+for use in templates.
+
+Code: &#0123;&#0123;html-menu&#0125;&#0125;
 
 
 ## Commands
@@ -315,6 +325,44 @@ The only prerequsite is that each image has an unique filename.
 Usage: see `mdimg -h`
 
 
+
+
+## Styles and Other Assets
+
+<summary>The various output formats require certain styles and other assets, this part of the documentation explains where goes what.</summary>
+
+Since this documentation makes use of all those formats, so you can find everything described here this repository.
+
+
+<dl>
+
+  <dt><a href="jekyll-builds.html">Styles and Assets for Jekyll/GitHub Pages</a></dt>
+  <dd></dd>
+
+  <dt><a href="reveal.js-builds.html">Styles and Assets for reveal.js Builds</a></dt>
+  <dd></dd>
+</dl>
+
+
+### Styles and Assets for Jekyll/GitHub Pages
+
+Unless it's replaced at build time via an entry in `config.presets.templates`, the following subdirectories of `docs` typicall contain templates and other resources for you site:
+
+- `_includes`: partials to be included by the templates in `_layouts`
+- `_layouts`: the templates for the different page or tsypes you can use in your site
+- `_sass`:  SCSS paritals that are processed into a single CSS fle
+- `css`: css files, either compiled by Jekyll, or added manually
+- `js`:
+- `menu`: files related to smartmenus
+
+see the [Jekyll documentation](https://jekyllrb.com/docs/structure/) for more information.
+
+
+### Styles and Assets for reveal.js Builds
+
+The folder `docs/reveal.js` contains all files related to reveal.js builds.
+
+However, the reveal.js-builder is currently broken. So sad.
 
 
 ### Translation
@@ -429,7 +477,10 @@ If templates contain translatable content, simply store them inside the content 
   <dt><a href="formats.html">Formats</a></dt>
   <dd></dd>
 
-  <dt><a href="indexes.html">Indexes</a></dt>
+  <dt><a href="macros.html">Macros</a></dt>
+  <dd></dd>
+
+  <dt><a href="styles-and-assets.html">Styles and Other Assets</a></dt>
   <dd></dd>
 
   <dt><a href="translation.html">Translation</a></dt>

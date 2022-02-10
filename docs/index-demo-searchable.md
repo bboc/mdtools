@@ -14,20 +14,21 @@ This obviously doesn't make sense in an ebook.
 - [Data Structure](data-structure.html)
 - [Features](features.html)
 - [Formats](formats.html)
-- [Indexes](indexes.html)
+- [Macros](macros.html)
+- [Styles and Other Assets](styles-and-assets.html)
 - [Translation](translation.html)
 - [What is this?](introduction.html)
 
 
 
 <div class="bottom-nav">
-<a href="index-demo-summary.html" title="Back to: Index demo: Summaries">◀</a> <a href="indexes.html" title="Up: Indexes">▲</a> <a href="commands.html" title="Read next: Commands">▶ Read next: Commands</a>
+<a href="index-demo-summary.html" title="Back to: Index demo: Summaries">◀</a> <a href="macros.html" title="Up: Macros">▲</a> <a href="menu-macro.html" title="Read next: The Menu Macro">▶ Read next: The Menu Macro</a>
 </div>
 
 
 <script type="text/javascript">
 Mousetrap.bind('g n', function() {
-    window.location.href = 'commands.html';
+    window.location.href = 'menu-macro.html';
     return false;
 });
 </script>

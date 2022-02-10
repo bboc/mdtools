@@ -19,13 +19,13 @@ Usage: see `mdimg -h`
 
 
 <div class="bottom-nav">
-<a href="mdslides.html" title="Back to: mdslides">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="translation.html" title="Read next: Translation">▶ Read next: Translation</a>
+<a href="mdslides.html" title="Back to: mdslides">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="styles-and-assets.html" title="Read next: Styles and Other Assets">▶ Read next: Styles and Other Assets</a>
 </div>
 
 
 <script type="text/javascript">
 Mousetrap.bind('g n', function() {
-    window.location.href = 'translation.html';
+    window.location.href = 'styles-and-assets.html';
     return false;
 });
 </script>
