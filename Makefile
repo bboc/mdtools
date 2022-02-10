@@ -12,6 +12,10 @@ site:
 	mdbuild all-in-one-jekyll-page $(PROJECT) -vv
 	cd docs;jekyll build
 
+serve:
+	# serve jekyll site
+	cd docs;jekyll serve
+
 debug:
 	# build with debug output (for quickly testing changes to structure.yaml or project.yaml)
 	mdbuild all-in-one-jekyll-page $(PROJECT) -vvvv
