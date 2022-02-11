@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-  {% include head.html %}
+  {% include html-head.html %}
 
   <body onload="setupAnnotations();">
     <div class="wrapper" markdown="1">
@@ -10,8 +10,27 @@
           {{ content }}
       </div>
       {% include footer.html %}
-      {% include smartmenu.html %}
-      {% include keyboard-nav.html %}
     </div>
+
+  <script type="text/javascript" src="{{ "/js/bootstrap-4.5.3.min.js" | prepend: site.baseurl }}"></script>
+  <script type="text/javascript" src="{{ "/js/jquery-3.5.1.min.js" | prepend: site.baseurl }}"></script>
+  <script type="text/javascript" src="{{ "/js/mousetrap.1.6.5.min.js" | prepend: site.baseurl }}"></script>
+  {% include smartmenus.html %}
+  {% include keyboard-nav.html %}
+
+  <script>
+    function setAnnotationHref() {
+      document.getElementById("annotate-link").href = "https://via.hypothes.is/" + self.document.location.href;
+    }
+    function hideWhenAnnotating() {
+      if (typeof(wbinfo) !== "undefined") {
+        document.getElementById("annotate-span").style.visibility = 'hidden';
+      }
+    }
+    function setupAnnotations() {
+      setAnnotationHref();
+      hideWhenAnnotating();
+    }
+  </script>
   </body>
 </html>
