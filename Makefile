@@ -13,8 +13,13 @@ site:
 	cd docs;jekyll build
 
 serve:
+    # build jekyll site
+	mdbuild jekyll $(PROJECT) -vv
+
 	# serve jekyll site
 	cd docs;jekyll serve
+	# release the port if something went wrong:
+	# ps aux |grep jekyll |awk '{print $2}' | xargs kill -9
 
 debug:
 	# build with debug output (for quickly testing changes to structure.yaml or project.yaml)
