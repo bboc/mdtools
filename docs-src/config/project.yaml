@@ -75,6 +75,9 @@ presets:
       - source: docs-src/content/website/_includes/header.html
         destination: docs/_includes/header.html
         mode: html
+      - source: docs-src/content/website/_includes/menu.html
+        destination: docs/_includes/menu.html
+        mode: html
       # other website config files
       - source: docs-src/templates/website/_config.yml
         destination: docs/_config.yml
