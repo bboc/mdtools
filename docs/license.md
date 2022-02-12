@@ -11,5 +11,5 @@ Contact me if you need another license for some reason.
 
 
 <div class="bottom-nav">
-<a href="site-index.html" title="Back to: Alphabetical List Of All Pages">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a>
+<a href="markdown-cheat-sheet.html" title="Back to: Check your theme">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a>
 </div>

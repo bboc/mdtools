@@ -47,4 +47,5 @@ parts:
     - glossary
     - changelog
     - site-index
+    - markdown-cheat-sheet
     - license

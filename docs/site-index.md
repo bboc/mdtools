@@ -35,13 +35,13 @@ title: "Alphabetical List Of All Pages"
 
 
 <div class="bottom-nav">
-<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="license.html" title="Read next: License">▶ Read next: License</a>
+<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="markdown-cheat-sheet.html" title="Read next: Check your theme">▶ Read next: Check your theme</a>
 </div>
 
 
 <script type="text/javascript">
 Mousetrap.bind('g n', function() {
-    window.location.href = 'license.html';
+    window.location.href = 'markdown-cheat-sheet.html';
     return false;
 });
 </script>

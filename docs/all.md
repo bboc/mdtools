@@ -491,6 +491,110 @@ If templates contain translatable content, simply store them inside the content 
 </dl>
 
 
+### Check your theme
+
+This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
+
+#### The Basics
+
+
+In this paragraph you will find some **bold text**, and some *italicized text*, and some `code`. ~~This statement is false .~~[^1]
+
+[^1]: This is the footnote.
+
+The following text is a blockquote
+
+> In a blockquote you might see something **impportant**, and something _emphasized._
+
+Sometimes you want ordered lists:
+
+1. First item
+2. Second item
+3. Third item
+
+On other occasions an unordered list is all it takes.
+
+- First item
+- Second item
+- Third item
+
+However, sometimes there is more to say about some of the bullet points:
+
+-   this one is simple
+-   but this one
+    -   requires more explanation
+    -   because it is more complex
+-   this one's more straightforward
+
+
+You can also have a list of tasks:
+
+- [x] that was easy
+- [ ] this one is yet to be done
+- [ ] this one will never be finished
+
+
+#### Horizontal Rule
+
+A horizontal rule:
+
+
+Text below the horizontal rule
+
+#### Links and link-likes
+
+
+Here's a _link to another page_, a link to a [heading on this page](#my-heading-id)and here's a term from the <a href="#" class="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> (you should see popover on mouseover)
+
+#### Image
+
+![alt text](/img/placeholder.png)
+
+
+##### Definition List
+
+term
+: definition
+
+
+#### Table
+
+Here's a simple table
+
+| Column 1 | Column 2 |
+| ----------- | ----------- |
+| Row 1 | Row 2 |
+| foo | bar |
+
+#### Fenced Code Block
+
+```
+- id: appendix
+    parts:
+    - glossary
+    - changelog
+    - site-index
+    - markdown-cheat-sheet
+    - license
+```
+
+#### All the headings {#my-heading-id}
+
+##### one more heading
+
+###### one more heading
+
+####### one more heading
+
+######## one more heading
+
+######### one more heading
+
+That's it, it shouln't get any deeper.
+
+
+
+
 #### License
 
 mdtools is licensed under the GNU General Public License v3.0
