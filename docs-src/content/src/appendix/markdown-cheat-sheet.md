@@ -85,7 +85,9 @@ def myMethod(foo, bar):
     return foo
 ```
 
-## All the headings {#my-heading-id}
+# All the headings {#my-heading-id}
+
+## one more heading
 
 ### one more heading
 
@@ -97,6 +99,6 @@ def myMethod(foo, bar):
 
 ####### one more heading
 
-That's it, it shouldn't get any deeper.
+That's it, it shouldn't go any deeper.
 
 
