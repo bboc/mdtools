@@ -77,14 +77,12 @@ Here's a simple table
 
 ## Fenced Code Block
 
-```
-- id: appendix
-    parts:
-    - glossary
-    - changelog
-    - site-index
-    - markdown-cheat-sheet
-    - license
+```python
+import os
+
+def myMethod(foo, bar):
+    # ignore bar
+    return foo
 ```
 
 ## All the headings {#my-heading-id}
@@ -99,6 +97,6 @@ Here's a simple table
 
 ####### one more heading
 
-That's it, it shouln't get any deeper.
+That's it, it shouldn't get any deeper.
 
 
