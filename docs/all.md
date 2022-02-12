@@ -504,7 +504,7 @@ In this paragraph you will find some **bold text**, and some *italicized text*, 
 
 The following text is a blockquote
 
-> In a blockquote you might see something **impportant**, and something _emphasized._
+> In a blockquote you might see something **important**, and something _emphasized._
 
 Sometimes you want ordered lists:
 
@@ -526,7 +526,6 @@ However, sometimes there is more to say about some of the bullet points:
     -   because it is more complex
 -   this one's more straightforward
 
-
 You can also have a list of tasks:
 
 - [x] that was easy
@@ -539,19 +538,20 @@ You can also have a list of tasks:
 A horizontal rule:
 
 
-Text below the horizontal rule
+(this text is below the horizontal rule)
+
 
 #### Links and link-likes
 
+Here's a _link to another page_, a link to a [heading on this page](#my-heading-id), and here's a term from the <a href="#" class="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> (you should see popover on mouseover)
 
-Here's a _link to another page_, a link to a [heading on this page](#my-heading-id)and here's a term from the <a href="#" class="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> (you should see popover on mouseover)
 
 #### Image
 
 ![alt text](/img/placeholder.png)
 
 
-##### Definition List
+#### Definition List
 
 term
 : definition
@@ -566,19 +566,20 @@ Here's a simple table
 | Row 1 | Row 2 |
 | foo | bar |
 
+
 #### Fenced Code Block
 
-```
-- id: appendix
-    parts:
-    - glossary
-    - changelog
-    - site-index
-    - markdown-cheat-sheet
-    - license
+```python
+import os
+
+def myMethod(foo, bar):
+    # ignore bar
+    return foo
 ```
 
-#### All the headings {#my-heading-id}
+### All the headings {#my-heading-id}
+
+#### one more heading
 
 ##### one more heading
 
@@ -590,7 +591,7 @@ Here's a simple table
 
 ######### one more heading
 
-That's it, it shouln't get any deeper.
+That's it, it shouldn't go any deeper.
 
 
 

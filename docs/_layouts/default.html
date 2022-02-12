@@ -5,32 +5,40 @@
 
   <body onload="setupAnnotations();">
     <div class="wrapper" markdown="1">
-      {% include header.html %}
+      <header class="site-header header-wrapper">
+        {% include header.html %}
+      </header>
+
+
+      <nav id="main-nav">
+        {% include menu.html %}
+      </nav>
       <div class="page-content">
           {{ content }}
       </div>
-      {% include footer.html %}
-    </div>
+      <footer class="site-footer">
+        {% include footer.html %}
+      </footer>
 
-  <script type="text/javascript" src="{{ "/js/bootstrap-4.5.3.min.js" | prepend: site.baseurl }}"></script>
-  <script type="text/javascript" src="{{ "/js/jquery-3.5.1.min.js" | prepend: site.baseurl }}"></script>
-  <script type="text/javascript" src="{{ "/js/mousetrap.1.6.5.min.js" | prepend: site.baseurl }}"></script>
-  {% include smartmenus.html %}
-  {% include keyboard-nav.html %}
+    <script type="text/javascript" src="{{ "/js/bootstrap-4.5.3.min.js" | prepend: site.baseurl }}"></script>
+    <script type="text/javascript" src="{{ "/js/jquery-3.5.1.min.js" | prepend: site.baseurl }}"></script>
+    <script type="text/javascript" src="{{ "/js/mousetrap.1.6.5.min.js" | prepend: site.baseurl }}"></script>
+    {% include smartmenus.html %}
+    {% include keyboard-nav.html %}
 
-  <script>
-    function setAnnotationHref() {
-      document.getElementById("annotate-link").href = "https://via.hypothes.is/" + self.document.location.href;
-    }
-    function hideWhenAnnotating() {
-      if (typeof(wbinfo) !== "undefined") {
-        document.getElementById("annotate-span").style.visibility = 'hidden';
+    <script>
+      function setAnnotationHref() {
+        document.getElementById("annotate-link").href = "https://via.hypothes.is/" + self.document.location.href;
       }
-    }
-    function setupAnnotations() {
-      setAnnotationHref();
-      hideWhenAnnotating();
-    }
-  </script>
+      function hideWhenAnnotating() {
+        if (typeof(wbinfo) !== "undefined") {
+          document.getElementById("annotate-span").style.visibility = 'hidden';
+        }
+      }
+      function setupAnnotations() {
+        setAnnotationHref();
+        hideWhenAnnotating();
+      }
+    </script>
   </body>
 </html>
