@@ -1,7 +1,28 @@
-// ----------------------------------------------------------
-// Styling dfn tag to highlight the word with the tooltip
-// ----------------------------------------------------------
+// --------------------------------------------------------------------------
+// Glossary page and tooltip
+// --------------------------------------------------------------------------
 
+//
+// Glossary Page
+// --------------------------------------------------------------------------
+
+.post-content {
+    // div.post-content
+    //   dl.glossary
+    //     dt
+    //     dd
+    dd {
+        padding-left: $spacing-unit / 2;
+        padding-bottom: $spacing-unit / 2;
+    }
+    dl.glossary dt {
+        font-weight: 700;
+    }
+}
+
+// 
+// Legacy: Styling dfn tag to highlight the word with the tooltip
+// ----------------------------------------------------------
 
 dfn {
   border-bottom: dashed 1px rgba(0,0,0,0.5);

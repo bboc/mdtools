@@ -2,126 +2,178 @@
 // styling the content of the page
 // ----------------------------------------------------------
 
+/* 
+    div.content-container
+    -- jekyll:
+        article.post
+            header.post-header
+                h1.post-title 
+          
+            div.post-content
+                the actual content
+                div.bottom-nav
+*/
 
 
+article.post {
 
-
-/**
- * Images
- */
-img {
-    max-width: 100%;
-    vertical-align: middle;
 }
 
+// ==========================================================================
+// headline for the content (inserted by jekyll) 
+// ==========================================================================
 
-
-/**
- * Figures
- */
-figure > img {
-    display: block;
+.post-header {
+    margin-bottom: $spacing-unit;
 }
 
-figcaption {
-    font-size: $small-font-size;
-    font-style: italic;
-    text-align:center;
-}
-
-
-
-/**
- * Lists
- */
-ul, ol {
-    margin-left: $spacing-unit;
-}
-
-li {
-    > ul,
-    > ol {
-         margin-bottom: 0;
-    }
-}
-
-
-
-/**
- * Headings
- */
-h1, h2, h3, h4, h5, h6 {
-    font-weight: $base-font-weight;
-}
-
-
-
-/**
- * Links
- */
-a {
-    color: $brand-color;
-    text-decoration: none;
-
-    &:visited {
-        color: darken($brand-color, 15%);
-    }
-
-    &:hover {
-        color: $text-color;
-        text-decoration: underline;
-    }
-}
-
-
-
-/**
- * Blockquotes
- */
-blockquote {
-    color: $grey-color;
-    border-left: 4px solid $grey-color-light;
-    padding-left: $spacing-unit / 2;
-    font-size: 18px;
+.post-title {
+    font-size: 36px;
     letter-spacing: -1px;
-    font-style: italic;
+    line-height: 1;
 
-    > :last-child {
-        margin-bottom: 0;
+    @include media-query($on-laptop) {
+        font-size: 34px;
     }
 }
 
-/**
- * summary
- */
-dd {
-    padding-left: $spacing-unit / 2;
-    padding-bottom: $spacing-unit / 2;
-}
+// ==========================================================================
+// all definitions in here only apply to the actual content of the page
+// ==========================================================================
+
+.post-content {
+    margin-bottom: $spacing-unit;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: $base-font-weight;
+    }
+
+    h2 {
+        font-size: 30px;
+
+        @include media-query($on-laptop) {
+            font-size: 28px;
+        }
+    }
+
+    h3 {
+        font-size: 25px;
+
+        @include media-query($on-laptop) {
+            font-size: 23px;
+        }
+    }
+
+    h4 {
+        font-size: 20px;
+
+        @include media-query($on-laptop) {
+            font-size: 18px;
+        }
+    }
+    h5 {
+        font-size: 18px;
+
+        @include media-query($on-laptop) {
+            font-size: 16px;
+        }
+    }
+
+    // images
+    // --------------------------------------------------------------------------
+
+    img {
+        max-width: 100%;
+        vertical-align: middle;
+    }
+
+    figure > img {
+        display: block;
+    }
+
+    figcaption {
+        font-size: $small-font-size;
+        font-style: italic;
+        text-align:center;
+    }
 
 
-/**
- * Code formatting
- */
-pre,
-code {
-    font-size: 15px;
-    border: 1px solid $grey-color-light;
-    border-radius: 3px;
-    background-color: #eef;
-}
+    // Lists
+    // --------------------------------------------------------------------------
 
-code {
-    padding: 1px 5px;
-}
+    ul, ol {
+        margin-left: $spacing-unit;
+    }
 
-pre {
-    padding: 8px 12px;
-    overflow-x: auto;
+    li {
+        > ul,
+        > ol {
+             margin-bottom: 0;
+        }
+    }
 
-    > code {
-        border: 0;
-        padding-right: 0;
-        padding-left: 0;
+    // Links
+    // --------------------------------------------------------------------------
+    a {
+        color: $brand-color;
+        text-decoration: none;
+
+        &:visited {
+            color: darken($brand-color, 15%);
+        }
+
+        &:hover {
+            color: $text-color;
+            text-decoration: underline;
+        }
+    }
+
+    //
+    // Blockquoates
+    // --------------------------------------------------------------------------
+    blockquote {
+        color: $grey-color;
+        border-left: 4px solid $grey-color-light;
+        padding-left: $spacing-unit / 2;
+        font-size: 18px;
+        letter-spacing: -1px;
+        font-style: italic;
+
+        > :last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // prev-/next-links right below the page content
+
+    .bottom-nav {
+        padding-top: $spacing-unit;
+        font-size: $small-font-size;
+    }
+
+
+    // Code formatting
+    // --------------------------------------------------------------------------
+    pre,
+    code {
+        font-size: 15px;
+        border: 1px solid $grey-color-light;
+        border-radius: 3px;
+        background-color: #eef;
+    }
+
+    code {
+        padding: 1px 5px;
+    }
+
+    pre {
+        padding: 8px 12px;
+        overflow-x: auto;
+
+        > code {
+            border: 0;
+            padding-right: 0;
+            padding-left: 0;
+        }
     }
 }
