@@ -20,10 +20,11 @@ mdtools 2.x:
 			- use bootstrap's clearfix where possible
 			- make sure menu uses proper media queries
 			- check _bass.scss for othe obsolete things
-		Switch to popper.js for tooltips:
-				https://popper.js.org/
-				probably needs new styles
+		Switch to popper.js for tooltips: @done
 				https://www.geeksforgeeks.org/bootstrap-4-popover/?ref=lbp
+				- add js from https://popper.js.org/ @done
+				- replace styles @done
+				
 		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
 			Menu on the left border of screen, 
 			contenct centered and a little wider

@@ -55,7 +55,7 @@ A horizontal rule:
 
 ## Links and link-likes
 
-Here's a [link to another page](appendix.html), a link to a [heading on this page](#my-heading-id), and here's a term from the <a href="#" class="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> (you should see popover on mouseover)
+Here's a [link to another page](appendix.html), a link to a [heading on this page](#my-heading-id), and here's a term from the <a href="glossary.html#entry-glossary" class="glossary-tooltip" data-toggle="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> (you should see popover on mouseover)
 
 
 ## Image

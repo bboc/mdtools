@@ -20,13 +20,19 @@
         {% include footer.html %}
       </footer>
 
-    <script type="text/javascript" src="{{ "/js/bootstrap-4.5.3.min.js" | prepend: site.baseurl }}"></script>
     <script type="text/javascript" src="{{ "/js/jquery-3.5.1.min.js" | prepend: site.baseurl }}"></script>
+    <script type="text/javascript" src="{{ "/js/popper.min-1.16.1.js" | prepend: site.baseurl }}"></script>
+    <script type="text/javascript" src="{{ "/js/bootstrap-4.5.3.min.js" | prepend: site.baseurl }}"></script>
     <script type="text/javascript" src="{{ "/js/mousetrap.1.6.5.min.js" | prepend: site.baseurl }}"></script>
     {% include smartmenus.html %}
     {% include keyboard-nav.html %}
 
     <script>
+
+      $('[data-toggle="tooltip"]').tooltip({html: true, placement: 'bottom'})
+      
+
+
       function setAnnotationHref() {
         document.getElementById("annotate-link").href = "https://via.hypothes.is/" + self.document.location.href;
       }

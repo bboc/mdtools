@@ -9,7 +9,7 @@ mdtools expects the glossary in a YAML-file, and can do a few tricks with it:
 
 - insert glossary explanations or definitions into the text using _&#0123;&#0123;glossary:glossary-term&#0125;&#0125;_ or _&#0123;&#0123;define:glossary-term&#0125;&#0125;_
 - render a full glossary using _&#0123;&#0123;insert-full-glossary&#0125;&#0125;_
-- add an explanation for a <a href="#" class="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> term as an overlay (in html output) using _&#0091;glossary&#0093;&#0040;glossary:glossary&#0041;_
+- add an explanation for a <a href="glossary.html#entry-glossary" class="glossary-tooltip" data-toggle="tooltip" title="Glossary: A collection of explanations for words the reader might not be familiar with.">glossary</a> term as an overlay (in html output) using _&#0091;glossary&#0093;&#0040;glossary:glossary&#0041;_
 
 
 ## Glossary Format:
