@@ -15,10 +15,14 @@ dl, dd, ol, ul, figure {
 /**
  * Set `margin-bottom` to maintain vertical rhythm
  */
+// TODO: this doesn't work!!
 h1, h2, h3, h4, h5, h6,
 p, blockquote, pre,
-ul, ol, dl, figure,
+ul, ol, dl, figure, .summary
 %vertical-rhythm {
+    margin-bottom: $spacing-unit / 2;
+}
+.summary {
     margin-bottom: $spacing-unit / 2;
 }
 

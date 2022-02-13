@@ -56,9 +56,9 @@ class TestMetadataFilterBasics(TestMetadataFilter):
         self.assertEqual(res, [
             '# my headline',
             '',
-            '<p class="well-sm">',
+            '<div class="card summary"><div class="card-body">',
             'this is my summary',
-            '</p>',            
+            '</div></div>',
             '',
             'some text'
         ])

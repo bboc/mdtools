@@ -25,8 +25,8 @@ class MetadataFilter(object):
 
     SUMMARY_MARKUP = {
         'html': {
-            BEGIN_SUMMARY: '<p class="well-sm">',
-            END_SUMMARY: '</p>',
+            BEGIN_SUMMARY: '<div class="card summary"><div class="card-body">',
+            END_SUMMARY: '</div></div>',
         },    
         'epub': {
             BEGIN_SUMMARY: '<p class="summary">',
