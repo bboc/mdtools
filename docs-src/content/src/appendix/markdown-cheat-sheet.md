@@ -1,4 +1,4 @@
-# Check your theme
+# Markdown Cheat-Sheet and Theme Checker
 
 <summary>
 This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
@@ -6,8 +6,8 @@ This page contains most of the Markdown syntax elements and several macros, so t
 
 (The above paragraph is tagged as summary!)
 
-## The Basics
 
+## The Basics
 
 In this paragraph you will find some **bold text**, and some *italicized text*, and some `code`. ~~This statement is false .~~[^1]
 
@@ -16,6 +16,9 @@ In this paragraph you will find some **bold text**, and some *italicized text*, 
 The following text is a blockquote
 
 > In a blockquote you might see something **important**, and something _emphasized._
+
+
+## Lists
 
 Sometimes you want ordered lists:
 
@@ -60,13 +63,13 @@ Here's a [link to another page](section:appendix), a link to a [heading on this 
 
 ## Image
 
-![alt text](/img/placeholder.png)
+![This is the caption of the image above – a placehholder, just like the image itself.](/img/placeholder.png)
 
 
 ## Definition List
 
-term
-: definition
+this is the term
+: and this is the definition of the term, hopefully that is enough explanation.
 
 
 ## Table
@@ -89,20 +92,20 @@ def myMethod(foo, bar):
     return foo
 ```
 
-# All the headings {#my-heading-id}
+# All the Headings {#my-heading-id}
 
-## one more heading
+## One More Heading
 
-### one more heading
+### One More Heading
 
-#### one more heading
+#### One More Heading
 
-##### one more heading
+##### One More Heading
 
-###### one more heading
+###### One More Heading
 
-####### one more heading
+####### One More Heading
+
 
 That's it, it shouldn't go any deeper.
-
 

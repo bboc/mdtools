@@ -35,7 +35,7 @@ title: "Alphabetical List Of All Pages"
 
 
 <div class="bottom-nav">
-<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="markdown-cheat-sheet.html" title="Read next: Check your theme">▶ Read next: Check your theme</a>
+<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="markdown-cheat-sheet.html" title="Read next: Markdown Cheat-Sheet and Theme Checker">▶ Read next: Markdown Cheat-Sheet and Theme Checker</a>
 </div>
 
 
