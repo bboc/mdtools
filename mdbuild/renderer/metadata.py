@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class MetadataFilter(object):
+    """Process stream and extract and process metadata (including summaries)."""
     title = None
     summary = None
     metadata = None
@@ -20,6 +21,30 @@ class MetadataFilter(object):
 
     BEGIN_SUMMARY = "<summary>"
     END_SUMMARY = "</summary>"
+
+
+    SUMMARY_MARKUP = {
+        'html': {
+            BEGIN_SUMMARY: '<p class="well-sm">',
+            END_SUMMARY: '</p>',
+        },    
+        'epub': {
+            BEGIN_SUMMARY: '<p class="summary">',
+            END_SUMMARY: '</p>',
+        },
+        'latex': {
+            BEGIN_SUMMARY: None,
+            END_SUMMARY: None,
+        },
+        None: {
+            BEGIN_SUMMARY: None,
+            END_SUMMARY: None,
+        },
+        'preserve': {
+            BEGIN_SUMMARY: BEGIN_SUMMARY,
+            END_SUMMARY: END_SUMMARY,        
+        }
+    }
 
     @classmethod
     def _header_filter(cls, line, after_metadata=False):
@@ -76,6 +101,12 @@ class MetadataFilter(object):
             cls.summary_lines.append(sline)
             cls.summary = '\n'.join(cls.summary_lines)
 
+            if cls.target_format == 'latex':
+                # wrap summary in bold for latex (unil I add markup for a proper box)
+                if line.startswith("**") or line.startswith("__"):
+                    pass
+                else:
+                    line = "**%s**" % line
             return line, cls._summary_filter
 
     @classmethod
@@ -91,7 +122,7 @@ class MetadataFilter(object):
             return line, cls._standard_filter
 
     @classmethod
-    def filter(cls, lines, strip_summary_tags=False):
+    def filter(cls, lines, target_format=None):
         """
         Extract title, summary and other metadata.
 
@@ -112,19 +143,31 @@ class MetadataFilter(object):
 
         TODO: figure out if an object-based (not class-based) approach is a cleaner
             solution here?
+
+        Target Format:
+            determines the output of metadata and summary tags
+            html, epub: wrap summary in <p class=well-sm">
+            latex: drop summary tag and wrap in ** if not already
+            None (leave it as it is)
         """
         # Initialize all class variables
         cls.title = None
         cls.summary = None
         cls.summary_lines = []
         cls.metadata = {}
+        cls.target_format = target_format
+
+        if target_format not in cls.SUMMARY_MARKUP:
+            raise Exception("Error: unknown target_format '%s'" % target_format)
 
         filter_function = cls._header_filter
         for line in lines:
             res, filter_function = filter_function(line)
 
             if res is not None:
-                if not strip_summary_tags:
+                if res.strip() not in (cls.BEGIN_SUMMARY, cls.END_SUMMARY):
                     yield res
-                elif res.strip() not in (cls.BEGIN_SUMMARY, cls.END_SUMMARY):
-                    yield res
+                else: 
+                    res = cls.SUMMARY_MARKUP[target_format][res.strip()]
+                    if res:
+                        yield res

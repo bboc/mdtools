@@ -7,8 +7,8 @@ from mdbuild.renderer import MetadataFilter
 
 class TestMetadataFilter(unittest.TestCase):
 
-    def _run_filter(self, strip_summary_tags=False):
-        return [line for line in MetadataFilter.filter(iter(self.input), strip_summary_tags=strip_summary_tags)]
+    def _run_filter(self, target_format=None):
+        return [line for line in MetadataFilter.filter(iter(self.input), target_format=target_format)]
 
 
 class TestMetadataFilterBasics(TestMetadataFilter):
@@ -38,7 +38,7 @@ class TestMetadataFilterBasics(TestMetadataFilter):
 
         # if summary is enclosed in **, markup is removed properly
         self.input[3] = '**this is my summary**'
-        res = self._run_filter()
+        res = self._run_filter(target_format="preserve")
         self.assertEqual(MetadataFilter.summary, 'this is my summary')
         self.assertEqual(res, [
             '# my headline',
@@ -50,8 +50,42 @@ class TestMetadataFilterBasics(TestMetadataFilter):
             'some text'
         ])
 
-    def test_strip_summary_tags(self):
-        res = self._run_filter(strip_summary_tags=True)
+    def test_summary_format_html(self):
+        res = self._run_filter(target_format='html')
+        self.assertEqual(MetadataFilter.summary, 'this is my summary')
+        self.assertEqual(res, [
+            '# my headline',
+            '',
+            '<p class="well-sm">',
+            'this is my summary',
+            '</p>',            
+            '',
+            'some text'
+        ])
+    def test_summary_format_epub(self):
+        res = self._run_filter(target_format='epub')
+        self.assertEqual(MetadataFilter.summary, 'this is my summary')
+        self.assertEqual(res, [
+            '# my headline',
+            '',
+            '<p class="summary">',
+            'this is my summary',
+            '</p>',
+            '',
+            'some text'
+        ])
+    def test_summary_format_latex(self):
+        res = self._run_filter(target_format='latex')
+        self.assertEqual(MetadataFilter.summary, 'this is my summary')
+        self.assertEqual(res, [
+            '# my headline',
+            '',
+            '**this is my summary**',
+            '',
+            'some text'
+        ])
+    def test_summary_format_none(self):
+        res = self._run_filter(target_format=None)
         self.assertEqual(MetadataFilter.summary, 'this is my summary')
         self.assertEqual(res, [
             '# my headline',
@@ -92,7 +126,7 @@ class TestMetadataFilterMetadata(TestMetadataFilter):
 
     def test_metadata_removal(self):
         """Metadata is removed from file."""
-        res = self._run_filter(strip_summary_tags=True)
+        res = self._run_filter(target_format=None)
 
         self.assertEqual(res, [
             '# my headline',

@@ -38,7 +38,7 @@ class DecksetWriter(object):
 
         # set up filters for renderer:
         self.filters = [
-            partial(filters.MetadataFilter.filter, strip_summary_tags=True),
+            partial(filters.MetadataFilter.filter, target_format=None),
             filters.SkipOnlyFilter.filter,
             partial(filters.convert_section_links, 'title'),
             macros.MacroFilter.filter,

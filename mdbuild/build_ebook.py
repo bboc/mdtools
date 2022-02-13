@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Compile all files into one file so that they can be rendered to LaTEX and ePub.
+Compile all files into one file so that they can be rendered to LaTeX and ePub.
 """
 from __future__ import print_function
 from __future__ import absolute_import
@@ -32,7 +32,7 @@ class EbookWriter(object):
 
         # set up filters for renderer:
         self.filters = [
-            partial(filters.MetadataFilter.filter, strip_summary_tags=True),
+            partial(filters.MetadataFilter.filter, target_format=config.cfg.target_format),
             filters.remove_breaks_and_conts,
             filters.SkipOnlyFilter.filter,
             partial(filters.convert_section_links, 'title'),
