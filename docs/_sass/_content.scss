@@ -28,12 +28,8 @@ article.post {
 }
 
 .post-title {
-    font-size: 36px;
-    letter-spacing: -1px;
-    line-height: 1;
 
     @include media-breakpoint-up(md) {
-        font-size: 34px;
     }
 }
 
@@ -42,41 +38,35 @@ article.post {
 // ==========================================================================
 
 .post-content {
-    margin-bottom: $spacing-unit;
 
     h1, h2, h3, h4, h5, h6 {
-        font-weight: $base-font-weight;
     }
 
     h2 {
-        font-size: 30px;
 
         @include media-breakpoint-up(md) {
-            font-size: 28px;
         }
     }
 
     h3 {
-        font-size: 25px;
 
         @include media-breakpoint-up(md) {
-            font-size: 23px;
         }
     }
 
     h4 {
-        font-size: 20px;
 
         @include media-breakpoint-up(md) {
-            font-size: 18px;
         }
     }
     h5 {
-        font-size: 18px;
 
         @include media-breakpoint-up(md) {
-            font-size: 16px;
         }
+    }
+
+    .summary {
+        margin-bottom: $spacing-unit / 2;
     }
 
     // images
@@ -105,14 +95,12 @@ article.post {
     // --------------------------------------------------------------------------
 
     ul, ol {
-        margin-left: $spacing-unit;
     }
-
-    li {
-        > ul,
-        > ol {
-             margin-bottom: 0;
-        }
+    .task-list-item {;
+        list-style: none;
+    }
+    .task-list-item-checkbox {
+        margin-right: 8px;
     }
 
     // Links
@@ -138,8 +126,6 @@ article.post {
         color: $grey-color;
         border-left: 4px solid $grey-color-light;
         padding-left: $spacing-unit / 2;
-        font-size: 18px;
-        letter-spacing: -1px;
         font-style: italic;
 
         > :last-child {
@@ -148,7 +134,7 @@ article.post {
     }
 
     // prev-/next-links right below the page content
-
+    // TODO: that should not be here!
     .bottom-nav {
         padding-top: $spacing-unit;
         font-size: $small-font-size;
@@ -159,7 +145,6 @@ article.post {
     // --------------------------------------------------------------------------
     pre,
     code {
-        font-size: 15px;
         border: 1px solid $grey-color-light;
         border-radius: 3px;
         background-color: #eef;
