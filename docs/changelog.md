@@ -3,10 +3,12 @@ title: "Changelog"
 ---
 
 
-### v2.0.3 (2022-02-xx)
+### v2.1.0 (2022-02-xx)
 
 -   Searchable index creation
 -   integration of Bootstrap 4
+-   better and more responsive website layout
+-   better rendering of summaries for epub and site
 
 ### v2.0.2 (2021-09-28)
 

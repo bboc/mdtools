@@ -3,7 +3,9 @@ title: "Check your theme"
 ---
 
 
-This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
+<div class="card summary"><div class="card-body">This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
+</div></div>
+(The above paragraph is tagged as summary!)
 
 ## The Basics
 

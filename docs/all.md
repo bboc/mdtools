@@ -389,10 +389,12 @@ If templates contain translatable content, simply store them inside the content 
 
 #### Changelog
 
-##### v2.0.3 (2022-02-xx)
+##### v2.1.0 (2022-02-xx)
 
 -   Searchable index creation
 -   integration of Bootstrap 4
+-   better and more responsive website layout
+-   better rendering of summaries for epub and site
 
 ##### v2.0.2 (2021-09-28)
 
@@ -493,7 +495,9 @@ If templates contain translatable content, simply store them inside the content 
 
 ### Check your theme
 
-This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
+<div class="card summary"><div class="card-body">This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
+</div></div>
+(The above paragraph is tagged as summary!)
 
 #### The Basics
 
