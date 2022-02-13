@@ -14,10 +14,10 @@ class MacroTests(unittest.TestCase):
 
     def test_replace(self):
 
-        def macro1():
+        def macro1(*args, **kwargs):
             return "<replaced m1>"
 
-        def macro2(param1):
+        def macro2(*args, **kwargs):
             return "<replaced m2>"
 
         def macro_bar_foo(*args, **kwargs):

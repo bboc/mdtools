@@ -46,9 +46,9 @@ class ImageTestBase(FileBasedTestCase):
 
     def compare_results(self, result_file, correct_file):
         """Compare the actual result with the correct result."""
-        with file(correct_file, 'r+') as correct:
+        with open(correct_file, 'r+') as correct:
             c = correct.readlines()
-            with file(result_file, 'r+') as result:
+            with open(result_file, 'r+') as result:
                 r = result.readlines()
                 self.assertEqual(c, r)
 

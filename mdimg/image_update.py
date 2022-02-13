@@ -97,8 +97,8 @@ class Document(object):
             original = self.path
             print('original', original)
             print('target', target_path)
-            with file(original, 'r') as source:
-                with file(target_path, 'w+') as target:
+            with open(original, 'r') as source:
+                with open(target_path, 'w+') as target:
                     self.parse_file(source, target.write)
 
             if self.keep_backup:
@@ -147,8 +147,8 @@ class Document(object):
                 self.document_has_errors = True
                 print(e.message(self.path, line_number), file=self.ERROR_OUT)
                 writer('{>>ERROR--ambiguous image reference:<<}\n')
-                for idx, variant in enumerate(e[1]):
+                for idx, variant in enumerate(e.args[1]):
                     writer('{>>variant ' + str(idx) + ':<<}\n')
-                    writer(line.replace(e[0], variant))
+                    writer(line.replace(e.args[0], variant))
                 writer('{>>original reference:<<}\n')
                 writer(line)
