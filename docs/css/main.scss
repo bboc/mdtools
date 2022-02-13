@@ -29,20 +29,6 @@ $on-palm:          600px;
 $on-laptop:        768px;
 
 
-
-// Use media queries like this:
-// @include media-query($on-palm) {
-//     .wrapper {
-//         padding-right: $spacing-unit / 2;
-//         padding-left: $spacing-unit / 2;
-//     }
-// }
-@mixin media-query($device) {
-    @media screen and (max-width: $device) {
-        @content;
-    }
-}
-
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
     "bootstrap-4.5.3/bootstrap",
@@ -62,3 +48,17 @@ $on-laptop:        768px;
     // --- syntax highlightling:
     "syntax-highlighting"
 ;
+
+
+//Responsive containers: 100% wide until specified breakpoint is reached, after that max-widths
+//.container-sm / .container-md / .container-lg / .container-xl
+// Responsive breakpoints:
+// xs <576px / sm ≥576px / md ≥768px / lg ≥992px / xl ≥1200px
+// Small devices (landscape phones, 576px and up)
+@include media-breakpoint-up(sm) { }
+// Small devices (landscape phones, less than 768px)
+@include media-breakpoint-down(sm) { }
+// Small devices (landscape phones, 576px and up)
+@include media-breakpoint-only(sm) { }
+// Apply styles starting from medium devices and up to extra large devices
+@include media-breakpoint-between(md, xl) { }

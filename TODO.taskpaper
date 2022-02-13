@@ -7,19 +7,20 @@ mdtools 2.x:
 		https://github.com/javascript-tutorial/server
 	Convert Layout to bootstrap:
 		use bootstrap 4 first because that works with jQuery and smartmenus, then see about bootstrap5 (which *should* also work)
-		The Basics:
-		- add bootstrap 4.5.x (css and media query, css below the site) @done
+		The Basics: @done
+			- add bootstrap 4.5.x (css and media query, css below the site) @done
 			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
 			- add to templates/default.html @done
 			- add to plain.html @done
 		Clean up CSS:
 			- update strutude (base / content / layout) and put everything where it needs to be @done
 			- check what is still necessary, and what can go @done
-			- fix media queries to use bootstrap media queries
+			- use bootstrap's clearfix where possible @done
 			- fix typography to use bootstrap
-			- use bootstrap's clearfix where possible
 			- make sure menu uses proper media queries
-			- check _bass.scss for othe obsolete things
+			- check _base.scss for othe obsolete things
+			- Replace media queries with bootstrap code @done
+				
 		Switch to popper.js for tooltips: @done
 				https://www.geeksforgeeks.org/bootstrap-4-popover/?ref=lbp
 				- add js from https://popper.js.org/ @done

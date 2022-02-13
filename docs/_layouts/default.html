@@ -9,13 +9,14 @@
         {% include header.html %}
       </header>
 
-
       <nav id="main-nav">
         {% include menu.html %}
       </nav>
+
       <div class="content-container">
           {{ content }}
       </div>
+      
       <footer class="site-footer">
         {% include footer.html %}
       </footer>
@@ -31,8 +32,6 @@
 
       $('[data-toggle="tooltip"]').tooltip({html: true, placement: 'bottom'})
       
-
-
       function setAnnotationHref() {
         document.getElementById("annotate-link").href = "https://via.hypothes.is/" + self.document.location.href;
       }

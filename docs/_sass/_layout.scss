@@ -31,8 +31,9 @@
 }
 
 .header-wrapper {
-    @extend %clearfix;
+    @include clearfix();
 }
+
 .header-col {
     margin-bottom: $spacing-unit / 2;
     padding-left: $spacing-unit / 2;
@@ -48,13 +49,11 @@
     text-align: right;
 }
 
-
 .content-container {
     padding: $spacing-unit 0;
     display: block;
     overflow: hidden;
 }
-
 
 /**
  * Site footer
@@ -81,7 +80,7 @@
     font-size: 15px;
     color: $grey-color;
     margin-left: -$spacing-unit / 2;
-    @extend %clearfix;
+    @include clearfix();
 }
 
 .footer-col {
@@ -101,7 +100,7 @@
     text-align: right;
 }
 
-@include media-query($on-laptop) {
+@include media-breakpoint-up(md) {
     .footer-col-1,
     .footer-col-2 {
         width: -webkit-calc(50% - (#{$spacing-unit} / 2));
@@ -109,7 +108,7 @@
     }
 }
 
-@include media-query($on-palm) {
+@include media-breakpoint-down(sm) {
     .footer-col {
         float: none;
         width: -webkit-calc(100% - (#{$spacing-unit} / 2));

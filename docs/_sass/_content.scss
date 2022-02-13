@@ -32,7 +32,7 @@ article.post {
     letter-spacing: -1px;
     line-height: 1;
 
-    @include media-query($on-laptop) {
+    @include media-breakpoint-up(md) {
         font-size: 34px;
     }
 }
@@ -51,7 +51,7 @@ article.post {
     h2 {
         font-size: 30px;
 
-        @include media-query($on-laptop) {
+        @include media-breakpoint-up(md) {
             font-size: 28px;
         }
     }
@@ -59,7 +59,7 @@ article.post {
     h3 {
         font-size: 25px;
 
-        @include media-query($on-laptop) {
+        @include media-breakpoint-up(md) {
             font-size: 23px;
         }
     }
@@ -67,14 +67,14 @@ article.post {
     h4 {
         font-size: 20px;
 
-        @include media-query($on-laptop) {
+        @include media-breakpoint-up(md) {
             font-size: 18px;
         }
     }
     h5 {
         font-size: 18px;
 
-        @include media-query($on-laptop) {
+        @include media-breakpoint-up(md) {
             font-size: 16px;
         }
     }
