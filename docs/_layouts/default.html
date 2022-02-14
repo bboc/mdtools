@@ -4,7 +4,6 @@
   {% include html-head.html %}
 
   <body onload="setupAnnotations();">
-    <div class="wrapper" markdown="1">
       <header class="site-header header-wrapper">
         {% include header.html %}
       </header>
@@ -13,7 +12,7 @@
         {% include menu.html %}
       </nav>
 
-      <div class="content-container">
+      <div class="content-container .container-lg">
           {{ content }}
       </div>
       

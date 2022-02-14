@@ -53,6 +53,17 @@
     padding: $spacing-unit 0;
     display: block;
     overflow: hidden;
+
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: $spacing-unit;
+    padding-left: $spacing-unit;
+    @include clearfix();
+
+    @include media-breakpoint-up(md) {
+        padding-right: $spacing-unit / 2;
+        padding-left: $spacing-unit / 2;
+    }
 }
 
 /**
