@@ -56,9 +56,8 @@ docs/_build/
 # PyBuilder
 target/
 
-mdtools.sublime-workspace
+*.sublime-workspace
 
-/mdtools.sublime-project
 
 # github page and tmp folder
 docs/_site/*
