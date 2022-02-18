@@ -7,15 +7,16 @@
     <header class="site-header container-fluid">
       {% include header.html %}
     </header>
-
-    <nav id="main-nav">
-      {% include menu.html %}
-    </nav>
-
-    <div class="content-container">
-      {{ content }}
+    <div class="site-body container-fluid">
+      <div class="row">
+        <nav class="main-nav col-sm-3 col-12">
+          {% include menu.html %}
+        </nav>
+        <div class="content-container col-sm-9 col-12">
+          {{ content }}
+        </div>
+      </div>
     </div>
-    
     <footer class="site-footer container-fluid">
       {% include footer.html %}
     </footer>

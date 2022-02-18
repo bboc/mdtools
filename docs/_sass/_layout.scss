@@ -27,6 +27,7 @@
     }
 
     .header-icons {
+        vertical-align: bottom;
         white-space: nowrap;
         float: right;
         text-align: right;
@@ -39,24 +40,27 @@
     }
 }
 
+.site-body {
+
+}
+.main-nav {
+    float: left;
+    @include media-breakpoint-down(sm) {
+        min-width: 300px;
+    }
+}
+
 //
 // Content
 // --------------------------------------------------------------------------
 
 .content-container {
-    display: block;
-    overflow: hidden;
+    //display: block;
+    //overflow: hidden;
 
-    margin-right: auto;
-    margin-left: auto;
+    float: right;
     padding-right: $spacing-unit;
     padding-left: $spacing-unit;
-    @include clearfix();
-
-    @include media-breakpoint-up(md) {
-        padding-right: $spacing-unit / 2;
-        padding-left: $spacing-unit / 2;
-    }
 }
 
 article.post {
