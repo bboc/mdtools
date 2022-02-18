@@ -39,42 +39,19 @@ article.post {
 
 .post-content {
 
-    h1, h2, h3, h4, h5, h6 {
-    }
-
-    h2 {
-
-        @include media-breakpoint-up(md) {
-        }
-    }
-
-    h3 {
-
-        @include media-breakpoint-up(md) {
-        }
-    }
-
-    h4 {
-
-        @include media-breakpoint-up(md) {
-        }
-    }
-    h5 {
-
-        @include media-breakpoint-up(md) {
-        }
-    }
-
     .summary {
         margin-bottom: $spacing-unit / 2;
+        font-style: italic;
     }
 
     // images
     // --------------------------------------------------------------------------
 
     img {
-        max-width: 100%;
         vertical-align: middle;
+        @include media-breakpoint-up(md) {
+            max-width: 80%;
+        }
     }
 
     figure > img {
@@ -87,15 +64,10 @@ article.post {
         text-align:center;
     }
 
-    .summary {
-        font-style: italic;
-    }
 
     // Lists
     // --------------------------------------------------------------------------
 
-    ul, ol {
-    }
     .task-list-item {
         list-style: none;
     }
@@ -120,7 +92,50 @@ article.post {
     }
 
     //
-    // Blockquoates
+    // Glossary Link and Tooltip
+    // --------------------------------------------------------------------------
+    a.glossary-tooltip {
+        border-bottom: dashed 1px rgba(0,0,0,0.5);
+        /*padding: 0 0.4em;*/
+        cursor: help;
+        /*font-style: normal;*/
+        position: relative;
+        &:hover {
+            color: $text-color;
+            text-decoration: none;
+        }
+
+    }
+
+    .tooltip  {
+      .tooltip-inner {
+        background-color: rgba(0,0,0,0.5);
+        font-weight: 300;
+        line-height: 1.5em;
+        color: #fff;
+        padding: 0.5em 0.8em;
+      }
+
+      .arrow { }
+    }
+
+    //
+    // Definition Lists and Glossary page definition lists
+    // --------------------------------------------------------------------------
+    dt {
+        font-weight: 700;
+    }
+    dd {
+        padding-left: $spacing-unit / 2;
+        padding-bottom: $spacing-unit / 2;
+    }
+    // special styles for glossary page
+    dl.glossary {
+        dt {}
+        dd {}
+    }
+    //
+    // Blockquotes
     // --------------------------------------------------------------------------
     blockquote {
         color: $grey-color;
@@ -132,14 +147,6 @@ article.post {
             margin-bottom: 0;
         }
     }
-
-    // prev-/next-links right below the page content
-    // TODO: that should not be here!
-    .bottom-nav {
-        padding-top: $spacing-unit;
-        font-size: $small-font-size;
-    }
-
 
     // Code formatting
     // --------------------------------------------------------------------------

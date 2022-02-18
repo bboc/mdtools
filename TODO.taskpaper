@@ -32,7 +32,6 @@ mdtools 2.x:
 			simple nav buttons < > around content or below on mobile
 			index.html stays as it is
 			- decide about information we keep in footer, where would that go?
-			- remove all styles and see how that goes
 			
 			New Two Column Layout:
 				current layout: 
@@ -51,11 +50,10 @@ mdtools 2.x:
 				Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
 				smartmenu appears to be working fine as it is
 				- style menu
-			Content:
-			Fix typography:
-				- Set base font size
-				- use .small for footer etc
-				- remove all superfluous styles
+			Fix typography: @done
+				- Set base font size @done
+				- use .small for footer etc @done
+				- remove all superfluous styles @done
 			Illustrations:
 				- Step 1: make  them responsive (simple)
 					https://www.geeksforgeeks.org/bootstrap-4-images/?ref=lbp
