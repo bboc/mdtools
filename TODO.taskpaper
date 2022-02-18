@@ -12,15 +12,14 @@ mdtools 2.x:
 			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
 			- add to templates/default.html @done
 			- add to plain.html @done
-		Clean up CSS:
+		Clean up CSS: @done
 			- update strutude (base / content / layout) and put everything where it needs to be @done
 			- check what is still necessary, and what can go @done
 			- use bootstrap's clearfix where possible @done
-			- fix typography to use bootstrap
-			- make sure menu uses proper media queries
-			- check _base.scss for othe obsolete things
+			- fix typography to use bootstrap @done
+			- make sure menu uses proper media queries @done
+			- check _base.scss for othe obsolete things @done
 			- Replace media queries with bootstrap code @done
-				
 		Switch to popper.js for tooltips: @done
 				https://www.geeksforgeeks.org/bootstrap-4-popover/?ref=lbp
 				- add js from https://popper.js.org/ @done
@@ -34,6 +33,7 @@ mdtools 2.x:
 			index.html stays as it is
 			- decide about information we keep in footer, where would that go?
 			- remove all styles and see how that goes
+			
 			New Two Column Layout:
 				current layout: 
 				header
@@ -41,19 +41,21 @@ mdtools 2.x:
 				content
 				footer
 				- Header: https://www.geeksforgeeks.org/bootstrap-4-flex/?ref=lbp
-				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp)
+				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
+				- Footer: make that look nice
 			Menu:
 				menu on the left side of screen, with a slightly grey background, and a scrollbar 
 				search-bar for patterns will come on top above the menu
 				menu div gets a scrollbar
 				add note: "published with mdtools"
-				- setup smartmenus to work with bootstrap (pugin)
-					smartmenus 4 bootstrap component: https://vadikom.github.io/smartmenus/src/demo/bootstrap-4-navbar.html
-					smartmenu appears to be working fine as it is
+				Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
+				smartmenu appears to be working fine as it is
 				- style menu
 			Content:
-				- fix typography 
-					https://www.geeksforgeeks.org/bootstrap-4-typography/?ref=lbp
+			Fix typography:
+				- Set base font size
+				- use .small for footer etc
+				- remove all superfluous styles
 			Illustrations:
 				- Step 1: make  them responsive (simple)
 					https://www.geeksforgeeks.org/bootstrap-4-images/?ref=lbp

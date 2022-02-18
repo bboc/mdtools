@@ -6,7 +6,11 @@
 // Our variables
 
 $base-font-size:   16px;
+// TODO: bootstrap already defines this as 80%
 $small-font-size:  $base-font-size * 0.875;
+
+//maximum with of the content box
+$content-max-width: 800px;
 
 // TODO: there must be a Bootrstrap way to achieve this…
 $spacing-unit:     30px;
@@ -20,10 +24,11 @@ $grey-color-light: lighten($grey-color, 40%);
 $grey-color-dark:  darken($grey-color, 25%);
 
 
+
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
     "bootstrap-4.5.3/bootstrap",
-    // --- everythin that affects the entire page:
+    // --- everything that affects the entire page:
     "base",
     // --- layout and behavior of the page:
     "layout",

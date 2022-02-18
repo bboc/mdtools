@@ -4,21 +4,21 @@
   {% include html-head.html %}
 
   <body onload="setupAnnotations();">
-      <header class="site-header header-wrapper">
-        {% include header.html %}
-      </header>
+    <header class="site-header header-wrapper">
+      {% include header.html %}
+    </header>
 
-      <nav id="main-nav">
-        {% include menu.html %}
-      </nav>
+    <nav id="main-nav">
+      {% include menu.html %}
+    </nav>
 
-      <div class="content-container .container-lg">
-          {{ content }}
-      </div>
-      
-      <footer class="site-footer">
-        {% include footer.html %}
-      </footer>
+    <div class="content-container">
+      {{ content }}
+    </div>
+    
+    <footer class="site-footer">
+      {% include footer.html %}
+    </footer>
 
     <script type="text/javascript" src="{{ "/js/jquery-3.5.1.min.js" | prepend: site.baseurl }}"></script>
     <script type="text/javascript" src="{{ "/js/popper.min-1.16.1.js" | prepend: site.baseurl }}"></script>

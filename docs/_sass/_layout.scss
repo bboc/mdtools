@@ -50,7 +50,6 @@
 }
 
 .content-container {
-    padding: $spacing-unit 0;
     display: block;
     overflow: hidden;
 
@@ -66,12 +65,19 @@
     }
 }
 
+article.post {
+    max-width: $content-max-width;
+    margin-top: $spacing-unit / 2 ;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /**
  * Site footer
  */
 .site-footer {
     border-top: 2px solid $grey-color-light;
-    padding: $spacing-unit 0;
+    padding: $spacing-unit / 2;
     font-size: $small-font-size;
     color: $grey-color;
 }
