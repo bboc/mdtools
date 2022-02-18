@@ -1,0 +1,37 @@
+// ----------------------------------------------------------
+// typography and coloring of header and footer
+// ----------------------------------------------------------
+
+//
+// Footer
+// --------------------------------------------------------------------------
+// footer.site-footer wraps the entire footer
+// div.footer-wide
+// div.footer col-wrapper
+//  div.footer-col footer-col-1
+//  div.footer-col footer-col-2
+.site-footer {
+    border-top: 2px solid $grey-color-light;
+
+    font-size: $small-font-size;
+    color: $grey-color;
+    a {
+        color: lighten($brand-color, 10%);
+        &:visited {
+            color: lighten($brand-color, 10%);
+        }
+
+        &:hover {
+            color: $brand-color;
+            text-decoration: underline;
+        }        
+    }
+
+    .contact-list,
+    .social-media-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+}
+

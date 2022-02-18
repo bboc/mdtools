@@ -14,6 +14,7 @@ $spacing-unit:     30px;
 
 $text-color:       #111;
 $background-color: #fdfdfd;
+// links and such
 $brand-color:      #2a7ae2;
 
 $grey-color:       #828282;
@@ -29,6 +30,8 @@ $grey-color-dark:  darken($grey-color, 25%);
     "base",
     // --- layout and behavior of the page:
     "layout",
+    // --- typography and coloring of header and footer
+    "design",
     // --- typograhpy etc. for the content area
     "content",
     // --- smartmenus theme and placement

@@ -7,6 +7,11 @@ mdtools 2.x:
 		https://github.com/javascript-tutorial/server
 	Convert Layout to bootstrap:
 		use bootstrap 4 first because that works with jQuery and smartmenus, then see about bootstrap5 (which *should* also work)
+		Notes for adaptation in projects:
+			- index.html: markup and version text: .small
+			- replace all the css!
+			- test what happens to plain template (pattern map)
+			- 
 		The Basics: @done
 			- add bootstrap 4.5.x (css and media query, css below the site) @done
 			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
@@ -27,29 +32,27 @@ mdtools 2.x:
 				
 		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
 			Menu on the left border of screen, 
-			contenct centered and a little wider
+			contenc centered and a little wider
 			lightboxes for illustriations on desktop so that they don't mess up the pages
 			simple nav buttons < > around content or below on mobile
 			index.html stays as it is
 			- decide about information we keep in footer, where would that go?
-			
 			New Two Column Layout:
-				current layout: 
-				header
-				nav
-				content
-				footer
-				- Header: https://www.geeksforgeeks.org/bootstrap-4-flex/?ref=lbp
 				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
-				- Footer: make that look nice
-			Menu:
-				menu on the left side of screen, with a slightly grey background, and a scrollbar 
-				search-bar for patterns will come on top above the menu
-				menu div gets a scrollbar
-				add note: "published with mdtools"
-				Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
-				smartmenu appears to be working fine as it is
-				- style menu
+				- Header: https://www.geeksforgeeks.org/bootstrap-4-flex/?ref=lbp
+				Footer: @done
+					- use grid @done
+					-  make it look good @done
+					- remove superfluous styles @done
+				Menu:
+					menu on the left side of screen, with a slightly grey background, and a scrollbar 
+					search-bar for patterns will come on top above the menu
+					menu div gets a scrollbar
+					add note: "published with mdtools"
+					Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
+					smartmenu appears to be working fine as it is
+					- style menu
+					- bug: footer must start below menu at all times!!
 			Fix typography: @done
 				- Set base font size @done
 				- use .small for footer etc @done
@@ -75,18 +78,15 @@ mdtools 2.x:
 			- keep menu open
 			- look at https://javascript.info/websocket: has nice info boxes and a great searchable tutorial map 
 		Links:
+			the bootstrap site: https://getbootstrap.com 
 			matrial design for botstrap: https://mdbootstrap.com/
 			Intro to bootstrap 4 (free): https://www.geeksforgeeks.org/bootstrap-4-introduction/
-			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
-				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
-			https://getbootstrap.com - the bootstrap site
-			https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
-				explanation of html/css for responsive menus (nav element and media queries)
-			pdf about bootstrap 4: https://bootstrapcreative.com/shop/bootstrap-quick-start/
-			https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
-				best practices
-			https://github.com/dpstrange/jekyll-bootstrap
-			bootstrap temlate for jekyll
+			best practices: https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
+			bootstrap template for jekyll: https://github.com/dpstrange/jekyll-bootstrap
+			Menus in bootstratp 4:
+				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that): https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
+				explanation of html/css for responsive menus (nav element and media queries): https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
+				
 	MVP: Responsive Pattern Map:
 		Macro Support: @estimate(30min)
 			- variables:
