@@ -7,9 +7,7 @@
 // Site header
 // --------------------------------------------------------------------------/**
 .site-header {
-
-
-    .site-title {
+    a.site-title {
         font-size: 26px;
         font-weight: 300;
         letter-spacing: -1px;
@@ -19,28 +17,11 @@
             color: $headline-color;
         }
     }
-
-    .header-col {
-
-    }
-
-    .header-title {
-        float: left;
-    }
-
-    .header-icons {
-    }
-
 }
 
 //
 // Footer
 // --------------------------------------------------------------------------
-// footer.site-footer wraps the entire footer
-// div.footer-wide
-// div.footer col-wrapper
-//  div.footer-col footer-col-1
-//  div.footer-col footer-col-2
 .site-footer {
     border-top: 2px solid $grey-color-light;
 

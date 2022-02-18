@@ -31,15 +31,16 @@ mdtools 2.x:
 				- replace styles @done
 				
 		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
-			Menu on the left border of screen, 
-			contenc centered and a little wider
-			lightboxes for illustriations on desktop so that they don't mess up the pages
-			simple nav buttons < > around content or below on mobile
-			index.html stays as it is
-			- decide about information we keep in footer, where would that go?
+			Overview
+				Menu on the left border of screen, 
+				conten centered and a little wider
+				lightboxes for illustriations on desktop so that they don't mess up the pages
+				simple nav buttons < > around content or below on mobile
+				index.html stays as it is
+			- decide about information to keep in footer, where would that go?
 			New Two Column Layout:
 				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
-				- Header: https://www.geeksforgeeks.org/bootstrap-4-flex/?ref=lbp
+				- Header: convert to grid @done
 				Footer: @done
 					- use grid @done
 					-  make it look good @done
