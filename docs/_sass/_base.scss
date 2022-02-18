@@ -5,6 +5,12 @@
 /**
  * Basic styling
  */
+
+html {
+
+    font-size: $base-font-size;
+}
+
 body {
     background-color: $background-color;
 }
