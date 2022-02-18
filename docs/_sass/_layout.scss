@@ -33,7 +33,9 @@
         @include media-breakpoint-down(sm) {
             text-align: left;
             min-width: 300px;
-        }        
+        }   
+        a img { 
+            height: 25px;}     
     }
 }
 
