@@ -2,6 +2,37 @@
 // typography and coloring of header and footer
 // ----------------------------------------------------------
 
+
+//
+// Site header
+// --------------------------------------------------------------------------/**
+.site-header {
+
+
+    .site-title {
+        font-size: 26px;
+        font-weight: 300;
+        letter-spacing: -1px;
+
+        &,
+        &:visited {
+            color: $headline-color;
+        }
+    }
+
+    .header-col {
+
+    }
+
+    .header-title {
+        float: left;
+    }
+
+    .header-icons {
+    }
+
+}
+
 //
 // Footer
 // --------------------------------------------------------------------------
