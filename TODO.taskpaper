@@ -11,7 +11,9 @@ mdtools 2.x:
 			- index.html: markup and version text: .small
 			- replace all the css!
 			- test what happens to plain template (pattern map)
-			- 
+			- make sure texts for prev/next are  added to translation memory
+			- make sure page.html is added to contents/website/_layouts and added to projects.yaml
+			- make sure to upfate menu.html
 		The Basics: @done
 			- add bootstrap 4.5.x (css and media query, css below the site) @done
 			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
@@ -37,7 +39,8 @@ mdtools 2.x:
 				lightboxes for illustriations on desktop so that they don't mess up the pages
 				simple nav buttons < > around content or below on mobile
 				index.html stays as it is
-			- decide about information to keep in footer, where would that go?
+			- decide about information to keep in footer, where would that go? @done
+			- fix icons in menu.html (and add  class="icon")
 			New Two Column Layout:
 				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
 				- Header: convert to grid @done
@@ -45,14 +48,14 @@ mdtools 2.x:
 					- use grid @done
 					-  make it look good @done
 					- remove superfluous styles @done
-				Menu:
+				Menu: @done
 					menu on the left side of screen, with a slightly grey background, and a scrollbar 
 					search-bar for patterns will come on top above the menu
 					menu div gets a scrollbar
 					add note: "published with mdtools"
 					Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
 					smartmenu appears to be working fine as it is
-					- style menu
+					- style menu @done
 					- bug: footer must start below menu at all times!! @done
 					- fix menu and content resizing @done
 			Fix typography: @done
@@ -65,16 +68,20 @@ mdtools 2.x:
 				- Step 2: make them nice (takes a bit more effort) 
 					add lightboxes make sure illustrations don't look like shit because long things are stretched ultrawide
 				e.g. https://mdbootstrap.com/docs/b4/jquery/javascript/lightbox/ deactivates on mobile automatically, that's nice
-			cleaner navigation:
+			Cleaner navigation: @done
 				keyboard navigation is now broken, because I moved all javascript down the page
 				quick and dirty solution: render links with id = "nav-next" and "nav-prev" and grab their url via javascript - BUT prev/next is not part of the content but page metadate and should be added to yaml front matter (will appear as global variables in liquid)
-				- make mdbuild add prev_page_url and next_page_url to front matter of content
-				- add < and > as navigation buttons (large, grey, mouseover) for next/prev (e.g. with fa-angle-right / -left, or simply &lt;/&gt;)
-				- to the sides left / right or below the content for mobile
-				- map left and right arrow keys to browse quickly through the pages
-				- add <link rel="prev"|"next">? to header?
+				- make mdbuild add prev/next_page_url and prev/next_page_title to front matter of content @done
+				- add < and > as navigation buttons for next/prev (using new icons) @done
+				- find a way to add first page to navigation so that 'g n' from the homepage leads somewhere @done
+				- setup color and mouseover @done
+				- add to bottom of page so that it looks nice enough @done
+				- map left and right arrow keys to browse quickly through the pages @done
+				- add <link rel="prev"|"next">? to html header? @done
+	
 		Cooler website (maybe later):
 			- move menu icon to the right of next to site icons for moother mobile navigation @later
+			- smaller headline and less spacing in header for better mobile view @later 
 			- search for patterns
 			- theme picker (text size, white, sepia, dark theme) via session storage: https://javascript.info/localstorage
 			- responsible map overlay... 
@@ -185,6 +192,7 @@ mdtools 2.x:
 		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
 	
 	Sometimes:
+		-   full support for YAML metadata in Markdown source files
 		MVP: App with GUI:
 			As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
 			(people would still require to install MacTex, Jekyll, Pandoc etc., though)
@@ -209,7 +217,6 @@ mdtools 2.x:
 					- backup all files in crowdin!
 					- manually move files in crowdin!!!
 					- release
-			
 		Add separate template command: @estimate(2h)
 			cmd_template is working with new config format 
 			requires some thought, because of new config format, running it with full config is a lot of hassle,

@@ -2,6 +2,11 @@
 // typography and coloring of header and footer
 // ----------------------------------------------------------
 
+.icon {
+    &:hover {
+        filter: $brand-color-svg;
+    }
+}
 
 //
 // Site header

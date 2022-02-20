@@ -33,16 +33,24 @@
   <!-- Go: Next Page
   if (typeof next_page_url !== 'undefined') {
     Mousetrap.bind('g n', function() {
-        window.location.href = next_page_url;
-        return false;
+      window.location.href = next_page_url;
+      return false;
+    });
+    Mousetrap.bind('right', function() {
+      window.location.href = next_page_url;
+      return false;
     });
   }
   <!-- Go: Previous Page
   if (typeof prev_page_url !== 'undefined') {
 
     Mousetrap.bind('g p', function() {
-        window.location.href = prev_page_url;
-        return false;
+      window.location.href = prev_page_url;
+      return false;
+    });
+    Mousetrap.bind('left', function() {
+      window.location.href = prev_page_url;
+      return false;
     });
   }
 </script>

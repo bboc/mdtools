@@ -16,6 +16,9 @@ $text-color:       #111;
 $background-color: #fdfdfd;
 // links and such
 $brand-color:      #2a7ae2;
+// created from brand color via this nifty tool: https://codepen.io/sosuke/pen/Pjoqqp
+// if any icon is not black, prepend to the filter: brightness(0) saturate(100%)
+$brand-color-svg:  invert(41%) sepia(34%) saturate(2020%) hue-rotate(186deg) brightness(93%) contrast(94%);
 
 $grey-color:       #828282;
 $grey-color-light: lighten($grey-color, 40%);

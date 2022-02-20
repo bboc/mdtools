@@ -5,6 +5,12 @@
 //
 // Site header
 // --------------------------------------------------------------------------/**
+.icon {
+
+
+
+}
+
 .site-header {
     border-top: 5px solid $grey-color-dark;
     border-bottom: 2px solid $grey-color-light;
@@ -40,9 +46,6 @@
     }
 }
 
-.site-body {
-
-}
 .main-nav {
     float: left;
     @include media-breakpoint-down(sm) {
@@ -68,6 +71,30 @@ article.post {
     margin-top: $spacing-unit / 2 ;
     margin-left: auto;
     margin-right: auto;
+
+    .bottom-nav {
+        .navigation {
+            height: 40px;
+            margin-top: $spacing-unit / 2;
+            display: block;        
+            white-space:nowrap;    
+        }
+        .navigation-prev {
+            float: left;        }
+        .navigation-next {
+            float: left;            
+        }
+        img.icon-prev {
+            vertical-align: left;
+            padding-right: $spacing-unit / 2;
+            height: 40px;
+        }
+        img.icon-next {
+            vertical-align: left;
+            padding-left: $spacing-unit / 2;
+            height: 40px;
+        }
+    }
 }
 
 //
