@@ -11,17 +11,24 @@ logger = logging.getLogger(__name__)
 
 
 class MetadataFilter(object):
-    """Process stream and extract and process metadata (including summaries)."""
+    """Process stream and extract/process metadata (title, summary etc.)"""
+
+    # extracted metadata
     title = None
     summary = None
     metadata = None
     summary_lines = None
 
+    # store next filter funktion to use
+    filter_function = None
+
     METADATA_PATTERN = re.compile(r'\[\:(?P<key>.*?)\]: # \"(?P<value>.*?)\"')
+    YAML_METADATA_PATTERN = re.compile(r'(?P<key>.*?):\w+\"(?P<value>.*?)\"')
+    
+    METADATA_TEMPLATE = "%s: %s"
 
     BEGIN_SUMMARY = "<summary>"
     END_SUMMARY = "</summary>"
-
 
     SUMMARY_MARKUP = {
         'html': {
@@ -49,7 +56,7 @@ class MetadataFilter(object):
     @classmethod
     def _header_filter(cls, line, after_metadata=False):
         """
-        Read metadata up to (and including) first header.
+        Read metadata up to (and including) first header. Inject
 
         Metadata must be followed by a blank line!
 
@@ -61,7 +68,8 @@ class MetadataFilter(object):
             key = match.groupdict()['key']
             value = match.groupdict()['value']
             cls.metadata[key] = value
-            return None, cls._header_filter
+            cls.filter_function = cls._header_filter
+            return None
 
         elif line.strip().startswith('#'):
             # process header
@@ -71,17 +79,21 @@ class MetadataFilter(object):
             except AttributeError:
                 logger.warning("title not set")
                 cls.title = ''
-            return line, cls._standard_filter
+            cls.filter_function = cls._standard_filter
+            return line
 
         elif line.strip() == '':
             # process empty line
             if after_metadata:
-                return line, cls._standard_filter
+                cls.filter_function = cls._standard_filter
+                return line
             else:
                 # ignore one blank line
-                return None, partial(cls._header_filter, after_metadata=True)
+                cls.filter_function = partial(cls._header_filter, after_metadata=True)
+                return None
         else:
             raise Exception('Metadata must be followed by an empty line!')
+
 
     @classmethod
     def _summary_filter(cls, line):
@@ -91,7 +103,8 @@ class MetadataFilter(object):
         Transition to standard filter after end of summary.
         """
         if line.strip() == cls.END_SUMMARY:
-            return line, cls._standard_filter
+            cls.filter_function = cls._standard_filter
+            return cls.SUMMARY_MARKUP[cls.target_format][cls.END_SUMMARY]
         else:
             # remove bold around summary if present
             if line.startswith("**") or line.startswith("__"):
@@ -102,12 +115,14 @@ class MetadataFilter(object):
             cls.summary = '\n'.join(cls.summary_lines)
 
             if cls.target_format == 'latex':
-                # wrap summary in bold for latex (unil I add markup for a proper box)
+                # wrap summary in bold for latex (for now)
+                # TODO: add LaTeX markup for a proper box or something nice
                 if line.startswith("**") or line.startswith("__"):
                     pass
                 else:
                     line = "**%s**" % line
-            return line, cls._summary_filter
+            cls.filter_function = cls._summary_filter
+            return line
 
     @classmethod
     def _standard_filter(cls, line):
@@ -117,9 +132,11 @@ class MetadataFilter(object):
         Transition to summary filter on encountering summary tag.
         """
         if line.strip() == cls.BEGIN_SUMMARY:
-            return line, cls._summary_filter
+            cls.filter_function = cls._summary_filter
+            return cls.SUMMARY_MARKUP[cls.target_format][cls.BEGIN_SUMMARY]
         else:
-            return line, cls._standard_filter
+            cls.filter_function = cls._standard_filter
+            return line
 
     @classmethod
     def filter(cls, lines, target_format=None):
@@ -160,14 +177,9 @@ class MetadataFilter(object):
         if target_format not in cls.SUMMARY_MARKUP:
             raise Exception("Error: unknown target_format '%s'" % target_format)
 
-        filter_function = cls._header_filter
+        cls.filter_function = cls._header_filter
         for line in lines:
-            res, filter_function = filter_function(line)
-
+            print(line)
+            res = cls.filter_function(line)
             if res is not None:
-                if res.strip() not in (cls.BEGIN_SUMMARY, cls.END_SUMMARY):
-                    yield res
-                else: 
-                    res = cls.SUMMARY_MARKUP[target_format][res.strip()]
-                    if res:
-                        yield res
+                yield res
