@@ -40,7 +40,7 @@ mdtools 2.x:
 				simple nav buttons < > around content or below on mobile
 				index.html stays as it is
 			- decide about information to keep in footer, where would that go? @done
-			- fix icons in menu.html (and add  class="icon")
+			- fix icons in menu.html (and add  class="icon") @done
 			New Two Column Layout:
 				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
 				- Header: convert to grid @done
