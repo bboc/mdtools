@@ -1,4 +1,3 @@
-from __future__ import print_function
 from __future__ import absolute_import
 
 import re
@@ -179,7 +178,6 @@ class MetadataFilter(object):
 
         cls.filter_function = cls._header_filter
         for line in lines:
-            print(line)
             res = cls.filter_function(line)
             if res is not None:
                 yield res
