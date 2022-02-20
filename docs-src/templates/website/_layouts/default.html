@@ -11,6 +11,15 @@
       <div class="row">
         <nav class="main-nav col-sm-3 col-12">
           {% include menu.html %}
+          {% if page.prev_page_url %}
+          <a href="{ page.prev_page_url }.html" class="navigation navigation-prev" aria-label="Previous page: { page.prev_page_title }"><img href="icons/angle-left-b.svg" class="icon-prev" title="Previous page: { page.prev_page_title }" /></a>
+          {% endif %}
+          {% if page.next_page_url %}
+          <a href="{ page.next_page_url }.html" class="navigation navigation-next " aria-label="Next page: { page.next_page_title }"><img href="icons/angle-right-b.svg" class="icon-prev" title="Next page: { page.prev_page_title }" /></a>
+          {% endif %}
+          <a href="using-scripts.html" class="navigation navigation-next " aria-label="Next page: Using Scripts" style="margin-right: 0px;">
+                    <i class="fa fa-angle-right"></i>
+                </a>
         </nav>
         <div class="content-container col-sm-9 col-12">
           {{ content }}

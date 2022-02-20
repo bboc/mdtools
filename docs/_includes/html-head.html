@@ -12,4 +12,21 @@
 
   <link rel="stylesheet" href="{{ '/css/main.css' | prepend: site.baseurl }}">
   <link rel="stylesheet" href="{{ '/menu/sm-core-css-1.1.1.css' | prepend: site.baseurl }}">
+ 
+  {% if page.prev_page_url %}<link rel="prev" href="{{ page.prev_page_url | prepend: site.baseurl | prepend: site.url }}">{% endif %}
+  {% if page.prev_next_url %}<link rel="next" href="{{ page.prev_next_url | prepend: site.baseurl | prepend: site.url }}">{% endif %}
+ 
+  <script type="text/javascript">
+  {% if page.prev_page_url %}
+  var prev_page_url = "{{ page.prev_page_url | prepend: site.baseurl | prepend: '/' }}";
+  var prev_page_title = "{{ page.prev_page_title }}";
+  {% endif %}
+  {% if page.next_page_url %}
+  var next_page_url = "{{ page.next_page_url | prepend: site.baseurl | prepend: '/' }}";
+  var next_page_title = "{{ page.next_page_title }}";
+  {% else %}
+  var next_page_url = "{{ "introduction.html" | prepend: site.baseurl | prepend: '/' }}";
+  var next_page_title = "Introduction";
+  {% endif %} 
+  </script>
 </head>
