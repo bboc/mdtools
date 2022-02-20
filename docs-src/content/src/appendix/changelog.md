@@ -1,11 +1,15 @@
 ## Changelog
 
+
 ### v2.1.0 (2022-02-xx)
 
 -   Searchable index creation
 -   integration of Bootstrap 4
 -   better and more responsive website layout
 -   better rendering of summaries for ePub and site
+-   nicer navigation buttons
+-   removed support for _read-next-navigation_ and _read-next-shortcuts_ (because that can be achieved via CSS and editing the templates)
+
 
 ### v2.0.2 (2021-09-28)
 
@@ -20,10 +24,11 @@
 -   added Deckset renderer
 -   added new glossary format for HTML: definition lists (CSS-class: glossary)
 -   added new config-variables:
-    -   read-next-navigation (true | false (default)): add navigation below content pages
-    -   read-next-shortcuts ((true | false (default)))
+    -   read-next-navigation (default: false): add navigation below content pages
+    -   read-next-shortcuts (default: false)
 -   added support for included/skipping content blocks in specific formats, presets or editions
 -   cleaner code
+
 
 ### v2.0.0 (2021-02-03)
 
@@ -37,9 +42,11 @@
 -   much simpler and cleaner code
 -   **note**: for now, `mdtools` no longer supports building slide decks. This might be re-added later.
 
+
 ### March 2019
 
 * added command-line parameter --glossary-style for rendering glossary links in various formats, see documentation for details
+
 
 ### August 2018
 
@@ -48,22 +55,27 @@
 * added section links and overlays for glossary terms
 * added basic tests for all output formats of `mdslides`
 
+
 ### May 2018
 
 * added a new sub-command 'templates' to `mdslides` to insert variables and translations into template files
  
+
 ### February 2018
 
 * added commands to build e-books (ePub and PDF from LaTex)
+
 
 ### January 2018
 
 * added basic section navigation to Jekyll site
 * added translatable index and localization for Jekyll site
 
+
 ### November 2017
 
 * added support for glossaries
+
 
 ### September 2017
 
