@@ -1,5 +1,9 @@
 ---
 title: "Markdown Cheat-Sheet and Theme Checker"
+next_page_title: "License"
+next_page_url: "license.html"
+prev_page_title: "Alphabetical List Of All Pages"
+prev_page_url: "site-index.html"
 ---
 
 
@@ -121,17 +125,3 @@ Morbi tempus iaculis urna id volutpat. Nec sagittis aliquam malesuada bibendum a
 Tortor vitae purus faucibus ornare suspendisse sed nisi lacus sed. Congue eu consequat ac felis donec et. Ut tellus elementum sagittis vitae et leo. Sollicitudin tempor id eu nisl nunc. _A lacus vestibulum sed arcu non odio euismod lacinia at_. Tellus mauris a diam maecenas sed. Elementum facilisis leo vel fringilla est ullamcorper. Leo a diam sollicitudin tempor id eu. Sed cras ornare arcu dui vivamus arcu felis. Viverra mauris in aliquam sem fringilla ut morbi. In massa tempor nec feugiat nisl pretium fusce id velit. Nisi porta lorem mollis aliquam ut. Enim facilisis gravida neque convallis a cras semper auctor. Vitae congue mauris rhoncus aenean vel elit scelerisque mauris pellentesque.
 
 Cras sed felis eget velit aliquet sagittis. Ut diam quam nulla porttitor massa. Risus sed vulputate odio ut enim blandit volutpat maecenas volutpat. Arcu bibendum at varius vel pharetra vel turpis nunc eget. Nec feugiat in fermentum posuere urna nec tincidunt praesent semper. Mauris rhoncus aenean vel elit scelerisque mauris. In hac habitasse platea dictumst. Risus pretium quam vulputate dignissim suspendisse in est ante in. Dictum varius duis at consectetur lorem donec massa. Orci porta non pulvinar neque laoreet. Orci ac auctor augue mauris.
-
-
-<div class="bottom-nav">
-<a href="site-index.html" title="Back to: Alphabetical List Of All Pages">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="license.html" title="Read next: License">▶ Read next: License</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'license.html';
-    return false;
-});
-</script>
-

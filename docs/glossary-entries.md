@@ -1,5 +1,9 @@
 ---
 title: "Glossary"
+next_page_title: "Section Links"
+next_page_url: "section-links.html"
+prev_page_title: "Features"
+prev_page_url: "features.html"
 ---
 
 
@@ -42,17 +46,3 @@ Variables in the template are:
 - **term**: the glossary term (identifier in the glossary yaml file)
 - **name**: the name of the glossary term in the yaml file)
 - **description**: the description of the glossary term
-
-
-<div class="bottom-nav">
-<a href="features.html" title="Up: Features">▲</a> <a href="section-links.html" title="Read next: Section Links">▶ Read next: Section Links</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'section-links.html';
-    return false;
-});
-</script>
-

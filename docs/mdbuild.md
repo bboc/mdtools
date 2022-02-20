@@ -1,5 +1,9 @@
 ---
 title: "mdbuild"
+next_page_title: "mdslides"
+next_page_url: "mdslides.html"
+prev_page_title: "Makefile and Tempfolder"
+prev_page_url: "makefile-and-temp-folder.html"
 ---
 
 
@@ -8,18 +12,4 @@ title: "mdbuild"
 
 Usage: see `mdbuild -h`
 
-
-
-
-<div class="bottom-nav">
-<a href="makefile-and-temp-folder.html" title="Back to: Makefile and Tempfolder">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="mdslides.html" title="Read next: mdslides">▶ Read next: mdslides</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'mdslides.html';
-    return false;
-});
-</script>
 

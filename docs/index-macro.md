@@ -1,5 +1,9 @@
 ---
 title: "The Index Macro"
+next_page_title: "Index demo: Summaries"
+next_page_url: "index-demo-summary.html"
+prev_page_title: "Macros"
+prev_page_url: "macros.html"
 ---
 
 
@@ -19,18 +23,4 @@ Parameters:
 -   only: jekyll
 -   sort: sort index by node attribute, e.g. title 
 - force_format: force a specific format (e.g. plain)
-
-
-
-<div class="bottom-nav">
-<a href="macros.html" title="Up: Macros">▲</a> <a href="index-demo-summary.html" title="Read next: Index demo: Summaries">▶ Read next: Index demo: Summaries</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'index-demo-summary.html';
-    return false;
-});
-</script>
 

@@ -12,7 +12,6 @@
         <nav class="main-nav col-sm-3 col-12">
           {% include menu.html %}
         </nav>
-
         <div class="content-container col-sm-9 col-12">
           {{ content }}
         </div>
@@ -31,8 +30,6 @@
 
     <script>
 
-      $('[data-toggle="tooltip"]').tooltip({html: true, placement: 'bottom'})
-      
       function setAnnotationHref() {
         document.getElementById("annotate-link").href = "https://via.hypothes.is/" + self.document.location.href;
       }
@@ -41,10 +38,34 @@
           document.getElementById("annotate-span").style.visibility = 'hidden';
         }
       }
+      //setup annotations
       function setupAnnotations() {
         setAnnotationHref();
         hideWhenAnnotating();
       }
-    </script>
+
+      $(function() { 
+        // setup tooltips
+        $('[data-toggle="tooltip"]').tooltip({html: true, placement: 'bottom'})
+      
+        // setup prev and next navigation buttons
+        if (typeof next_page_url !== 'undefined') {
+              $("#next-page").attr("href", next_page_url);
+              $("#next-page").attr("title", next_page_title);
+              $("#icon-next").attr("title", next_page_title);
+        } else {
+          $("#next-page").hide()
+        }
+        if (typeof prev_page_url !== 'undefined') {
+              $("#prev-page").attr("href", prev_page_url);
+              $("#prev-page").attr("title", prev_page_title);
+              $("#icon-prev").attr("title", prev_page_title);
+        } else {
+          $("#prev-page").hide()
+        }
+        <!-- Go: Previous Page
+  
+      });
+  </script>
   </body>
 </html>

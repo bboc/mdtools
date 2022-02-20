@@ -1,10 +1,14 @@
 ---
 title: "Styles and Other Assets"
+next_page_title: "Styles and Assets for Jekyll/GitHub Pages"
+next_page_url: "jekyll-builds.html"
+prev_page_title: "mdimg"
+prev_page_url: "mdimg.html"
 ---
 
 
-<summary>The various output formats require certain styles and other assets, this part of the documentation explains where goes what.</summary>
-
+<div class="card summary"><div class="card-body">The various output formats require certain styles and other assets, this part of the documentation explains where goes what.
+</div></div>
 Since this documentation makes use of all those formats, so you can find everything described here this repository.
 
 
@@ -16,17 +20,3 @@ Since this documentation makes use of all those formats, so you can find everyth
   <dt><a href="reveal.js-builds.html">Styles and Assets for reveal.js Builds</a></dt>
   <dd></dd>
 </dl>
-
-
-<div class="bottom-nav">
-<a href="mdimg.html" title="Back to: mdimg">◀</a> <a href="jekyll-builds.html" title="Read next: Styles and Assets for Jekyll/GitHub Pages">▶ Read next: Styles and Assets for Jekyll/GitHub Pages</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'jekyll-builds.html';
-    return false;
-});
-</script>
-

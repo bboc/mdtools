@@ -1,5 +1,9 @@
 ---
 title: "Alphabetical List Of All Pages"
+next_page_title: "Markdown Cheat-Sheet and Theme Checker"
+next_page_url: "markdown-cheat-sheet.html"
+prev_page_title: "Changelog"
+prev_page_url: "changelog.html"
 ---
 
 
@@ -24,7 +28,7 @@ title: "Alphabetical List Of All Pages"
   <dd></dd>
 
   <dt><a href="styles-and-assets.html">Styles and Other Assets</a></dt>
-  <dd></dd>
+  <dd><p>The various output formats require certain styles and other assets, this part of the documentation explains where goes what.</p></dd>
 
   <dt><a href="translation.html">Translation</a></dt>
   <dd></dd>
@@ -32,17 +36,3 @@ title: "Alphabetical List Of All Pages"
   <dt><a href="introduction.html">What is this?</a></dt>
   <dd></dd>
 </dl>
-
-
-<div class="bottom-nav">
-<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="markdown-cheat-sheet.html" title="Read next: Markdown Cheat-Sheet and Theme Checker">▶ Read next: Markdown Cheat-Sheet and Theme Checker</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'markdown-cheat-sheet.html';
-    return false;
-});
-</script>
-

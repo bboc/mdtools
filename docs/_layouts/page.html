@@ -11,4 +11,13 @@ layout: default
     {{ content }}
   </div>
 
+  <div class="bottom-nav">
+
+    {% if page.prev_page_url %}
+    <a href="{{ page.prev_page_url }}" class="navigation navigation-prev" id="prev-page" title="{{ page.prev_page_title }}"><img src="/icons/angle-left-b.svg" height="40px" class="icon navicon icon-prev" title="{{ page.prev_page_title}}" /></a>
+    {% endif %}
+    {% if page.next_page_url %}
+    <a href="{{ page.next_page_url}}" class="navigation navigation-next " id="next-page" title="{{ page.next_page_title }}"><img src="/icons/angle-right-b.svg" height="40px" class="icon navicon icon-next" title="{{ page.next_page_title}}" />Read next: {{ page.next_page_title }}</a>
+    {% endif %}
+  </div>
 </article>

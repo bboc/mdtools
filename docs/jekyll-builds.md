@@ -1,5 +1,9 @@
 ---
 title: "Styles and Assets for Jekyll/GitHub Pages"
+next_page_title: "Styles and Assets for reveal.js Builds"
+next_page_url: "reveal.js-builds.html"
+prev_page_title: "Styles and Other Assets"
+prev_page_url: "styles-and-assets.html"
 ---
 
 
@@ -13,17 +17,3 @@ Unless it's replaced at build time via an entry in `config.presets.templates`, t
 - `menu`: files related to smartmenus
 
 see the [Jekyll documentation](https://jekyllrb.com/docs/structure/) for more information.
-
-
-<div class="bottom-nav">
-<a href="styles-and-assets.html" title="Up: Styles and Other Assets">▲</a> <a href="reveal.js-builds.html" title="Read next: Styles and Assets for reveal.js Builds">▶ Read next: Styles and Assets for reveal.js Builds</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'reveal.js-builds.html';
-    return false;
-});
-</script>
-

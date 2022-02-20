@@ -1,5 +1,9 @@
 ---
 title: "A searchable index"
+next_page_title: "The Menu Macro"
+next_page_url: "menu-macro.html"
+prev_page_title: "Index demo: Summaries"
+prev_page_url: "index-demo-summary.html"
 ---
 
 
@@ -18,18 +22,4 @@ This obviously doesn't make sense in an ebook.
 - [Styles and Other Assets](styles-and-assets.html)
 - [Translation](translation.html)
 - [What is this?](introduction.html)
-
-
-
-<div class="bottom-nav">
-<a href="index-demo-summary.html" title="Back to: Index demo: Summaries">◀</a> <a href="macros.html" title="Up: Macros">▲</a> <a href="menu-macro.html" title="Read next: The Menu Macro">▶ Read next: The Menu Macro</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'menu-macro.html';
-    return false;
-});
-</script>
 

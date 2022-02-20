@@ -1,5 +1,9 @@
 ---
 title: "The Menu Macro"
+next_page_title: "Commands"
+next_page_url: "commands.html"
+prev_page_title: "A searchable index"
+prev_page_url: "index-demo-searchable.html"
 ---
 
 
@@ -8,17 +12,3 @@ title: "The Menu Macro"
 for use in templates.
 
 Code: &#0123;&#0123;html-menu&#0125;&#0125;
-
-
-<div class="bottom-nav">
-<a href="index-demo-searchable.html" title="Back to: A searchable index">◀</a> <a href="macros.html" title="Up: Macros">▲</a> <a href="commands.html" title="Read next: Commands">▶ Read next: Commands</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'commands.html';
-    return false;
-});
-</script>
-

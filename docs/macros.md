@@ -1,5 +1,9 @@
 ---
 title: "Macros"
+next_page_title: "The Index Macro"
+next_page_url: "index-macro.html"
+prev_page_title: "Templates"
+prev_page_url: "templates.html"
 ---
 
 
@@ -39,18 +43,4 @@ Example: the index below is rendered via &#0123;&#0123;index:root=indexes,sort=t
 - [The Index Macro](index-macro.html)
 - [The Menu Macro](menu-macro.html)
 
-
-
-
-<div class="bottom-nav">
-<a href="templates.html" title="Back to: Templates">◀</a> <a href="index-macro.html" title="Read next: The Index Macro">▶ Read next: The Index Macro</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'index-macro.html';
-    return false;
-});
-</script>
 
