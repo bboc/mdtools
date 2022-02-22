@@ -5,100 +5,22 @@ mdtools 2.x:
 	- section links could be lowercased before rendering???
 	- check out how Javascript Tutorial handles translations of illustrations, they solve the exact same problem we do 
 		https://github.com/javascript-tutorial/server
-	Convert Layout to bootstrap:
-		use bootstrap 4 first because that works with jQuery and smartmenus, then see about bootstrap5 (which *should* also work)
-		Notes for adaptation in projects:
-			- index.html: markup and version text: .small
-			- replace all the css!
-			- test what happens to plain template (pattern map)
-			- make sure texts for prev/next are  added to translation memory
-			- make sure page.html is added to contents/website/_layouts and added to projects.yaml
-			- make sure to upfate menu.html
-		The Basics: @done
-			- add bootstrap 4.5.x (css and media query, css below the site) @done
-			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
-			- add to templates/default.html @done
-			- add to plain.html @done
-		Clean up CSS: @done
-			- update strutude (base / content / layout) and put everything where it needs to be @done
-			- check what is still necessary, and what can go @done
-			- use bootstrap's clearfix where possible @done
-			- fix typography to use bootstrap @done
-			- make sure menu uses proper media queries @done
-			- check _base.scss for othe obsolete things @done
-			- Replace media queries with bootstrap code @done
-		Switch to popper.js for tooltips: @done
-				https://www.geeksforgeeks.org/bootstrap-4-popover/?ref=lbp
-				- add js from https://popper.js.org/ @done
-				- replace styles @done
-				
-		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
-			Overview
-				Menu on the left border of screen, 
-				conten centered and a little wider
-				lightboxes for illustriations on desktop so that they don't mess up the pages
-				simple nav buttons < > around content or below on mobile
-				index.html stays as it is
-			- decide about information to keep in footer, where would that go? @done
-			- fix icons in menu.html (and add  class="icon") @done
-			New Two Column Layout: @done
-				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
-				- Header: convert to grid @done
-				Footer: @done
-					- use grid @done
-					-  make it look good @done
-					- remove superfluous styles @done
-				Menu: @done
-					menu on the left side of screen, with a slightly grey background, and a scrollbar 
-					search-bar for patterns will come on top above the menu
-					menu div gets a scrollbar
-					add note: "published with mdtools"
-					Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
-					smartmenu appears to be working fine as it is
-					- style menu @done
-					- bug: footer must start below menu at all times!! @done
-					- fix menu and content resizing @done
-			Fix typography: @done
-				- Set base font size @done
-				- use .small for footer etc @done
-				- remove all superfluous styles @done
-			Illustrations: @done
-				- Step 1: make  them responsive (simple) @done
-					https://www.geeksforgeeks.org/bootstrap-4-images/?ref=lbp
-				- Step 2: make them nice (takes a bit more effort) @done
-					add lightboxes make sure illustrations don't look like shit because long things are stretched ultrawide
-				e.g. https://mdbootstrap.com/docs/b4/jquery/javascript/lightbox/ deactivates on mobile automatically, that's nice
-			Cleaner navigation: @done
-				keyboard navigation is now broken, because I moved all javascript down the page
-				quick and dirty solution: render links with id = "nav-next" and "nav-prev" and grab their url via javascript - BUT prev/next is not part of the content but page metadate and should be added to yaml front matter (will appear as global variables in liquid)
-				- make mdbuild add prev/next_page_url and prev/next_page_title to front matter of content @done
-				- add < and > as navigation buttons for next/prev (using new icons) @done
-				- find a way to add first page to navigation so that 'g n' from the homepage leads somewhere @done
-				- setup color and mouseover @done
-				- add to bottom of page so that it looks nice enough @done
-				- map left and right arrow keys to browse quickly through the pages @done
-				- add <link rel="prev"|"next">? to html header? @done
-		- bug: the content area is moved to the left slightly @done
-		- bug: menu button snaps sooner than menu space
 	
-		Cooler website (maybe later):
-			- move menu icon to the right of next to site icons for moother mobile navigation @later
-			- smaller headline and less spacing in header for better mobile view @later 
-			- search for patterns
-			- theme picker (text size, white, sepia, dark theme) via session storage: https://javascript.info/localstorage
-			- responsible map overlay.
-			- keep menu open
-			- look at https://javascript.info/websocket: has nice info boxes and a great searchable tutorial map 
-		Links:
-			the bootstrap site: https://getbootstrap.com 
-			matrial design for botstrap: https://mdbootstrap.com/
-			Intro to bootstrap 4 (free): https://www.geeksforgeeks.org/bootstrap-4-introduction/
-			best practices: https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
-			bootstrap template for jekyll: https://github.com/dpstrange/jekyll-bootstrap
-			Menus in bootstratp 4:
-				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that): https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
-				explanation of html/css for responsive menus (nav element and media queries): https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
-				
+	Cooler website (maybe later):
+		- move menu icon to the right of next to site icons for moother mobile navigation @later
+		- smaller headline and less spacing in header for better mobile view @later @done
+		- search for patterns
+		- theme picker (text size, white, sepia, dark theme) via session storage: https://javascript.info/localstorage
+		- responsible map overlay.
+		- keep menu open
+		- look at https://javascript.info/websocket: has nice info boxes and a great searchable tutorial map 
+			Links (botstrap etc.):
+				matrial design for botstrap: https://mdbootstrap.com/ (probably not necessary)
+				Menus in bootstratp 4:
+					best practices: https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
+					good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that): https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
+					explanation of html/css for responsive menus (nav element and media queries): https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
+					
 	MVP: Responsive Pattern Map:
 		Macro Support: @estimate(30min)
 			- variables:
@@ -250,7 +172,82 @@ mdtools 2.x:
 			simple stuff that goes in the page header, can be configured via _config.yml
 			https://en.wikipedia.org/wiki/Facebook_Platform#Open_Graph_protocol
 			used by facebook, twitter, google, and linkedin: https://stackoverflow.com/questions/10397510/do-services-other-than-facebook-use-open-graph
-Done:
+Done: @done
+	Convert Layout to bootstrap: @done
+		use bootstrap 4 first because that works with jQuery and smartmenus, then see about bootstrap5 (which *should* also work)
+		- bug: menu button snaps sooner than menu space
+		Notes for adaptation in projects:
+			- index.html: markup and version text: .small
+			- replace all the css!
+			- test what happens to plain template (pattern map)
+			- make sure texts for prev/next are  added to translation memory
+			- make sure page.html is added to contents/website/_layouts and added to projects.yaml
+			- make sure to upfate menu.html
+		The Basics: @done
+			- add bootstrap 4.5.x (css and media query, css below the site) @done
+			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
+			- add to templates/default.html @done
+			- add to plain.html @done
+		Clean up CSS: @done
+			- update strutude (base / content / layout) and put everything where it needs to be @done
+			- check what is still necessary, and what can go @done
+			- use bootstrap's clearfix where possible @done
+			- fix typography to use bootstrap @done
+			- make sure menu uses proper media queries @done
+			- check _base.scss for othe obsolete things @done
+			- Replace media queries with bootstrap code @done
+		Switch to popper.js for tooltips: @done
+				https://www.geeksforgeeks.org/bootstrap-4-popover/?ref=lbp
+				- add js from https://popper.js.org/ @done
+				- replace styles @done
+				
+		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
+			Overview
+				Menu on the left border of screen, 
+				conten centered and a little wider
+				lightboxes for illustriations on desktop so that they don't mess up the pages
+				simple nav buttons < > around content or below on mobile
+				index.html stays as it is
+			- decide about information to keep in footer, where would that go? @done
+			- fix icons in menu.html (and add  class="icon") @done
+			New Two Column Layout: @done
+				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
+				- Header: convert to grid @done
+				Footer: @done
+					- use grid @done
+					-  make it look good @done
+					- remove superfluous styles @done
+				Menu: @done
+					menu on the left side of screen, with a slightly grey background, and a scrollbar 
+					search-bar for patterns will come on top above the menu
+					menu div gets a scrollbar
+					add note: "published with mdtools"
+					Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
+					smartmenu appears to be working fine as it is
+					- style menu @done
+					- bug: footer must start below menu at all times!! @done
+					- fix menu and content resizing @done
+			Fix typography: @done
+				- Set base font size @done
+				- use .small for footer etc @done
+				- remove all superfluous styles @done
+			Illustrations: @done
+				- Step 1: make  them responsive (simple) @done
+					https://www.geeksforgeeks.org/bootstrap-4-images/?ref=lbp
+				- Step 2: make them nice (takes a bit more effort) @done
+					add lightboxes make sure illustrations don't look like shit because long things are stretched ultrawide
+				e.g. https://mdbootstrap.com/docs/b4/jquery/javascript/lightbox/ deactivates on mobile automatically, that's nice
+			Cleaner navigation: @done
+				keyboard navigation is now broken, because I moved all javascript down the page
+				quick and dirty solution: render links with id = "nav-next" and "nav-prev" and grab their url via javascript - BUT prev/next is not part of the content but page metadate and should be added to yaml front matter (will appear as global variables in liquid)
+				- make mdbuild add prev/next_page_url and prev/next_page_title to front matter of content @done
+				- add < and > as navigation buttons for next/prev (using new icons) @done
+				- find a way to add first page to navigation so that 'g n' from the homepage leads somewhere @done
+				- setup color and mouseover @done
+				- add to bottom of page so that it looks nice enough @done
+				- map left and right arrow keys to browse quickly through the pages @done
+				- add <link rel="prev"|"next">? to html header? @done
+		- bug: the content area is moved to the left slightly @done
 	Styling the summary: @done
 		The summary should not require formatting in the actual summary to make it stand out.
 		- replace strip_summary_tags with summary_format=jekyll/epub/latex/plain (metadata.py!!) @done
