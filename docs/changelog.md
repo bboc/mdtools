@@ -8,9 +8,8 @@ prev_page_url: "glossary.html"
 
 
 
-### v2.1.0 (2022-02-xx)
+### v2.1.0 (2022-02-22)
 
--   Searchable index creation
 -   integration of Bootstrap 4
 -   better and more responsive website layout
 -   better rendering of summaries for ePub and site
