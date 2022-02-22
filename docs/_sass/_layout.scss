@@ -45,6 +45,7 @@
         }     
     }
 }
+
 .main-nav {
     $main-nav-width: 230px;
     float: left;
@@ -61,11 +62,7 @@
 //
 // Content
 // --------------------------------------------------------------------------
-
 .content-container {
-    //display: block;
-    //overflow: hidden;
-
     float: right;
     padding-right: $spacing-unit;
     padding-left: $spacing-unit;
@@ -73,7 +70,7 @@
 
 article.post {
     max-width: $content-max-width;
-    margin-top: $spacing-unit / 2 ;
+    margin-top: $spacing-unit / 2;
     margin-left: auto;
     margin-right: auto;
 
@@ -105,14 +102,12 @@ article.post {
 //
 // Footer
 // --------------------------------------------------------------------------
-
 .site-footer {
     margin-top: $spacing-unit / 2;
     .footer-top {
         padding-top: $spacing-unit / 2;
         padding-bottom: $spacing-unit / 2;
     }
-
     .footer-col-bottom-right {
         text-align: right;
         @include media-breakpoint-down(sm) {
