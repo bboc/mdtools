@@ -9,7 +9,6 @@ $base-font-size:   14px;
 //maximum with of the content box
 $content-max-width: 800px;
 
-// TODO: there must be a Bootrstrap way to achieve this…
 $spacing-unit:     30px;
 
 $text-color:       #111;
@@ -49,15 +48,15 @@ $headline-color:   $grey-color-dark;
     "zoomify"
 ;
 
-//Responsive containers: 100% wide until specified breakpoint is reached, after that max-widths
+//Responsive containers: 100% wide until specified breakpoint is reached, after that max-width:
 //.container-sm / .container-md / .container-lg / .container-xl
 // Responsive breakpoints:
 // xs <576px / sm ≥576px / md ≥768px / lg ≥992px / xl ≥1200px
-// Small devices (landscape phones, 576px and up)
-@include media-breakpoint-up(sm) { }
-// Small devices (landscape phones, less than 768px)
-@include media-breakpoint-down(sm) { }
-// Small devices (landscape phones, 576px and up)
-@include media-breakpoint-only(sm) { }
-// Apply styles starting from medium devices and up to extra large devices
-@include media-breakpoint-between(md, xl) { }
+// Small devices (landscape phones, 576px and up):
+// @include media-breakpoint-up(sm) { }
+// Small devices (landscape phones, less than 768px):
+// @include media-breakpoint-down(sm) { }
+// Small devices (landscape phones, 576px and up):
+// @include media-breakpoint-only(sm) { }
+// Apply styles starting from medium devices and up to extra large devices:
+// @include media-breakpoint-between(md, xl) { }
