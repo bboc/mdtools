@@ -1,5 +1,9 @@
 ---
 title: "Glossary"
+next_page_title: "Changelog"
+next_page_url: "changelog.html"
+prev_page_title: "Appendix"
+prev_page_url: "appendix.html"
 ---
 
 
@@ -14,18 +18,4 @@ title: "Glossary"
 
 
 
-
-
-
-<div class="bottom-nav">
-<a href="appendix.html" title="Up: Appendix">▲</a> <a href="changelog.html" title="">▶ Read next: Changelog</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'changelog.html';
-    return false;
-});
-</script>
 

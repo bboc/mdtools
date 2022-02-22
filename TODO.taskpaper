@@ -2,8 +2,47 @@ mdtools 2.x:
 	see ./proposal-for-mdtools-2.0.md for details (mostly outdated now...)
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
-		
 	- section links could be lowercased before rendering???
+	- check out how Javascript Tutorial handles translations of illustrations, they solve the exact same problem we do 
+		https://github.com/javascript-tutorial/server
+	
+	Cooler website (maybe later):
+		- move menu icon to the right of next to site icons for moother mobile navigation @later
+		- smaller headline and less spacing in header for better mobile view @later @done
+		- search for patterns
+		- theme picker (text size, white, sepia, dark theme) via session storage: https://javascript.info/localstorage
+		- responsible map overlay.
+		- keep menu open
+		- look at https://javascript.info/websocket: has nice info boxes and a great searchable tutorial map 
+			Links (botstrap etc.):
+				matrial design for botstrap: https://mdbootstrap.com/ (probably not necessary)
+				Menus in bootstratp 4:
+					best practices: https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
+					good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that): https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
+					explanation of html/css for responsive menus (nav element and media queries): https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
+					
+	MVP: Responsive Pattern Map:
+		Macro Support: @estimate(30min)
+			- variables:
+					green: #FF0000
+				{{name:$green}} or {{name:var(green)}}
+			- test that variable-name can be correctly substituted in macros and templates (the cfg-object's key is "variable_name")
+		Plugin and Macro Support: @estimate(8h)
+			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
+			- configure plugins globally and per document type
+			- plugins used for a specific document can be configured globally or in the preset 
+			- override and extend plugin list in document type
+			- define parameters per plugin
+			- add preprocessor plugins
+			- refactor S3-specific macros to use plugin architecture
+		Plugin for Clickable Pattern Map: @estimate(4h)
+			As reader of the practical guide, I want a responsive patter map so that I can navigate effortlessly between patterns.
+			- add plugin to create html for pattern map structure
+			- add remplate and JS for pattern map
+			- add css for pattern map
+			- add texts to localization.pot if required 
+		Release the practical guide: @estimate(2h)
+			
 	sync glossary with crowdin:
 		https://realpython.com/api-integration-in-python/ 
 		look at realpython 1/2 pdf
@@ -39,7 +78,7 @@ mdtools 2.x:
 		- add a page for each renderer
 		- set up a separate example project for deckset renderer 
 	Index document can be empty:
-		Asa an author I want to have a directory without an index document, so that I have more flexibility for arranging content into different editions. 
+		As an author I want to have a directory without an index document, so that I have more flexibility for arranging content into different editions. 
 		- what about headline levels? Trade-off might be that those would need to be manually aligned?
 	Support all editions from one structure:
 		Build supporter editon and "normal" editions from the same structure, use a config variable cfg.edition (default: '')
@@ -64,28 +103,6 @@ mdtools 2.x:
 	Fix testsuite:
 		- ensure that all existing tests are running
 		- check that all main features are not only explained but also used in the documentation so that the documentation serves as a test suite
-	MVP: Responsive Pattern Map:
-		Macro Support: @estimate(30min)
-			- variables:
-					green: #FF0000
-				{{name:$green}} or {{name:var(green)}}
-			- test that variable-name can be correctly substituted in macros and templates (the cfg-object's key is "variable_name")
-		Plugin and Macro Support: @estimate(8h)
-			As developer I want a simple plugin API that allows for defining new macros, and access to the preprocessor for preparing required data structures so that I can easily add new behaviour with just a few lines of code
-			- configure plugins globally and per document type
-			- plugins used for a specific document can be configured globally or in the preset 
-			- override and extend plugin list in document type
-			- define parameters per plugin
-			- add preprocessor plugins
-			- refactor S3-specific macros to use plugin architecture
-		Plugin for Clickable Pattern Map: @estimate(4h)
-			As reader of the practical guide, I want a responsive patter map so that I can navigate effortlessly between patterns.
-			- add plugin to create html for pattern map structure
-			- add remplate and JS for pattern map
-			- add css for pattern map
-			- add texts to localization.pot if required 
-		Release the practical guide: @estimate(2h)
-			
 	Redirections: @estimate(6h)
 		As an author, I redirections on my website so that I can re-arrange my content and change titles as I see fit.
 		can simply be released when ready
@@ -97,20 +114,9 @@ mdtools 2.x:
 		- add search
 	Link to Node:
 		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
-	Convert Layout to bootstrap:
-		- add bootstrap 
-		- setup smartmenus to work with bootstrap
-		Links:
-			https://medium.com/better-programming/an-introduction-to-using-jekyll-with-bootstrap-4-6f2433afeda9
-				good explanation how to include bootstrap and inclue a menu (which is not layered, so other code would be required for that)
-			https://getbootstrap.com - the bootstrap site
-			https://inspirationalpixels.com/creating-a-responsive-menu-with-html-css-jquery/
-				explanation of html/css for responsive menus (nav element and media queries)
-			https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212
-				best practices
-			https://github.com/dpstrange/jekyll-bootstrap
-			bootstrap temlate for jekyll
+	
 	Sometimes:
+		-   full support for YAML metadata in Markdown source files
 		MVP: App with GUI:
 			As author I want a simple app that converts my stuff to so that I don't have to mess with installation and teh commandline.
 			(people would still require to install MacTex, Jekyll, Pandoc etc., though)
@@ -135,7 +141,6 @@ mdtools 2.x:
 					- backup all files in crowdin!
 					- manually move files in crowdin!!!
 					- release
-			
 		Add separate template command: @estimate(2h)
 			cmd_template is working with new config format 
 			requires some thought, because of new config format, running it with full config is a lot of hassle,
@@ -163,7 +168,92 @@ mdtools 2.x:
 					underlines with ulem: http://texdoc.net/texmf-dist/doc/generic/ulem/ulem.pdf
 				undeline in Latex: https://alexwlchan.net/2017/10/latex-underlines/
 			- try https://github.com/fletcher/MultiMarkdown/wiki/MultiMarkdown-Syntax-Guide#glossaries
-Done:
+		Support for Open Graph tags:
+			simple stuff that goes in the page header, can be configured via _config.yml
+			https://en.wikipedia.org/wiki/Facebook_Platform#Open_Graph_protocol
+			used by facebook, twitter, google, and linkedin: https://stackoverflow.com/questions/10397510/do-services-other-than-facebook-use-open-graph
+Done: @done
+	Convert Layout to bootstrap: @done
+		use bootstrap 4 first because that works with jQuery and smartmenus, then see about bootstrap5 (which *should* also work)
+		- bug: menu button snaps sooner than menu space
+		Notes for adaptation in projects:
+			- index.html: markup and version text: .small
+			- replace all the css!
+			- test what happens to plain template (pattern map)
+			- make sure texts for prev/next are  added to translation memory
+			- make sure page.html is added to contents/website/_layouts and added to projects.yaml
+			- make sure to upfate menu.html
+		The Basics: @done
+			- add bootstrap 4.5.x (css and media query, css below the site) @done
+			see https://getbootstrap.com/docs/4.0/getting-started/introduction/
+			- add to templates/default.html @done
+			- add to plain.html @done
+		Clean up CSS: @done
+			- update strutude (base / content / layout) and put everything where it needs to be @done
+			- check what is still necessary, and what can go @done
+			- use bootstrap's clearfix where possible @done
+			- fix typography to use bootstrap @done
+			- make sure menu uses proper media queries @done
+			- check _base.scss for othe obsolete things @done
+			- Replace media queries with bootstrap code @done
+		Switch to popper.js for tooltips: @done
+				https://www.geeksforgeeks.org/bootstrap-4-popover/?ref=lbp
+				- add js from https://popper.js.org/ @done
+				- replace styles @done
+				
+		Quick and dirty redesign with bootstrap for a simpler and cleaner look:
+			Overview
+				Menu on the left border of screen, 
+				conten centered and a little wider
+				lightboxes for illustriations on desktop so that they don't mess up the pages
+				simple nav buttons < > around content or below on mobile
+				index.html stays as it is
+			- decide about information to keep in footer, where would that go? @done
+			- fix icons in menu.html (and add  class="icon") @done
+			New Two Column Layout: @done
+				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
+				- Header: convert to grid @done
+				Footer: @done
+					- use grid @done
+					-  make it look good @done
+					- remove superfluous styles @done
+				Menu: @done
+					menu on the left side of screen, with a slightly grey background, and a scrollbar 
+					search-bar for patterns will come on top above the menu
+					menu div gets a scrollbar
+					add note: "published with mdtools"
+					Smartmenu  bootstrap pugin only works for HORIZONTAL navbar menus!
+					smartmenu appears to be working fine as it is
+					- style menu @done
+					- bug: footer must start below menu at all times!! @done
+					- fix menu and content resizing @done
+			Fix typography: @done
+				- Set base font size @done
+				- use .small for footer etc @done
+				- remove all superfluous styles @done
+			Illustrations: @done
+				- Step 1: make  them responsive (simple) @done
+					https://www.geeksforgeeks.org/bootstrap-4-images/?ref=lbp
+				- Step 2: make them nice (takes a bit more effort) @done
+					add lightboxes make sure illustrations don't look like shit because long things are stretched ultrawide
+				e.g. https://mdbootstrap.com/docs/b4/jquery/javascript/lightbox/ deactivates on mobile automatically, that's nice
+			Cleaner navigation: @done
+				keyboard navigation is now broken, because I moved all javascript down the page
+				quick and dirty solution: render links with id = "nav-next" and "nav-prev" and grab their url via javascript - BUT prev/next is not part of the content but page metadate and should be added to yaml front matter (will appear as global variables in liquid)
+				- make mdbuild add prev/next_page_url and prev/next_page_title to front matter of content @done
+				- add < and > as navigation buttons for next/prev (using new icons) @done
+				- find a way to add first page to navigation so that 'g n' from the homepage leads somewhere @done
+				- setup color and mouseover @done
+				- add to bottom of page so that it looks nice enough @done
+				- map left and right arrow keys to browse quickly through the pages @done
+				- add <link rel="prev"|"next">? to html header? @done
+		- bug: the content area is moved to the left slightly @done
+	Styling the summary: @done
+		The summary should not require formatting in the actual summary to make it stand out.
+		- replace strip_summary_tags with summary_format=jekyll/epub/latex/plain (metadata.py!!) @done
+		- wrap summary in <p class="well(-sm)> and add styles for page and epub, remove ** @done
+		- wrap summary in ** for LaTeX output if it isn't already (because that won't break anything), but a nice box would actualle be the thing to do @done
+		- fix tests!!! @done
 	MVP 1: New Structure, Menu and CSF: @done
 		After the first milestone, the Common Sense Framework can be integrated into the practical guide.
 		This release affects crowdin! @priority

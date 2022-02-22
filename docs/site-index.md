@@ -1,5 +1,9 @@
 ---
 title: "Alphabetical List Of All Pages"
+next_page_title: "Markdown Cheat-Sheet and Theme Checker"
+next_page_url: "markdown-cheat-sheet.html"
+prev_page_title: "Changelog"
+prev_page_url: "changelog.html"
 ---
 
 
@@ -20,23 +24,15 @@ title: "Alphabetical List Of All Pages"
   <dt><a href="formats.html">Formats</a></dt>
   <dd></dd>
 
+  <dt><a href="macros.html">Macros</a></dt>
+  <dd></dd>
+
+  <dt><a href="styles-and-assets.html">Styles and Other Assets</a></dt>
+  <dd><p>The various output formats require certain styles and other assets, this part of the documentation explains where goes what.</p></dd>
+
   <dt><a href="translation.html">Translation</a></dt>
   <dd></dd>
 
   <dt><a href="introduction.html">What is this?</a></dt>
   <dd></dd>
 </dl>
-
-
-<div class="bottom-nav">
-<a href="changelog.html" title="Back to: Changelog">◀</a> <a href="appendix.html" title="Up: Appendix">▲</a> <a href="license.html" title="">▶ Read next: License</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'license.html';
-    return false;
-});
-</script>
-

@@ -1,5 +1,9 @@
 ---
 title: "Defining the Project Structure"
+next_page_title: "Configuration"
+next_page_url: "configuration.html"
+prev_page_title: "Data Structure"
+prev_page_url: "data-structure.html"
 ---
 
 
@@ -45,18 +49,4 @@ foorbar/foobar_index.md
 </pre>
 
 Pick a style that makes sense for your usecase.
-
-
-
-<div class="bottom-nav">
-<a href="data-structure.html" title="Up: Data Structure">▲</a> <a href="configuration.html" title="">▶ Read next: Configuration</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'configuration.html';
-    return false;
-});
-</script>
 

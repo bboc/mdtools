@@ -1,5 +1,9 @@
 ---
 title: "Makefile and Tempfolder"
+next_page_title: "mdbuild"
+next_page_url: "mdbuild.html"
+prev_page_title: "Commands"
+prev_page_url: "commands.html"
 ---
 
 
@@ -13,18 +17,4 @@ A good practice way for bringing together preprocessing and rendering the final 
 2. remove or comment the target formats that are not required
 
 Then you can run `make <format>` to test one specific format, and `source build.sh` for a clean build of all formats. 
-
-
-
-<div class="bottom-nav">
-<a href="commands.html" title="Up: Commands">▲</a> <a href="mdbuild.html" title="">▶ Read next: mdbuild</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'mdbuild.html';
-    return false;
-});
-</script>
 

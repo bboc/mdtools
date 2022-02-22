@@ -1,5 +1,9 @@
 ---
 title: "mdslides"
+next_page_title: "mdimg"
+next_page_url: "mdimg.html"
+prev_page_title: "mdbuild"
+prev_page_url: "mdbuild.html"
 ---
 
 
@@ -14,18 +18,4 @@ title: "mdslides"
 * `skeleton` parses a config file and creates folders for chapters and files for sections
 * `deckset-index` (deprecated) build a translatable index file (the new config format will make this obsolete)
 * 'template' Inject translations (and optionally parameters from a config) into a template file.
-
-
-
-<div class="bottom-nav">
-<a href="mdbuild.html" title="Back to: mdbuild">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="mdimg.html" title="">▶ Read next: mdimg</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'mdimg.html';
-    return false;
-});
-</script>
 

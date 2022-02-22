@@ -1,21 +1,11 @@
 ---
 title: "Configuration"
+next_page_title: "Templates"
+next_page_url: "templates.html"
+prev_page_title: "Defining the Project Structure"
+prev_page_url: "structure-definition.html"
 ---
 
 
 TODO: describe config format
-
-
-
-<div class="bottom-nav">
-<a href="structure-definition.html" title="Back to: Defining the Project Structure">◀</a> <a href="data-structure.html" title="Up: Data Structure">▲</a> <a href="templates.html" title="">▶ Read next: Templates</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'templates.html';
-    return false;
-});
-</script>
 

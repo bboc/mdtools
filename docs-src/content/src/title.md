@@ -4,5 +4,5 @@
 
 # A Toolkit for Markdown Content
 
-#### Turn your content into slide decks, ebooks and websites
+#### Publish the same content as slide decks, ebooks and websites.
 #### <https://github.com/bboc/mdtools>

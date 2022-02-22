@@ -1,5 +1,9 @@
 ---
 title: "mdimg"
+next_page_title: "Styles and Other Assets"
+next_page_url: "styles-and-assets.html"
+prev_page_title: "mdslides"
+prev_page_url: "mdslides.html"
 ---
 
 
@@ -15,18 +19,4 @@ The only prerequsite is that each image has an unique filename.
 
 Usage: see `mdimg -h`
 
-
-
-
-<div class="bottom-nav">
-<a href="mdslides.html" title="Back to: mdslides">◀</a> <a href="commands.html" title="Up: Commands">▲</a> <a href="translation.html" title="">▶ Read next: Translation</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'translation.html';
-    return false;
-});
-</script>
 

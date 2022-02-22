@@ -1,18 +1,8 @@
 ---
 title: "Features"
+next_page_title: "Glossary"
+next_page_url: "glossary-entries.html"
+prev_page_title: "Jekyll"
+prev_page_url: "jekyll.html"
 ---
-
-
-
-<div class="bottom-nav">
-<a href="jekyll.html" title="Back to: Jekyll">◀</a> <a href="glossary-entries.html" title="">▶ Read next: Glossary</a>
-</div>
-
-
-<script type="text/javascript">
-Mousetrap.bind('g n', function() {
-    window.location.href = 'glossary-entries.html';
-    return false;
-});
-</script>
 

@@ -80,7 +80,7 @@ def _processed_template(mode, src, dest):
                 glossary.get_glossary_link_processor('tooltip'),
             ])
             if mode == 'markdown':
-                renderer.add_filter(filters.jekyll_front_matter)
+                renderer.add_filter(partial(filters.jekyll_front_matter, None))
             renderer.add_filter(partial(filters.write, target))
             renderer.render()
 

@@ -29,19 +29,20 @@ class ImageRepo(object):
         self.missing_counter = defaultdict(lambda: defaultdict(int))
 
         self.languages = self._find_languages()
+
         self._build_repo_structure()
 
     class DuplicateImageException(Exception):
         def message(self, path, line_number):
             return dedent("""
                 ambiguous image reference in "{}", line {}:
-                "{}" --> "{}" """).format(path, line_number, self[0], repr(self[1]))
+                "{}" --> "{}" """).format(path, line_number, self.args[0], repr(self.args[1]))
 
     class ImageNotFoundException(Exception):
         def message(self, path, line_number):
             return dedent("""
                 image not found in file "{}", line {}:
-                image reference: "{}" """).format(path, line_number, self[0])
+                image reference: "{}" """).format(path, line_number, self.args[0])
 
     def _find_languages(self):
         # TODO: there must be a better way than using os.walk this way?
