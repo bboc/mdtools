@@ -41,7 +41,7 @@ mdtools 2.x:
 				index.html stays as it is
 			- decide about information to keep in footer, where would that go? @done
 			- fix icons in menu.html (and add  class="icon") @done
-			New Two Column Layout:
+			New Two Column Layout: @done
 				- content is centered, but with maximum size (see https://www.geeksforgeeks.org/bootstrap-4-holy-grail-layout/?ref=lbp) @done
 				- Header: convert to grid @done
 				Footer: @done
@@ -62,10 +62,10 @@ mdtools 2.x:
 				- Set base font size @done
 				- use .small for footer etc @done
 				- remove all superfluous styles @done
-			Illustrations:
-				- Step 1: make  them responsive (simple)
+			Illustrations: @done
+				- Step 1: make  them responsive (simple) @done
 					https://www.geeksforgeeks.org/bootstrap-4-images/?ref=lbp
-				- Step 2: make them nice (takes a bit more effort) 
+				- Step 2: make them nice (takes a bit more effort) @done
 					add lightboxes make sure illustrations don't look like shit because long things are stretched ultrawide
 				e.g. https://mdbootstrap.com/docs/b4/jquery/javascript/lightbox/ deactivates on mobile automatically, that's nice
 			Cleaner navigation: @done
@@ -78,13 +78,15 @@ mdtools 2.x:
 				- add to bottom of page so that it looks nice enough @done
 				- map left and right arrow keys to browse quickly through the pages @done
 				- add <link rel="prev"|"next">? to html header? @done
+		- bug: the content area is moved to the left slightly @done
+		- bug: menu button snaps sooner than menu space
 	
 		Cooler website (maybe later):
 			- move menu icon to the right of next to site icons for moother mobile navigation @later
 			- smaller headline and less spacing in header for better mobile view @later 
 			- search for patterns
 			- theme picker (text size, white, sepia, dark theme) via session storage: https://javascript.info/localstorage
-			- responsible map overlay... 
+			- responsible map overlay.
 			- keep menu open
 			- look at https://javascript.info/websocket: has nice info boxes and a great searchable tutorial map 
 		Links:

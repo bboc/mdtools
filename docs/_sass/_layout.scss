@@ -7,8 +7,6 @@
 // --------------------------------------------------------------------------/**
 .icon {
 
-
-
 }
 
 .site-header {
@@ -45,14 +43,18 @@
             height: 25px;}     
     }
 }
-
 .main-nav {
+    $main-nav-width: 230px;
     float: left;
+    -ms-flex: 0 0 $main-nav-width;
+    flex: 0 0 $main-nav-width;
+
+    min-width: 300px;
     @include media-breakpoint-down(sm) {
-        min-width: 300px;
     }
     a img { 
-        height: 25px;}  
+        height: 25px;
+    }  
 }
 
 //
