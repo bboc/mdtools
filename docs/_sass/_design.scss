@@ -17,6 +17,10 @@
         font-weight: 300;
         letter-spacing: -1px;
 
+        @include media-breakpoint-down(sm) {
+            font-size: 20px;
+        }
+
         &,
         &:visited {
             color: $headline-color;

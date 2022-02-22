@@ -5,10 +5,6 @@
 //
 // Site header
 // --------------------------------------------------------------------------/**
-.icon {
-
-}
-
 .site-header {
     border-top: 5px solid $grey-color-dark;
     border-bottom: 2px solid $grey-color-light;
@@ -24,6 +20,11 @@
     .header-title, .header-icons {
         margin-bottom: $spacing-unit / 2;
         padding-top: $spacing-unit / 2;
+        @include media-breakpoint-down(sm) {
+            margin-bottom: $spacing-unit / 4;
+            padding-top: 0px;
+
+        }
     }
 
     .header-title {
@@ -36,11 +37,12 @@
         float: right;
         text-align: right;
         @include media-breakpoint-down(sm) {
-            text-align: left;
-            min-width: 300px;
-        }   
-        a img { 
-            height: 25px;}     
+            //text-align: left;
+            //min-width: 300px;
+        }
+        a img.icon { 
+            height: 25px;
+        }     
     }
 }
 .main-nav {
@@ -50,10 +52,9 @@
     flex: 0 0 $main-nav-width;
 
     min-width: 300px;
-    @include media-breakpoint-down(sm) {
-    }
+    // icons in the submenu:
     a img { 
-        height: 25px;
+        height: 22px;
     }  
 }
 
