@@ -2,9 +2,13 @@ mdtools 2.x:
 	see ./proposal-for-mdtools-2.0.md for details (mostly outdated now...)
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
+	- fix gitHub page: 
+		- all assets must must prepend baseurl (e.g. "/mdtools"): like so: {{ "/assets/style.css" | relative_url }} @done(22-02-24)
+		- all links must know baseurl??? -> this must remain broken for now, because that means adding code in several places, and figuring out a way to handle local preview and publishing, maybe di that together with redirect and page structure that reflects the content structure?
 	- section links could be lowercased before rendering???
 	- check out how Javascript Tutorial handles translations of illustrations, they solve the exact same problem we do 
 		https://github.com/javascript-tutorial/server
+	- add a chapter in the docs about the enhancement of mdtools and move the enhancement proposal for 2.0 as well as large parts of this document there, and only keep this taskpaper for current projects and small things and bug tracking
 	
 	Cooler website (maybe later):
 		- move menu icon to the right of next to site icons for moother mobile navigation @later
@@ -113,7 +117,7 @@ mdtools 2.x:
 		- add configurable build step for generating redirection files from redirections.yaml
 		- add search
 	Link to Node:
-		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can clock on references in the text, and especially in the list of patterns.
+		As a reader I want links to content nodes in the PDF, the EPUB and the all-in-one webpage, so that I can click on references in the text, and especially in the list of patterns.
 	
 	Sometimes:
 		-   full support for YAML metadata in Markdown source files
