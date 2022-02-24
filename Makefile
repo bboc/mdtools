@@ -20,6 +20,7 @@ serve-site:
 	open http://127.0.0.1:4000/
 	# serve jekyll site
 	cd docs;jekyll serve
+	//cd docs;jekyll serve --baseurl=
 	# release the port if something went wrong:
 	# ps aux |grep jekyll |awk '{print $2}' | xargs kill -9
 

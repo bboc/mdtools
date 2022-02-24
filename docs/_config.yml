@@ -4,7 +4,8 @@ email: bernhard.bockelbrink@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
    A set of commandline tools for creating slide decks, ebooks and websites.
 
-baseurl: "" # subpath of the site, e.g. /blog, ompty otherwise
+baseurl: "" # subpath of the site, e.g. /blog, empty otherwise
+//baseurl: "/mdtools" # subpath of the site, e.g. /blog, empty otherwise
 url: "https://bboc.github.io" # the base hostname & protocol for your site
 keywords: "sociocracy, holacracy, s3, scrum, kanban, agile, lean"
 author: "Bernhard Bockelbrink, James Priest, Liliana David"
