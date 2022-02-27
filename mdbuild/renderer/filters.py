@@ -111,6 +111,9 @@ def jekyll_front_matter(metadata, lines):
     TODO: this should use the library for yaml, insert handcrafted lines of text!
     """
     
+    def escape_quotes(text):
+        return text.replace("\"", "\\\"")
+
     line = next(lines)
     yield FRONT_MATTER_SEPARATOR
     match = HEADLINE_PATTERN.search(line)
@@ -120,13 +123,13 @@ def jekyll_front_matter(metadata, lines):
         pass
     else:
         # escape quotes in title
-        yield FRONT_MATTER_TITLE % title.replace("\"", "\\\"")
+        yield FRONT_MATTER_TITLE % escape_quotes(title)
         line = None
     if metadata:
         # insert parameters into front matter if present
         # preserve order of parameters to avoid random changes in files
         for key in sorted(metadata.keys()):
-            yield '%s: "%s"\n' % (key, metadata[key])
+            yield '%s: "%s"\n' % (key, escape_quotes(metadata[key]))
     yield FRONT_MATTER_SEPARATOR
     yield "\n"
 
