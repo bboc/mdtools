@@ -19,11 +19,11 @@
   <script type="text/javascript">
   {% if page.prev_page_url %}
   var prev_page_url = "{{ page.prev_page_url | relative_url }}";
-  var prev_page_title = "{{ page.prev_page_title }}";
+  var prev_page_title = {{ page.prev_page_title | jsonify }};
   {% endif %}
   {% if page.next_page_url %}
   var next_page_url = "{{ page.next_page_url | relative_url }}";
-  var next_page_title = "{{ page.next_page_title }}";
+  var next_page_title = {{ page.next_page_title | jsonify }};
   {% else %}
   var next_page_url = "{{ "/introduction.html" | relative_url }}";
   var next_page_title = "Introduction";
