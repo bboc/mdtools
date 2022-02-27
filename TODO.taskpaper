@@ -2,6 +2,11 @@ mdtools 2.x:
 	see ./proposal-for-mdtools-2.0.md for details (mostly outdated now...)
 	Order of user stories is relevant for handling dependencies!
 	This update will most likely break the deckset renderer and the reveal.js renderer pretty thoroughly.
+	- first page and (page title in title tag of that link) is hardcoded in html-head.html, that should be a config variable and an entry in the translation memory 
+- 	make sure texts for prev/next are  added to translation memory
+	- bug: images zoom under menu
+	- bug: zoomify/css: icons are not possible in index.html (or anywhere else in the content)
+
 	- fix gitHub page: 
 		- all assets must must prepend baseurl (e.g. "/mdtools"): like so: {{ "/assets/style.css" | relative_url }} @done(22-02-24)
 		- all links must know baseurl??? -> this must remain broken for now, because that means adding code in several places, and figuring out a way to handle local preview and publishing, maybe di that together with redirect and page structure that reflects the content structure?
