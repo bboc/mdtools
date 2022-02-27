@@ -48,9 +48,10 @@ article.post {
     // --------------------------------------------------------------------------
 
     img {
-        vertical-align: middle;
+        width: 80%;
+
         @include media-breakpoint-up(md) {
-            max-width: 80%;
+            //max-width: 60%;
         }
     }
 
