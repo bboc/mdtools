@@ -10,7 +10,7 @@ def read(fname):
 # TODO: make a nicer setup.py from https://github.com/navdeep-G/setup.py
 setup(
     name="mdtools",
-    version='2.1.0',
+    version='2.1.1',
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     install_requires=['polib'],
     author="Bernhard Bockelbrink",

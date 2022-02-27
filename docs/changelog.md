@@ -7,6 +7,9 @@ prev_page_url: "glossary.html"
 ---
 
 
+### v2.1.1 (2022-02-27)
+
+-   a couple of bug fixes
 
 ### v2.1.0 (2022-02-22)
 
