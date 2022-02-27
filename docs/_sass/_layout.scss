@@ -37,8 +37,8 @@
         float: right;
         text-align: right;
         @include media-breakpoint-down(sm) {
-            //text-align: left;
-            //min-width: 300px;
+            text-align: left;
+            min-width: 300px;
         }
         a img.icon { 
             height: 25px;
@@ -48,10 +48,11 @@
 
 .main-nav {
     $main-nav-width: 230px;
+    -ms-flex: 0 0 $main-nav-width;
+    flex: 0 0 $main-nav-width;
     @include media-breakpoint-up(sm) {
         float: left;
-        -ms-flex: 0 0 $main-nav-width;
-        flex: 0 0 $main-nav-width;
+        flex: 0 0 30px;
     // icons in the submenu:
         a img { 
             height: 22px;
