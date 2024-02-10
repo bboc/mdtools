@@ -108,7 +108,7 @@ def jekyll_front_matter(metadata, lines):
     """
     Inject Jekyll front matter.
 
-    TODO: this should use the library for yaml, insert handcrafted lines of text!
+    TODO: this should use the library for yaml, instead of handcrafted lines of text!
     """
     
     def escape_quotes(text):

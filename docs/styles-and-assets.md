@@ -9,6 +9,7 @@ prev_page_url: "mdimg.html"
 
 <div class="card summary"><div class="card-body">The various output formats require certain styles and other assets, this part of the documentation explains where goes what.
 </div></div>
+
 Since this documentation makes use of all those formats, so you can find everything described here this repository.
 
 

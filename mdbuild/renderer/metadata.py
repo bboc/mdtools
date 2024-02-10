@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import re
 from functools import partial
 import logging
+import markdown
 
 from .common import HEADLINE_PATTERN
 
@@ -12,15 +13,17 @@ logger = logging.getLogger(__name__)
 class MetadataFilter(object):
     """Process stream and extract/process metadata (title, summary etc.)"""
 
-    # extracted metadata
+    # extracted metadata (acessed from outside)
     title = None
     summary = None
     metadata = None
-    summary_lines = None
 
-    # store next filter funktion to use
-    filter_function = None
+    # store next filter function to use
+    _filter_function = None
 
+    # internal buffer for summary
+    _summary_lines = None
+    
     METADATA_PATTERN = re.compile(r'\[\:(?P<key>.*?)\]: # \"(?P<value>.*?)\"')
     YAML_METADATA_PATTERN = re.compile(r'(?P<key>.*?):\w+\"(?P<value>.*?)\"')
     
@@ -32,7 +35,7 @@ class MetadataFilter(object):
     SUMMARY_MARKUP = {
         'html': {
             BEGIN_SUMMARY: '<div class="card summary"><div class="card-body">',
-            END_SUMMARY: '</div></div>',
+            END_SUMMARY: '</div></div>\n',
         },    
         'epub': {
             BEGIN_SUMMARY: '<p class="summary">',
@@ -44,7 +47,7 @@ class MetadataFilter(object):
         },
         None: {
             BEGIN_SUMMARY: None,
-            END_SUMMARY: None,
+            END_SUMMARY: '\n',
         },
         'preserve': {
             BEGIN_SUMMARY: BEGIN_SUMMARY,
@@ -67,7 +70,7 @@ class MetadataFilter(object):
             key = match.groupdict()['key']
             value = match.groupdict()['value']
             cls.metadata[key] = value
-            cls.filter_function = cls._header_filter
+            cls._filter_function = cls._header_filter
             return None
 
         elif line.strip().startswith('#'):
@@ -78,17 +81,17 @@ class MetadataFilter(object):
             except AttributeError:
                 logger.warning("title not set")
                 cls.title = ''
-            cls.filter_function = cls._standard_filter
+            cls._filter_function = cls._standard_filter
             return line
 
         elif line.strip() == '':
             # process empty line
             if after_metadata:
-                cls.filter_function = cls._standard_filter
+                cls._filter_function = cls._standard_filter
                 return line
             else:
                 # ignore one blank line
-                cls.filter_function = partial(cls._header_filter, after_metadata=True)
+                cls._filter_function = partial(cls._header_filter, after_metadata=True)
                 return None
         else:
             raise Exception('Metadata must be followed by an empty line!')
@@ -102,16 +105,16 @@ class MetadataFilter(object):
         Transition to standard filter after end of summary.
         """
         if line.strip() == cls.END_SUMMARY:
-            cls.filter_function = cls._standard_filter
+            cls._filter_function = cls._standard_filter
             return cls.SUMMARY_MARKUP[cls.target_format][cls.END_SUMMARY]
         else:
             # remove bold around summary if present
             if line.startswith("**") or line.startswith("__"):
                 sline = line.strip()[2:-2]
             else:
-                sline = line
-            cls.summary_lines.append(sline)
-            cls.summary = '\n'.join(cls.summary_lines)
+                sline = line.strip()
+            cls._summary_lines.append(sline)
+            cls.summary = '\n'.join(cls._summary_lines)
 
             if cls.target_format == 'latex':
                 # wrap summary in bold for latex (for now)
@@ -119,9 +122,13 @@ class MetadataFilter(object):
                 if line.startswith("**") or line.startswith("__"):
                     pass
                 else:
-                    line = "**%s**" % line
-            cls.filter_function = cls._summary_filter
-            return line
+                    line = "**%s**\n\n" % line.strip()
+            cls._filter_function = cls._summary_filter
+            if cls.target_format == "html":
+                # render to markdown (and strip <p>)
+                return markdown.markdown(line)[3:-4] + "\n"
+            else:
+                return line
 
     @classmethod
     def _standard_filter(cls, line):
@@ -131,10 +138,10 @@ class MetadataFilter(object):
         Transition to summary filter on encountering summary tag.
         """
         if line.strip() == cls.BEGIN_SUMMARY:
-            cls.filter_function = cls._summary_filter
+            cls._filter_function = cls._summary_filter
             return cls.SUMMARY_MARKUP[cls.target_format][cls.BEGIN_SUMMARY]
         else:
-            cls.filter_function = cls._standard_filter
+            cls._filter_function = cls._standard_filter
             return line
 
     @classmethod
@@ -169,15 +176,15 @@ class MetadataFilter(object):
         # Initialize all class variables
         cls.title = None
         cls.summary = None
-        cls.summary_lines = []
+        cls._summary_lines = []
         cls.metadata = {}
         cls.target_format = target_format
 
         if target_format not in cls.SUMMARY_MARKUP:
             raise Exception("Error: unknown target_format '%s'" % target_format)
 
-        cls.filter_function = cls._header_filter
+        cls._filter_function = cls._header_filter
         for line in lines:
-            res = cls.filter_function(line)
+            res = cls._filter_function(line)
             if res is not None:
                 yield res

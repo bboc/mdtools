@@ -331,6 +331,7 @@ Usage: see `mdimg -h`
 
 <div class="card summary"><div class="card-body">The various output formats require certain styles and other assets, this part of the documentation explains where goes what.
 </div></div>
+
 Since this documentation makes use of all those formats, so you can find everything described here this repository.
 
 
@@ -389,6 +390,18 @@ If templates contain translatable content, simply store them inside the content 
 
 #### Changelog
 
+
+##### v2.1.3 (2024-02-09)
+
+-   proper rendering of markdown in html-summaries
+
+##### v2.1.2 (2022-04-05)
+
+-   fixed a bug that broke rendering of summaries for LaTeX
+
+##### v2.1.1 (2022-02-27)
+
+-   a couple of bug fixes
 
 ##### v2.1.0 (2022-02-22)
 
@@ -508,6 +521,7 @@ If templates contain translatable content, simply store them inside the content 
 
 <div class="card summary"><div class="card-body">This page contains most of the Markdown syntax elements and several macros, so that you can check if the output looks ok in the various output formats. It doesn't cover all the edge cases, but it provides a solid start.
 </div></div>
+
 (The above paragraph is tagged as summary!)
 
 
