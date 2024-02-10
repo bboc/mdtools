@@ -7,6 +7,15 @@ prev_page_url: "glossary.html"
 ---
 
 
+
+### v2.1.3 (2024-02-09)
+
+-   proper rendering of markdown in html-summaries
+
+### v2.1.2 (2022-04-05)
+
+-   fixed a bug that broke rendering of summaries for LaTeX
+
 ### v2.1.1 (2022-02-27)
 
 -   a couple of bug fixes
